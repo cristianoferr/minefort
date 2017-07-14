@@ -15,7 +15,7 @@ namespace Rimworld
             return world.AddEntity(new HumanoidEntity()) as HumanoidEntity;
         }
 
-        public model.entities.physical.GEStockPile SpawnStockPile(int x, int y, float width, float height)
+        public model.entities.physical.GEStockPile SpawnStockPile(int x, int y, int width, int height)
         {
             GEStockPile pile = new GEStockPile();
             pile.position.x = x;

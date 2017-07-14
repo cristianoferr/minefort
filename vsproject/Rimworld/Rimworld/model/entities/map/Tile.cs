@@ -7,10 +7,11 @@ using UnityEngine;
 namespace Rimworld.model.entities
 {
 
-    public class Tile
+    public class Tile:ISelectableInterface
     {
 
         IList<PhysicalEntity> entitiesHere;
+        public List<PhysicalEntity> characters;
         public Tile(map.Chunk chunk, int i, int j)
         {
             this.chunk = chunk;
@@ -20,7 +21,7 @@ namespace Rimworld.model.entities
         public map.Chunk chunk { get; private set; }
         public Position position { get; set; }
         public Room room { get; set; }
-        public Inventory inventory;
+        public logic.Inventory inventory;
 
         public override string ToString()
         {
@@ -41,6 +42,25 @@ namespace Rimworld.model.entities
             }
             entitiesHere.Add(physicalEntity);
         }
+
+        #region ISelectableInterface implementation
+
+        public string GetName()
+        {
+            return this._type.ToString();
+        }
+
+        public string GetDescription()
+        {
+            return "The tile.";
+        }
+
+        public string GetHitPointString()
+        {
+            return "";  // Do tiles have hitpoints? Can flooring be damaged? Obviously "empty" is indestructible.
+        }
+
+        #endregion
 
         /// <summary>
         /// Gets the neighbours.
@@ -176,21 +196,7 @@ namespace Rimworld.model.entities
             protected set;
         }
 
-        /// <summary>
-        /// Register a function to be called back when our tile type changes.
-        /// </summary>
-        public void RegisterTileTypeChangedCallback(Action<Tile> callback)
-        {
-            cbTileChanged += callback;
-        }
-
-        /// <summary>
-        /// Unregister a callback.
-        /// </summary>
-        public void UnregisterTileTypeChangedCallback(Action<Tile> callback)
-        {
-            cbTileChanged -= callback;
-        }
+        
 
         public bool UnplaceFurniture()
         {
@@ -247,7 +253,7 @@ namespace Rimworld.model.entities
             return true;
         }
 
-        public bool PlaceInventory(Inventory inv)
+        public bool PlaceInventory(logic.Inventory inv)
         {
             if (inv == null)
             {

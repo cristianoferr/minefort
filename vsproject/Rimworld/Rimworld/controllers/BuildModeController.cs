@@ -1,5 +1,7 @@
-﻿using Rimworld.model;
+﻿using Rimworld.logic.Jobs;
+using Rimworld.model;
 using Rimworld.model.entities;
+using Rimworld.model.furniture;
 using UnityEngine;
 
 namespace Rimworld.controllers
@@ -123,12 +125,12 @@ namespace Rimworld.controllers
 
 
             }
-            else if (buildMode == BuildMode.FLOOR)
+            else if (buildMode == GameConsts.BuildMode.FLOOR)
             {
                 // We are in tile-changing mode.
                 t.Type = buildModeTile;
             }
-            else if (buildMode == BuildMode.DECONSTRUCT)
+            else if (buildMode == GameConsts.BuildMode.DECONSTRUCT)
             {
                 // TODO
                 if (t.furniture != null)

@@ -18,6 +18,8 @@ namespace Rimworld.model.entities
 
         }
 
+        
+
         //singleton
         static World world_;
         public static World current
@@ -125,6 +127,11 @@ namespace Rimworld.model.entities
             InvalidateTileGraph();
         }
 
+        public void DeleteRoom(Room r)
+        {
+            r.chunk.DeleteRoom(r);
+        }
+
         #endregion Callbacks
 
         public void InvalidateTileGraph()
@@ -168,6 +175,13 @@ namespace Rimworld.model.entities
 
         #region Furniture
         public Dictionary<string, Furniture> furniturePrototypes;
+        public List<Furniture> furnitures;
+
+        // TODO: Most likely this will be replaced with a dedicated
+        // class for managing job queues (plural!) that might also
+        // be semi-static or self initializing or some damn thing.
+        // For now, this is just a PUBLIC member of World
+        public JobQueue jobQueue;
 
         public bool IsFurniturePlacementValid(string furnitureType, Tile t)
         {
@@ -203,6 +217,8 @@ namespace Rimworld.model.entities
                 Room.DoRoomFloodFill(furn.tile);
             }
 
+
+
             if (cbFurnitureCreated != null)
             {
                 cbFurnitureCreated(furn);
@@ -218,6 +234,16 @@ namespace Rimworld.model.entities
             }
 
             return furn;
+        }
+
+        public void OnFurnitureRemoved(Furniture furn)
+        {
+            furnitures.Remove(furn);
+        }
+
+        internal void AddRoom(Room newRoom)
+        {
+            newRoom.chunk.AddRoom(newRoom);
         }
     }
 }

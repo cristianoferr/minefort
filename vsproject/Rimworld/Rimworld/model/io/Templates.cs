@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 namespace Rimworld.model.io
 {
     [DataContract]
@@ -18,7 +18,7 @@ namespace Rimworld.model.io
         public IList<Template> templates;
 
 
-        public static Templates LoadSaved(DataHolder holder)
+      /*  public static Templates LoadSaved(DataHolder holder)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Rimworld.model.io
             ser.WriteObject(fileStream, this);
             fileStream.Close();
 
-        }
+        }*/
 
         internal Template CreateTemplate(string name)
         {

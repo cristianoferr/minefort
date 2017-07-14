@@ -10,8 +10,8 @@ namespace Rimworld.logic
         public TemplateInitializer(DataHolder dataHolder)
         {
             this.dataHolder = dataHolder;
-            dataHolder.templates = Templates.LoadSaved(dataHolder);
-            if (dataHolder.templates == null)
+           // dataHolder.templates = Templates.LoadSaved(dataHolder);
+           // if (dataHolder.templates == null)
             {
                 dataHolder.templates = new Templates(dataHolder);
                 InitializeTemplates();

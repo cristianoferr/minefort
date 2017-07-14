@@ -1,7 +1,9 @@
 ﻿
+using Rimworld.logic;
+
 namespace Rimworld.model.entities
 {
-    public class PhysicalEntity : GameEntity
+    public class PhysicalEntity : GameEntity, ISelectableInterface
     {
         public PhysicalEntity()
             : base()
@@ -24,6 +26,23 @@ namespace Rimworld.model.entities
             position.x = pos.x;
             position.y = pos.y;
         }
+
+        #region ISelectableInterface
+        public string GetName()
+        {
+            return this.name;
+        }
+
+        public string GetDescription()
+        {
+            return "This is a piece of furniture."; // TODO: Add "Description" property and matching XML field.
+        }
+
+        public string GetHitPointString()
+        {
+            return "18/18"; // TODO: Add a hitpoint system to...well...everything
+        }
+        #endregion ISelectableInterface
 
         //X e Y serão usados visualmente
         public virtual float X
@@ -48,6 +67,10 @@ namespace Rimworld.model.entities
             {
                 return dimension.height;
             }
+            set
+            {
+                dimension.height = value;
+            }
         }
 
         public int width
@@ -55,6 +78,10 @@ namespace Rimworld.model.entities
             get
             {
                 return dimension.width;
+            }
+            set
+            {
+                dimension.width = value;
             }
         }
 

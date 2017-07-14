@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Rimworld.logic;
+using Rimworld.model.entities;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using Rimworld.logic;
+using Rimworld.model;
 
 namespace Rimworld.controllers
 {
@@ -262,7 +267,7 @@ namespace Rimworld.controllers
                     {
                         // Display the building hint on top of this tile position
 
-                        if (bmc.buildMode == BuildMode.FURNITURE)
+                        if (bmc.buildMode == GameConsts.BuildMode.FURNITURE)
                         {
                             ShowFurnitureSpriteAtTile(bmc.buildModeObjectType, t);
                         }
@@ -340,7 +345,7 @@ namespace Rimworld.controllers
 
             Furniture proto = World.current.furniturePrototypes[furnitureType];
 
-            go.transform.position = new Vector3(t.X + ((proto.Width - 1) / 2f), t.Y + ((proto.Height - 1) / 2f), 0);
+            go.transform.position = new Vector3(t.X + ((proto.width - 1) / 2f), t.Y + ((proto.height - 1) / 2f), 0);
 
         }
 

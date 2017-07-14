@@ -1,16 +1,23 @@
 ﻿
+using Rimworld.logic;
 using Rimworld.logic.Jobs;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace Rimworld.model.entities
 {
-    public class Furniture : PhysicalEntity
+    public class Furniture : PhysicalEntity, ISelectableInterface
     {
         #region constructors
         public Furniture()
             : base()
         {
+            furnParameters = new Dictionary<string, float>();
+            jobs = new List<Job>();
+            this.funcPositionValidation = this.DEFAULT__IsValidPosition;
+            this.height = 1;
+            this.width = 1;
+
         }
         virtual public Furniture Clone()
         {
@@ -47,8 +54,53 @@ namespace Rimworld.model.entities
         }
         #endregion constructors
 
-        #region properties
-        List<Job> jobs;
+        #region getValidPosition
+
+        Func<Tile, bool> funcPositionValidation;
+
+        public bool IsValidPosition(Tile t)
+        {
+            return funcPositionValidation(t);
+        }
+        // FIXME: These functions should never be called directly,
+        // so they probably shouldn't be public functions of Furniture
+        // This will be replaced by validation checks fed to use from 
+        // LUA files that will be customizable for each piece of furniture.
+        // For example, a door might specific that it needs two walls to
+        // connect to.
+        protected bool DEFAULT__IsValidPosition(Tile t)
+        {
+            for (int x_off = t.X; x_off < (t.X + width); x_off++)
+            {
+                for (int y_off = t.Y; y_off < (t.Y + height); y_off++)
+                {
+                    Tile t2 = World.current.GetTileAt(x_off, y_off);
+
+                    // Make sure tile is FLOOR
+                    if (t2.Type != GameConsts.TileType.Floor)
+                    {
+                        return false;
+                    }
+
+                    // Make sure tile doesn't already have furniture
+                    if (t2.furniture != null)
+                    {
+                        return false;
+                    }
+
+                }
+            }
+
+
+            return true;
+        }
+
+
+        #endregion getValidPosition
+
+        #region Parameters
+        //TODO: mudar isso para o parameter value
+
         /// <summary>
         /// Custom parameter for this particular piece of furniture.  We are
         /// using a dictionary because later, custom LUA function will be
@@ -56,6 +108,71 @@ namespace Rimworld.model.entities
         /// Basically, the LUA code will bind to this dictionary.
         /// </summary>
         protected Dictionary<string, float> furnParameters;
+
+        /// <summary>
+        /// Gets the custom furniture parameter from a string key.
+        /// </summary>
+        /// <returns>The parameter value (float).</returns>
+        /// <param name="key">Key string.</param>
+        /// <param name="default_value">Default value.</param>
+        public float GetParameter(string key, float default_value)
+        {
+            if (furnParameters.ContainsKey(key) == false)
+            {
+                return default_value;
+            }
+
+            return furnParameters[key];
+        }
+
+        public float GetParameter(string key)
+        {
+            return GetParameter(key, 0);
+        }
+
+
+        public void SetParameter(string key, float value)
+        {
+            furnParameters[key] = value;
+        }
+
+        public void ChangeParameter(string key, float value)
+        {
+            if (furnParameters.ContainsKey(key) == false)
+            {
+                furnParameters[key] = value;
+            }
+
+            furnParameters[key] += value;
+        }
+
+        #endregion Parameters
+
+        #region properties
+        List<Job> jobs;
+
+        public void Deconstruct()
+        {
+            Debug.Log("Deconstruct");
+
+            tile.UnplaceFurniture();
+
+            if (cbOnRemoved != null)
+                cbOnRemoved(this);
+
+            // Do we need to recalculate our rooms?
+            if (roomEnclosure)
+            {
+                Room.DoRoomFloodFill(this.tile);
+            }
+
+            World.current.InvalidateTileGraph();
+
+            // At this point, no DATA structures should be pointing to us, so we
+            // should get garbage-collected.
+
+        }
+
 
         /// <summary>
         /// These actions are called every update. They get passed the furniture
@@ -88,7 +205,14 @@ namespace Rimworld.model.entities
         public Action<Furniture> cbOnChanged;
         public Action<Furniture> cbOnRemoved;
 
-        Func<Tile, bool> funcPositionValidation;
+        
+        
+        // This represents the BASE tile of the object -- but in practice, large objects may actually occupy
+        // multile tiles.
+        public Tile tile
+        {
+            get; protected set;
+        }
 
         public bool linksToNeighbour
         {
@@ -121,33 +245,25 @@ namespace Rimworld.model.entities
 
         #endregion callbacks
 
-
-        internal bool IsValidPosition(Tile t)
+        #region ISelectableInterface
+        public string GetName()
         {
-            for (int x_off = t.X; x_off < (t.X + width); x_off++)
-            {
-                for (int y_off = t.Y; y_off < (t.Y + height); y_off++)
-                {
-                    Tile t2 = World.current.GetTileAt(x_off, y_off);
-
-                    // Make sure tile is FLOOR
-                    if (t2.Type != GameConsts.TileType.Floor)
-                    {
-                        return false;
-                    }
-
-                    // Make sure tile doesn't already have furniture
-                    if (t2.furniture != null)
-                    {
-                        return false;
-                    }
-
-                }
-            }
-
-
-            return true;
+            return this.name;
         }
+
+        public string GetDescription()
+        {
+            return "This is a piece of furniture."; // TODO: Add "Description" property and matching XML field.
+        }
+
+        public string GetHitPointString()
+        {
+            return "18/18"; // TODO: Add a hitpoint system to...well...everything
+        }
+        #endregion ISelectableInterface
+
+
+
 
         // This is a multipler. So a value of "2" here, means you move twice as slowly (i.e. at half speed)
         // Tile types and other environmental effects may be combined.

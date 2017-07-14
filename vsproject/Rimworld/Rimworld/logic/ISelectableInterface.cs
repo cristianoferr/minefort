@@ -1,7 +1,7 @@
 ﻿
 namespace Rimworld.logic
 {
-    interface ISelectableInterface
+    public interface ISelectableInterface
     {
         string GetName();
         string GetDescription();

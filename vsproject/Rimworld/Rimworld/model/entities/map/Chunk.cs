@@ -1,11 +1,17 @@
 ﻿
+using System;
+using System.Collections.Generic;
+
 namespace Rimworld.model.entities.map
 {
     public class Chunk
     {
         public Tile[,] tiles { get; private set; }
+        public IList<Room> rooms;
         public Chunk(Map map, int cx, int cy)
+
         {
+            rooms = new List<Room>();
             this.map = map;
             this.cx = cx;
             this.cy = cy;
@@ -41,6 +47,27 @@ namespace Rimworld.model.entities.map
         public override string ToString()
         {
             return "Chunk(" + cx + "," + cy + ")";
+        }
+
+        public void AddRoom(Room newRoom)
+        {
+            rooms.Add(newRoom);
+        }
+
+        public void DeleteRoom(Room r)
+        {
+            if (r == outsideRoom)
+            {
+                Utils.LogError("Tried to delete the outside room.");
+                return;
+            }
+
+            // Remove this room from our rooms list.
+            rooms.Remove(r);
+
+            // All tiles that belonged to this room should be re-assigned to
+            // the outside.
+            r.ReturnTilesToOutsideRoom();
         }
     }
 }
