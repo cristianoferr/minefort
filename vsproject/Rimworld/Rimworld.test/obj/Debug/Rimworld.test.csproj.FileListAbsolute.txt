@@ -1,0 +1,16 @@
+F:\Java\repositorios\github\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.test.dll
+F:\Java\repositorios\github\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.test.pdb
+F:\Java\repositorios\github\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.dll
+F:\Java\repositorios\github\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.pdb
+F:\Java\repositorios\github\projetos\GameDev\Rimworld\Rimworld.test\obj\Debug\Rimworld.test.csprojResolveAssemblyReference.cache
+F:\Java\repositorios\github\projetos\GameDev\Rimworld\Rimworld.test\obj\Debug\Rimworld.test.dll
+F:\Java\repositorios\github\projetos\GameDev\Rimworld\Rimworld.test\obj\Debug\Rimworld.test.pdb
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.test.dll
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.test.pdb
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.dll
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\Rimworld.pdb
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\obj\Debug\Rimworld.test.csprojResolveAssemblyReference.cache
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\obj\Debug\Rimworld.test.dll
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\obj\Debug\Rimworld.test.pdb
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\UnityEngine.dll
+G:\java\repositorios\gitHub\projetos\GameDev\Rimworld\Rimworld.test\bin\Debug\UnityEngine.xml
