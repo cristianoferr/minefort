@@ -70,7 +70,7 @@ namespace Rimworld.model
 
         public const string VAL_WORLD_HEIGHT = "world_height";
 
-        public const int CHUNK_SIZE = 32; //tamanho que cada chunk terá, cada chunk terá sua própria
+        public const int CHUNK_SIZE = 16; //tamanho que cada chunk terá, cada chunk terá sua própria
         public const int WORLD_WIDTH = CHUNK_SIZE * 4;
         public const int WORLD_HEIGHT = CHUNK_SIZE * 4;
 

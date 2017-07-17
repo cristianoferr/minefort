@@ -99,7 +99,7 @@ namespace Rimworld.model.Pathfinding
                     // We don't have a POSITIONAL goal, we're just trying to find
                     // some king of inventory.  Have we reached it?
                     //TODO: verificar isso
-                    /*if (current.data.inventory != null && current.data.inventory.objectType == objectType)
+                    if (current.data.inventory != null && current.data.inventory.objectType == objectType)
                     {
                         // Type is correct
                         if (canTakeFromStockpile || current.data.furniture == null || current.data.furniture.IsStockpile() == false)
@@ -108,7 +108,7 @@ namespace Rimworld.model.Pathfinding
                             reconstruct_path(Came_From, current);
                             return;
                         }
-                    }*/
+                    }
                 }
 
                 ClosedSet.Add(current);
@@ -124,9 +124,11 @@ namespace Rimworld.model.Pathfinding
 
                     float tentative_g_score = g_score[current] + movement_cost_to_neighbor;
 
+                    // This is not a better path
                     if (OpenSet.Contains(neighbor) && tentative_g_score >= g_score[neighbor])
                         continue;
 
+                    // This path is the best until now. Record it!
                     Came_From[neighbor] = current;
                     g_score[neighbor] = tentative_g_score;
                     f_score[neighbor] = g_score[neighbor] + heuristic_cost_estimate(neighbor, goal);

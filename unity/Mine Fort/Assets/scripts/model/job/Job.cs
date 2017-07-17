@@ -224,6 +224,7 @@ namespace Rimworld.logic.Jobs
 
         public bool HasAllMaterial()
         {
+
             foreach (GameInventory inv in inventoryRequirements.Values)
             {
                 if (inv.maxStackSize > inv.stackSize)

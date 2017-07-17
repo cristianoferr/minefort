@@ -34,7 +34,7 @@ namespace Rimworld.model.entities
 
         public override string ToString()
         {
-            return "Tile[" + position + "]," + chunk + " @room: " + room;
+            return "Tile[" + X + "," + Y + "] @room: " + room;
         }
 
         public void RemoveEntity(PhysicalEntity physicalEntity)
@@ -100,8 +100,6 @@ namespace Rimworld.model.entities
             }
 
             Tile n;
-            float X = position.x;
-            float Y = position.y;
 
             n = World.map.GetTileAt(X, Y + 1);
             ns[0] = n;	// Could be null, but that's okay.

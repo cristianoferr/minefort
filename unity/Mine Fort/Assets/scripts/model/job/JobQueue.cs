@@ -22,7 +22,7 @@ public class JobQueue
 
     public void Enqueue(Job j)
     {
-        Utils.Log("Adding job to queue. Existing queue size: " + jobQueue.Count);
+        //Utils.Log("Adding job to queue. Existing queue size: " + jobQueue.Count);
         if (j.jobTime < 0)
         {
             // Job has a negative job time, so it's not actually

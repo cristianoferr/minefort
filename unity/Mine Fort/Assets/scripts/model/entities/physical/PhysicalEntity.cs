@@ -15,15 +15,21 @@ namespace Rimworld.model.entities
         }
 
         public string name { get; set; }
+        //If true then cbOnChanged is called on update
+        protected bool hasChanged = false;
         // public Vector3 position;
 
-        Tile _currTile;
+        Tile _currTile=null;
         public Tile currTile { get {
-                return currTile;
+                return _currTile;
             }
             set
             {
-                _currTile = currTile;
+                if (_currTile != value)
+                {
+                    _currTile = value;
+                    hasChanged = true;
+                }
             }
 
         }
@@ -68,13 +74,17 @@ namespace Rimworld.model.entities
             currTile = World.current.GetTileAt(pos);
         }
 
-
+        
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            if (cbOnChanged != null)
+            if (cbOnChanged != null && hasChanged)
+            {
                 cbOnChanged(this);
+                hasChanged = false;
+            }
         }
+
 
         #region ISelectableInterface
         public string GetName()
@@ -119,6 +129,7 @@ namespace Rimworld.model.entities
             set
             {
                 dimension.height = value;
+                hasChanged = true;
             }
         }
 
@@ -131,6 +142,7 @@ namespace Rimworld.model.entities
             set
             {
                 dimension.width = value;
+                hasChanged = true;
             }
         }
 

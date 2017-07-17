@@ -15,19 +15,7 @@ namespace Rimworld.model.entities
 
         public Tile nextTile { get; set; }
         public GameInventory inventory;
-        public override float X
-        {
-            get
-            {
-                if (nextTile == null)
-                {
-                    return base.X;
-                }
-                return Mathf.Lerp(currTile.X, nextTile.X, movementPercentage);
-            }
-        }
-
-
+        
         public override void Update(float deltaTime)
         {
             //Debug.Log("Character Update");
@@ -50,6 +38,7 @@ namespace Rimworld.model.entities
                 pathAStar = null;
                 return; // We're already were we want to be.
             }
+            hasChanged = true;
 
             // currTile = The tile I am currently in (and may be in the process of leaving)
             // nextTile = The tile I am currently entering
@@ -145,6 +134,20 @@ namespace Rimworld.model.entities
 
         }
 
+        public override float X
+        {
+            get
+            {
+                if (nextTile == null)
+                {
+                    return base.X;
+                }
+                hasChanged = true;
+                return Mathf.Lerp(currTile.X, nextTile.X, movementPercentage);
+            }
+        }
+
+
         public override float Y
         {
             get
@@ -153,6 +156,7 @@ namespace Rimworld.model.entities
                 {
                     return base.Y;
                 }
+                hasChanged = true;
                 return Mathf.Lerp(currTile.Y, nextTile.Y, movementPercentage);
 
             }
