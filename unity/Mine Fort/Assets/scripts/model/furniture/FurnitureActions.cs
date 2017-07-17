@@ -5,6 +5,7 @@ using Rimworld.controllers;
 using Rimworld.logic;
 using Rimworld.logic.Jobs;
 using Rimworld.model.entities;
+using Rimworld.model.inventory;
 using UnityEngine;
 
 namespace Rimworld.model.furniture
@@ -29,7 +30,7 @@ namespace Rimworld.model.furniture
             // If we want to be able to instantiate a new object of a class
             //   i.e. by doing    SomeClass.__new()
             // We need to make the base type visible.
-            myLuaScript.Globals["Inventory"] = typeof(Inventory);
+            myLuaScript.Globals["Inventory"] = typeof(GameInventory);
             myLuaScript.Globals["Job"] = typeof(Job);
 
             // Also to access statics/globals

@@ -4,11 +4,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using Rimworld.model.entities;
 using Rimworld.controllers;
+using Rimworld;
 
 public class FurnitureSpriteController : MonoBehaviour
 {
 
-    Dictionary<Furniture, GameObject> furnitureGameObjectMap;
+    Dictionary<PhysicalEntity, GameObject> furnitureGameObjectMap;
 
     World world
     {
@@ -19,16 +20,18 @@ public class FurnitureSpriteController : MonoBehaviour
     void Start()
     {
         // Instantiate our dictionary that tracks which GameObject is rendering which Tile data.
-        furnitureGameObjectMap = new Dictionary<Furniture, GameObject>();
+        furnitureGameObjectMap = new Dictionary<PhysicalEntity, GameObject>();
 
         // Register our callback so that our GameObject gets updated whenever
         // the tile's type changes.
         world.RegisterFurnitureCreated(OnFurnitureCreated);
 
         // Go through any EXISTING furniture (i.e. from a save that was loaded OnEnable) and call the OnCreated event manually
-        foreach (Furniture furn in world.furnitures)
+        foreach (PhysicalEntity ent in world.entities)
         {
-            OnFurnitureCreated(furn);
+            Furniture furn = ent as Furniture;
+            if (furn!=null)
+                OnFurnitureCreated(furn);
         }
     }
 
@@ -80,7 +83,7 @@ public class FurnitureSpriteController : MonoBehaviour
 
     }
 
-    void OnFurnitureRemoved(Furniture furn)
+    void OnFurnitureRemoved(PhysicalEntity furn)
     {
         if (furnitureGameObjectMap.ContainsKey(furn) == false)
         {
@@ -93,8 +96,10 @@ public class FurnitureSpriteController : MonoBehaviour
         furnitureGameObjectMap.Remove(furn);
     }
 
-    void OnFurnitureChanged(Furniture furn)
+    void OnFurnitureChanged(PhysicalEntity pe)
     {
+        Furniture furn = pe as Furniture;
+        if (furn == null) Utils.LogError("OnFurnitureChanged: Furniture is null!!");
         //Debug.Log("OnFurnitureChanged");
         // Make sure the furniture's graphics are correct.
 
@@ -165,8 +170,8 @@ public class FurnitureSpriteController : MonoBehaviour
 
         // Check for neighbours North, East, South, West
 
-        int x = furn.tile.X;
-        int y = furn.tile.Y;
+        float x = furn.tile.X;
+        float y = furn.tile.Y;
 
         Tile t;
 

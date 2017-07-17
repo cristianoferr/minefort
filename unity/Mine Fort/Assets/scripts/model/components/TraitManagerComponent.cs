@@ -12,8 +12,9 @@ namespace Rimworld.model.components
 
         }
 
-        public override void Initialize()
+        public override void Start()
         {
+            base.Start();
             InitTraits(GetValueAsInt(GameConsts.VAL_POINTS_TO_DISTRIBUTE));
         }
 

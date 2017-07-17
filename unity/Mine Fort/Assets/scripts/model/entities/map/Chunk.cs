@@ -8,7 +8,7 @@ namespace Rimworld.model.entities.map
     {
         public Tile[,] tiles { get; private set; }
         public IList<Room> rooms;
-        public Chunk(Map map, int cx, int cy)
+        public Chunk(Map map, int cx, int cy, Action<Tile> cbTileChanged)
 
         {
             rooms = new List<Room>();
@@ -22,6 +22,7 @@ namespace Rimworld.model.entities.map
                 for (int j = 0; j < GameConsts.CHUNK_SIZE; j++)
                 {
                     tiles[i, j] = new Tile(this, i, j);
+                    tiles[i, j].RegisterTileTypeChangedCallback(cbTileChanged);
                 }
             }
         }

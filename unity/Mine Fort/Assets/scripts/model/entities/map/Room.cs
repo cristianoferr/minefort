@@ -38,14 +38,14 @@ namespace Rimworld.model.entities
         {
             for (int i = 0; i < tiles.Count; i++)
             {
-                tiles[i].room = World.map.GetOutsideRoom(position);	// Assign to outside
+                tiles[i].room = World.map.GetOutsideRoom(X,Y);	// Assign to outside
             }
             tiles = new List<Tile>();
         }
 
         public bool IsOutsideRoom()
         {
-            return this == World.map.GetOutsideRoom(position);
+            return this == World.map.GetOutsideRoom(X, Y);
         }
 
         public static void DoRoomFloodFill(Tile sourceTile, bool onlyIfOutside = false)
@@ -134,7 +134,7 @@ namespace Rimworld.model.entities
                 return;
             }
 
-            if (tile.Type == GameConsts.TileType.Empty)
+            if (tile.Type == null)
             {
                 // This tile is empty space and must remain part of the outside.
                 return;
@@ -164,7 +164,7 @@ namespace Rimworld.model.entities
                     Tile[] ns = t.GetNeighbours();
                     foreach (Tile t2 in ns)
                     {
-                        if (t2 == null || t2.Type == GameConsts.TileType.Empty)
+                        if (t2 == null || t2.Type == null)
                         {
                             // We have hit open space (either by being the edge of the map or being an empty tile)
                             // so this "room" we're building is actually part of the Outside.

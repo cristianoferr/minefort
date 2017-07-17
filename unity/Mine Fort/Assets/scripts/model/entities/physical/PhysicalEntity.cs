@@ -1,5 +1,7 @@
 ﻿
 using Rimworld.logic;
+using System;
+using UnityEngine;
 
 namespace Rimworld.model.entities
 {
@@ -8,23 +10,70 @@ namespace Rimworld.model.entities
         public PhysicalEntity()
             : base()
         {
-            position = new Position(0, 0, 0);
+          //  position = new Vector3(0, 0, 0);
             dimension = new Dimension(1, 1);
         }
 
         public string name { get; set; }
-        public Position position { get; private set; }
+        // public Vector3 position;
+
+        Tile _currTile;
+        public Tile currTile { get {
+                return currTile;
+            }
+            set
+            {
+                _currTile = currTile;
+            }
+
+        }
+
         public Dimension dimension { get; private set; }
 
-        internal void PlaceNear(Position pos)
+        #region callbacks
+        public Action<PhysicalEntity> cbOnChanged;
+        public Action<PhysicalEntity> cbOnRemoved;
+
+
+        public void RegisterOnChangedCallback(Action<PhysicalEntity> callbackFunc)
+        {
+            cbOnChanged += callbackFunc;
+        }
+
+        public void UnregisterOnChangedCallback(Action<PhysicalEntity> callbackFunc)
+        {
+            cbOnChanged -= callbackFunc;
+        }
+
+        public void RegisterOnRemovedCallback(Action<PhysicalEntity> callbackFunc)
+        {
+            cbOnRemoved += callbackFunc;
+        }
+
+        public void UnregisterOnRemovedCallback(Action<PhysicalEntity> callbackFunc)
+        {
+            cbOnRemoved -= callbackFunc;
+        }
+        #endregion callbacks
+
+
+
+        internal void PlaceNear(Vector3 pos)
         {
             if (pos == null)
             {
                 Utils.LogError("PlaceNear pos is null!");
                 return;
             }
-            position.x = pos.x;
-            position.y = pos.y;
+            currTile = World.current.GetTileAt(pos);
+        }
+
+
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+            if (cbOnChanged != null)
+                cbOnChanged(this);
         }
 
         #region ISelectableInterface
@@ -49,7 +98,7 @@ namespace Rimworld.model.entities
         {
             get
             {
-                return position.x;
+                return currTile.X;
             }
         }
 
@@ -57,7 +106,7 @@ namespace Rimworld.model.entities
         {
             get
             {
-                return position.y;
+                return currTile.Y;
             }
         }
 
@@ -85,16 +134,8 @@ namespace Rimworld.model.entities
             }
         }
 
-        public Tile currTile
-        {
-            get { return World.map.GetTileAt(position); }
-
-        }
+        
 
 
-
-        internal void Update(float deltaTime)
-        {
-        }
     }
 }

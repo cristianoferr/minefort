@@ -4,15 +4,25 @@ using Rimworld.logic.Jobs;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Xml;
+using MoonSharp.Interpreter;
+using System.Xml.Serialization;
+using Rimworld.model.furniture;
+using System.Xml.Schema;
+using Rimworld.model.inventory;
+
 namespace Rimworld.model.entities
 {
-    public class Furniture : PhysicalEntity, ISelectableInterface
+    [MoonSharpUserData]
+    public class Furniture : PhysicalEntity, IXmlSerializable, ISelectableInterface
     {
         #region constructors
         public Furniture()
             : base()
         {
             furnParameters = new Dictionary<string, float>();
+            updateActions = new List<string>();
+
             jobs = new List<Job>();
             this.funcPositionValidation = this.DEFAULT__IsValidPosition;
             this.height = 1;
@@ -70,14 +80,14 @@ namespace Rimworld.model.entities
         // connect to.
         protected bool DEFAULT__IsValidPosition(Tile t)
         {
-            for (int x_off = t.X; x_off < (t.X + width); x_off++)
+            for (int x_off = (int)t.X; x_off < (t.X + width); x_off++)
             {
-                for (int y_off = t.Y; y_off < (t.Y + height); y_off++)
+                for (int y_off = (int)t.Y; y_off < (t.Y + height); y_off++)
                 {
                     Tile t2 = World.current.GetTileAt(x_off, y_off);
 
                     // Make sure tile is FLOOR
-                    if (t2.Type != GameConsts.TileType.Floor)
+                    if (t2.Type ==null )//GameConsts.TileType.Floor)
                     {
                         return false;
                     }
@@ -148,6 +158,20 @@ namespace Rimworld.model.entities
 
         #endregion Parameters
 
+        /// <summary>
+        /// Registers a function that will be called every Update.
+        /// (Later this implementation might change a bit as we support LUA.)
+        /// </summary>
+        public void RegisterUpdateAction(string luaFunctionName)
+        {
+            updateActions.Add(luaFunctionName);
+        }
+
+        public void UnregisterUpdateAction(string luaFunctionName)
+        {
+            updateActions.Remove(luaFunctionName);
+        }
+
         #region properties
         List<Job> jobs;
 
@@ -172,7 +196,37 @@ namespace Rimworld.model.entities
             // should get garbage-collected.
 
         }
+        
 
+        public bool IsStockpile()
+        {
+            return objectType == "Stockpile";
+        }
+
+
+        	public GameConsts.ENTERABILITY IsEnterable() {
+		if(isEnterableAction == null || isEnterableAction.Length == 0) {
+			return GameConsts.ENTERABILITY.Yes;
+		}
+
+		//FurnitureActions.CallFunctionsWithFurniture( isEnterableActions.ToArray(), this );
+
+		DynValue ret = FurnitureActions.CallFunction( isEnterableAction, this );
+
+		return (GameConsts.ENTERABILITY)ret.Number;
+
+	}
+
+	// This represents the BASE tile of the object -- but in practice, large objects may actually occupy
+	// multile tiles.
+	public Tile tile {
+		get; protected set;
+	}
+
+	// This "objectType" will be queried by the visual system to know what sprite to render for this object
+	public string objectType {
+		get; protected set;
+	}
 
         /// <summary>
         /// These actions are called every update. They get passed the furniture
@@ -184,11 +238,7 @@ namespace Rimworld.model.entities
         //public Func<Furniture, ENTERABILITY> IsEnterable;
         protected string isEnterableAction;
         // This "objectType" will be queried by the visual system to know what sprite to render for this object
-        public string objectType
-        {
-            get;
-            protected set;
-        }
+      
 
         public bool roomEnclosure { get; protected set; }
         public Color tint = Color.white;
@@ -200,20 +250,163 @@ namespace Rimworld.model.entities
         // furniture tile itself!  (In fact, this will probably be common).
         public Vector2 jobSpotOffset = Vector2.zero;
 
-        // If the job causes some kind of object to be spawned, where will it appear?
-        public Vector2 jobSpawnSpotOffset = Vector2.zero;
-        public Action<Furniture> cbOnChanged;
-        public Action<Furniture> cbOnRemoved;
-
-        
-        
-        // This represents the BASE tile of the object -- but in practice, large objects may actually occupy
-        // multile tiles.
-        public Tile tile
+        #region readXML
+        public XmlSchema GetSchema()
         {
-            get; protected set;
+            return null;
         }
 
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("X", tile.X.ToString());
+            writer.WriteAttributeString("Y", tile.Y.ToString());
+            writer.WriteAttributeString("objectType", objectType);
+            //writer.WriteAttributeString( "movementCost", movementCost.ToString() );
+
+            foreach (string k in furnParameters.Keys)
+            {
+                writer.WriteStartElement("Param");
+                writer.WriteAttributeString("name", k);
+                writer.WriteAttributeString("value", furnParameters[k].ToString());
+                writer.WriteEndElement();
+            }
+
+        }
+
+        public void ReadXmlPrototype(XmlReader reader_parent)
+        {
+            //Debug.Log("ReadXmlPrototype");
+
+            objectType = reader_parent.GetAttribute("objectType");
+
+            XmlReader reader = reader_parent.ReadSubtree();
+
+
+            while (reader.Read())
+            {
+                switch (reader.Name)
+                {
+                    case "Name":
+                        reader.Read();
+                        name = reader.ReadContentAsString();
+                        break;
+                    case "MovementCost":
+                        reader.Read();
+                        movementCost = reader.ReadContentAsFloat();
+                        break;
+                    case "Width":
+                        reader.Read();
+                        width = reader.ReadContentAsInt();
+                        break;
+                    case "Height":
+                        reader.Read();
+                        height = reader.ReadContentAsInt();
+                        break;
+                    case "LinksToNeighbours":
+                        reader.Read();
+                        linksToNeighbour = reader.ReadContentAsBoolean();
+                        break;
+                    case "EnclosesRooms":
+                        reader.Read();
+                        roomEnclosure = reader.ReadContentAsBoolean();
+                        break;
+                    case "BuildingJob":
+                        float jobTime = float.Parse(reader.GetAttribute("jobTime"));
+
+                        List<GameInventory> invs = new List<GameInventory>();
+
+                        XmlReader invs_reader = reader.ReadSubtree();
+
+                        while (invs_reader.Read())
+                        {
+                            if (invs_reader.Name == "Inventory")
+                            {
+                                // Found an inventory requirement, so add it to the list!
+                                invs.Add(new GameInventory(
+                                    invs_reader.GetAttribute("objectType"),
+                                    int.Parse(invs_reader.GetAttribute("amount")),
+                                    0
+                                ));
+                            }
+                        }
+
+                        Job j = new Job(null,
+                            objectType,
+                            FurnitureActions.JobComplete_FurnitureBuilding, jobTime,
+                            invs.ToArray()
+                        );
+
+                        World.current.SetFurnitureJobPrototype(j, this);
+
+                        break;
+                    case "OnUpdate":
+
+                        string functionName = reader.GetAttribute("FunctionName");
+                        RegisterUpdateAction(functionName);
+
+                        break;
+                    case "IsEnterable":
+
+                        isEnterableAction = reader.GetAttribute("FunctionName");
+
+                        break;
+
+                    case "JobSpotOffset":
+                        jobSpotOffset = new Vector2(
+                            int.Parse(reader.GetAttribute("X")),
+                            int.Parse(reader.GetAttribute("Y"))
+                        );
+
+                        break;
+                    case "JobSpawnSpotOffset":
+                        jobSpawnSpotOffset = new Vector2(
+                            int.Parse(reader.GetAttribute("X")),
+                            int.Parse(reader.GetAttribute("Y"))
+                        );
+
+                        break;
+                    case "Params":
+                        ReadXmlParams(reader);  // Read in the Param tag
+                        break;
+                }
+            }
+
+
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            // X, Y, and objectType have already been set, and we should already
+            // be assigned to a tile.  So just read extra data.
+
+            //movementCost = int.Parse( reader.GetAttribute("movementCost") );
+
+            ReadXmlParams(reader);
+        }
+
+        public void ReadXmlParams(XmlReader reader)
+        {
+            // X, Y, and objectType have already been set, and we should already
+            // be assigned to a tile.  So just read extra data.
+
+            //movementCost = int.Parse( reader.GetAttribute("movementCost") );
+
+            if (reader.ReadToDescendant("Param"))
+            {
+                do
+                {
+                    string k = reader.GetAttribute("name");
+                    float v = float.Parse(reader.GetAttribute("value"));
+                    furnParameters[k] = v;
+                } while (reader.ReadToNextSibling("Param"));
+            }
+        }
+        #endregion readXML
+
+        // If the job causes some kind of object to be spawned, where will it appear?
+        public Vector2 jobSpawnSpotOffset = Vector2.zero;
+
+        
         public bool linksToNeighbour
         {
             get;
@@ -222,28 +415,7 @@ namespace Rimworld.model.entities
 
         #endregion properties
 
-        #region callbacks
-        public void RegisterOnChangedCallback(Action<Furniture> callbackFunc)
-        {
-            cbOnChanged += callbackFunc;
-        }
-
-        public void UnregisterOnChangedCallback(Action<Furniture> callbackFunc)
-        {
-            cbOnChanged -= callbackFunc;
-        }
-
-        public void RegisterOnRemovedCallback(Action<Furniture> callbackFunc)
-        {
-            cbOnRemoved += callbackFunc;
-        }
-
-        public void UnregisterOnRemovedCallback(Action<Furniture> callbackFunc)
-        {
-            cbOnRemoved -= callbackFunc;
-        }
-
-        #endregion callbacks
+        
 
         #region ISelectableInterface
         public string GetName()
@@ -282,7 +454,7 @@ namespace Rimworld.model.entities
 
             // We know our placement destination is valid.
             Furniture obj = proto.Clone();
-            obj.position.getFrom(proto.position);
+            obj.tile = proto.tile;
 
             // FIXME: This assumes we are 1x1!
             if (tile.PlaceFurniture(obj) == false)
@@ -302,8 +474,8 @@ namespace Rimworld.model.entities
                 // buddy.  Just trigger their OnChangedCallback.
 
                 Tile t;
-                int x = tile.X;
-                int y = tile.Y;
+                float x = tile.X;
+                float y = tile.Y;
 
                 t = World.current.GetTileAt(x, y + 1);
                 if (t != null && t.furniture != null && t.furniture.cbOnChanged != null && t.furniture.objectType == obj.objectType)

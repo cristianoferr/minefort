@@ -10,11 +10,11 @@ namespace Rimworld
             this.holder = holder;
             this.world = World.current;
         }
-        public HumanoidEntity SpawnPawn(int pointsToSpend)
+        public GameCharacter SpawnPawn(int pointsToSpend)
         {
-            return world.AddEntity(new HumanoidEntity()) as HumanoidEntity;
+            return world.AddEntity(new GameCharacter()) as GameCharacter;
         }
-
+/*
         public model.entities.physical.GEStockPile SpawnStockPile(int x, int y, int width, int height)
         {
             GEStockPile pile = new GEStockPile();
@@ -34,7 +34,7 @@ namespace Rimworld
             pile.position.y = y;
             world.AddEntity(pile);
             return pile;
-        }
+        }*/
 
         public DataHolder holder { get; set; }
 

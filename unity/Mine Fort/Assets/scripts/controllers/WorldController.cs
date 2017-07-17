@@ -1,4 +1,5 @@
-﻿using Rimworld.model.entities;
+﻿using System;
+using Rimworld.model.entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,6 +26,10 @@ namespace Rimworld.controllers
             {
                 _isPaused = value;
             }
+        }
+
+        void Start()
+        {
         }
 
         public bool IsModal; // If true, a modal dialog box is open so normal inputs should be ignored.
@@ -68,8 +73,7 @@ namespace Rimworld.controllers
         {
             int x = Mathf.FloorToInt(coord.x + 0.5f);
             int y = Mathf.FloorToInt(coord.y + 0.5f);
-
-            return world.GetTileAt(x, y);
+            return world.GetTileAt(Utils.IsoTo2D(x, y));
         }
 
         public void NewWorld()
@@ -102,10 +106,21 @@ namespace Rimworld.controllers
         {
             // Create a world with Empty tiles
             //world = new World(100, 100);
+            world = World.current;
+            world.Start();
+            RandomizeWorld(world,"land");
+        }
 
-            // Center the Camera
-            Camera.main.transform.position = new Vector3(world.width / 2, world.height / 2, Camera.main.transform.position.z);
-
+        private void RandomizeWorld(World world,string tag=null)
+        {
+            for (int x = 0; x < world.width; x++)
+            {
+                for (int y = 0; y < world.width; y++)
+                {
+                    Tile tile = world.GetTileAt(x, y);
+                    tile.Type = world.biome.RandomTile(tag);
+                }
+            }
         }
 
         /*void CreateWorldFromSaveFile()

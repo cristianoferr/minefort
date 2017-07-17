@@ -69,7 +69,7 @@ namespace Rimworld.logic
             templateHumanoid.AddTag(GameConsts.TAG_HUMANOID);
             templateHumanoid.AddTag(GameConsts.TAG_ORGANIC);
             templateHumanoid.AddTag(GameConsts.TAG_PHYSICAL);
-            templateHumanoid.entityToSpawn = typeof(HumanoidEntity);
+            templateHumanoid.entityToSpawn = typeof(model.entities.GameCharacter);
 
             Property propBodyParts = templateHumanoid.AddComponent(GameConsts.TEMPL_HUMANOID_BODYPARTS);
             propBodyParts.AddTag(GameConsts.TAG_BODYPARTS);

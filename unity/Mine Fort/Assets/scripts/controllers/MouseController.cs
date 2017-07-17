@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Rimworld.logic;
 using Rimworld.model;
+using System;
 
 namespace Rimworld.controllers
 {
@@ -16,6 +17,7 @@ namespace Rimworld.controllers
         // The world-position of the mouse last frame.
         Vector3 lastFramePosition;
         Vector3 currFramePosition;
+        Vector3 currIsoPosition;
 
         // The world-position start of our left-mouse drag operation
         Vector3 dragStartPosition;
@@ -36,12 +38,18 @@ namespace Rimworld.controllers
         // Use this for initialization
         void Start()
         {
+            currentMode = MouseMode.BUILD;
             bmc = GameObject.FindObjectOfType<BuildModeController>();
 
             fsc = GameObject.FindObjectOfType<FurnitureSpriteController>();
 
 
             dragPreviewGameObjects = new List<GameObject>();
+
+            // Center the Camera
+            Vector3 pos =Utils.TwoDToIso(WorldController.Instance.world.width / 2, WorldController.Instance.world.height / 2,0);
+            pos.z = Camera.main.transform.position.z;
+            Camera.main.transform.position = pos;
         }
 
         /// <summary>
@@ -54,10 +62,6 @@ namespace Rimworld.controllers
 
         public Tile GetMouseOverTile()
         {
-            /*		return WorldController.Instance.world.GetTileAt(
-                        Mathf.FloorToInt(currFramePosition.x), 
-                        Mathf.FloorToInt(currFramePosition.y)
-                    );*/
 
             return WorldController.Instance.GetTileAtWorldCoord(currFramePosition);
         }
@@ -72,6 +76,7 @@ namespace Rimworld.controllers
             }
 
             currFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            currIsoPosition = Utils.IsoTo2D(currFramePosition.x, currFramePosition.y);
             currFramePosition.z = 0;
 
             if (Input.GetKeyUp(KeyCode.Escape))
@@ -91,7 +96,6 @@ namespace Rimworld.controllers
             UpdateDragging();
             UpdateCameraMovement();
             UpdateSelection();
-
             // Save the mouse position from this frame
             // We don't use currFramePosition because we may have moved the camera.
             lastFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -178,10 +182,10 @@ namespace Rimworld.controllers
         {
 
             // Make sure stuffInTile is big enough to handle all the characters, plus the 3 extra values
-            mySelection.stuffInTile = new ISelectableInterface[mySelection.tile.characters.Count + 3];
+            mySelection.stuffInTile = new ISelectableInterface[mySelection.tile.charactersCount + 3];
 
             // Copy the character references
-            for (int i = 0; i < mySelection.tile.characters.Count; i++)
+            for (int i = 0; i < mySelection.tile.charactersCount; i++)
             {
                 mySelection.stuffInTile[i] = mySelection.tile.characters[i];
             }
@@ -217,12 +221,12 @@ namespace Rimworld.controllers
             // Start Drag
             if (Input.GetMouseButtonDown(0))
             {
-                dragStartPosition = currFramePosition;
+                dragStartPosition = currIsoPosition;
                 isDragging = true;
             }
             else if (isDragging == false)
             {
-                dragStartPosition = currFramePosition;
+                dragStartPosition = currIsoPosition;
             }
 
             if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Escape))
@@ -234,13 +238,14 @@ namespace Rimworld.controllers
 
             if (bmc.IsObjectDraggable() == false)
             {
-                dragStartPosition = currFramePosition;
+                dragStartPosition = currIsoPosition;
             }
 
+            Vector3 dragEndPosition = currIsoPosition;
             int start_x = Mathf.FloorToInt(dragStartPosition.x + 0.5f);
-            int end_x = Mathf.FloorToInt(currFramePosition.x + 0.5f);
+            int end_x = Mathf.FloorToInt(dragEndPosition.x + 0.5f);
             int start_y = Mathf.FloorToInt(dragStartPosition.y + 0.5f);
-            int end_y = Mathf.FloorToInt(currFramePosition.y + 0.5f);
+            int end_y = Mathf.FloorToInt(dragEndPosition.y + 0.5f);
 
             // We may be dragging in the "wrong" direction, so flip things if needed.
             if (end_x < start_x)
@@ -258,6 +263,9 @@ namespace Rimworld.controllers
 
             //if( isDragging ) {
             // Display a preview of the drag area
+            //TODO: melhorar essa limitação
+            //if (Math.Abs(end_x - start_x) > 20) end_x = start_x + 20;
+           // if (Math.Abs(end_y - start_y) > 20) end_y = start_y + 20;
             for (int x = start_x; x <= end_x; x++)
             {
                 for (int y = start_y; y <= end_y; y++)
@@ -274,7 +282,7 @@ namespace Rimworld.controllers
                         else
                         {
                             // show the generic dragging visuals
-                            GameObject go = SimplePool.Spawn(circleCursorPrefab, new Vector3(x, y, 0), Quaternion.identity);
+                            GameObject go = SimplePool.Spawn(circleCursorPrefab, Utils.TwoDToIso(x,y,0), Quaternion.identity);
                             go.transform.SetParent(this.transform, true);
                             dragPreviewGameObjects.Add(go);
                         }
@@ -294,7 +302,7 @@ namespace Rimworld.controllers
                 {
                     for (int y = start_y; y <= end_y; y++)
                     {
-                        Tile t = WorldController.Instance.world.GetTileAt(x, y);
+                        Tile t = WorldController.Instance.world.GetTileAt(x-0.5f, y - 0.5f);
 
                         if (t != null)
                         {
@@ -319,7 +327,7 @@ namespace Rimworld.controllers
 
             Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel");
 
-            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 25f);
+            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, GameConsts.CAM_MAX_DISTANCE);
         }
 
         void ShowFurnitureSpriteAtTile(string furnitureType, Tile t)

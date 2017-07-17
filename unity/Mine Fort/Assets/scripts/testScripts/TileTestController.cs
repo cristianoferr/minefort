@@ -3,20 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Rimworld;
+using Rimworld.model.entities.map;
+using Rimworld.controllers;
 
 public class TileTestController : MonoBehaviour {
 
     public Sprite floorSprite;
     public Sprite emptySprite;
 
-    public GameObject parent;
 
     World world;
     // Use this for initialization
     void Start () {
 
         world = World.current;
-        RandomizeTiles(world);
+        Biome biome = world.biome;
         for (int x = 0; x < world.width; x++)
         {
             for (int y = 0; y < world.height; y++)
@@ -26,18 +28,21 @@ public class TileTestController : MonoBehaviour {
 
                 SpriteRenderer tile_sr = tile_go.AddComponent<SpriteRenderer>();
                 Tile tile_data = world.GetTileAt(x, y);
-                tile_go.transform.position = CalcPosition(tile_go,x, y,45);
-                if (tile_data.Type == Rimworld.model.GameConsts.TileType.Floor)
-                {
-                    tile_sr.sprite = floorSprite;
-                } else
-                {
-                    tile_sr.sprite = emptySprite;
-                }
-                tile_go.transform.parent = parent.transform;
+                float tx = x;
+                float ty = y;
+
+                tile_data.RegisterTileTypeChangedCallback((tile)=> { OnTileTypeChanged(tile, tile_go,tx,ty); });
+                tile_go.transform.parent = this.gameObject.transform;
+                tile_data.Type = biome.RandomTile();// Rimworld.model.GameConsts.TileType.Floor;
+                
             }
         }
-	}
+
+        RandomizeTiles(world);
+    }
+
+
+
 
     /*
      function isoTo2D(pt:Point):Point{
@@ -56,20 +61,13 @@ public class TileTestController : MonoBehaviour {
 
 
 
-    private Vector3 CalcPosition(GameObject tile_go,float x, float y,float angle)
+    private Vector3 CalcPosition(GameObject tile_go, Tile tile)
     {
-        /*   var eulers = tile_go.transform.rotation.eulerAngles;
-           //tile_go.transform.rotation = Quaternion.Euler(angle, eulers.y, eulers.z);
 
-           Vector3 pos=new Vector3(x/2f , y/2f , 0);
-           pos=Quaternion.AngleAxis(30, Vector3.up) * pos;
-           pos = Quaternion.AngleAxis(45, Vector3.left) * pos;
-           return pos;*/
-        x = x / 2f;
-        y = y / 2f;
-        Vector3 pos = new Vector3(x-y,(x+y)/2, -y/2f);
+        Vector3 pos = Utils.TwoDToIso(tile.X, tile.Y, tile.height);
         return pos;
     }
+
 
     private void RandomizeTiles(World world)
     {
@@ -77,21 +75,45 @@ public class TileTestController : MonoBehaviour {
         {
             for (int y = 0; y < world.height; y++)
             {
-                if (UnityEngine.Random.Range(0, 2) == 0)
-                {
-                    world.GetTileAt(x, y).Type = Rimworld.model.GameConsts.TileType.Floor;
-                } else
-                {
-                    world.GetTileAt(x, y).Type = Rimworld.model.GameConsts.TileType.Empty;
-                }
+                Tile tile = world.GetTileAt(x, y);
+                RandomizeTile(tile);
+
             }
         }
     }
 
-   
+    private void RandomizeTile(Tile tile)
+    {
+        tile.Type = world.biome.RandomTile();
+        tile.height = UnityEngine.Random.Range(tile.Type.MinHeight, tile.Type.MaxHeight);
+    }
+
+    float randomizeTileTimer = 2f;
 
     // Update is called once per frame
     void Update () {
-		
+      /*  randomizeTileTimer -= Time.deltaTime;
+        if (randomizeTileTimer < 0)
+        {
+            RandomizeTiles(world);
+            randomizeTileTimer = 2f;
+        }*/
 	}
+
+    void OnTileTypeChanged(Tile tile_data,GameObject tile_go,float x,float y)
+    {
+        tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", tile_data.Type.fileName);
+      /*  if (tile_data.Type == Rimworld.model.GameConsts.TileType.Floor)
+        {
+            tile_go.GetComponent<SpriteRenderer>().sprite = floorSprite;
+        }
+        else
+        {
+            tile_go.GetComponent<SpriteRenderer>().sprite = emptySprite;
+        }*/
+
+        tile_go.transform.position = CalcPosition(tile_go, tile_data);
+        
+
+    }
 }

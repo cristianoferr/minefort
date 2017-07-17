@@ -4,13 +4,14 @@ namespace Rimworld.model
 {
     public class GameConsts
     {
+        public enum ENTERABILITY { Yes, Never, Soon }
+  
         public enum BuildMode
         {
             FLOOR,
             FURNITURE,
             DECONSTRUCT
         }
-        public enum TileType { Empty, Floor };
         public enum DATA_TYPE
         {
             UNDEFINED = 0, INT = 1, FLOAT = 2, STRING = 3
@@ -72,5 +73,14 @@ namespace Rimworld.model
         public const int CHUNK_SIZE = 32; //tamanho que cada chunk terá, cada chunk terá sua própria
         public const int WORLD_WIDTH = CHUNK_SIZE * 4;
         public const int WORLD_HEIGHT = CHUNK_SIZE * 4;
+
+        //usado no csv
+        public const string DATA_DICT_BIOME = "BIOMES";
+        public const string TAG_TILE_WATER="water";
+        public const string TAG_TILE_LAND = "land";
+        public const string TAG_TILE_GRASS = "grass";
+        public const string TAG_TILE_TEST = "test";
+
+        public const float CAM_MAX_DISTANCE = 50f;
     }
 }

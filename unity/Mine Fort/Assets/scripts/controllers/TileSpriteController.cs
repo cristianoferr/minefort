@@ -36,13 +36,13 @@ namespace Rimworld.controllers
                     tileGameObjectMap.Add(tile_data, tile_go);
 
                     tile_go.name = "Tile_" + x + "_" + y;
-                    tile_go.transform.position = new Vector3(tile_data.X, tile_data.Y, 0);
+                   // tile_go.transform.position = new Vector3(tile_data.X, tile_data.Y, 0);
                     tile_go.transform.SetParent(this.transform, true);
 
                     // Add a Sprite Renderer
                     // Add a default sprite for empty tiles.
                     SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
-                    sr.sprite = SpriteManager.current.GetSprite("Tile", "Empty");
+                    sr.sprite = SpriteManager.current.GetSprite("Tile", tile_data.Type.fileName);
                     sr.sortingLayerName = "Tiles";
 
                     OnTileChanged(tile_data);
@@ -51,7 +51,7 @@ namespace Rimworld.controllers
 
             // Register our callback so that our GameObject gets updated whenever
             // the tile's type changes.
-            world.RegisterTileChanged(OnTileChanged);
+            world.mapData.RegisterTileChanged(OnTileChanged);
         }
 
         // THIS IS AN EXAMPLE -- NOT CURRENTLY USED (and probably out of date)
@@ -97,8 +97,8 @@ namespace Rimworld.controllers
                 return;
             }
 
-            Utils.LogError("Verificar a saida do tile.toString(): " + tile_data.Type.ToString());
-            tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", tile_data.Type.ToString());
+            tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", tile_data.Type.fileName);
+            tile_go.transform.position = CalcPosition( tile_data);
             /*if (tile_data.Type == GameConsts.TileType.Floor)
             {
                 tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", "Floor");
@@ -113,6 +113,12 @@ namespace Rimworld.controllers
             }*/
 
 
+        }
+        private Vector3 CalcPosition( Tile tile)
+        {
+            
+            Vector3 pos = Utils.TwoDToIso(tile.X, tile.Y, tile.height);
+            return pos;
         }
 
 

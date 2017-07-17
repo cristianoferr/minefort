@@ -89,8 +89,8 @@ namespace Rimworld.Utilities.Pathfinding
             // If the movement from curr to neigh is diagonal (e.g. N-E)
             // Then check to make sure we aren't clipping (e.g. N and E are both walkable)
 
-            int dX = curr.X - neigh.X;
-            int dY = curr.Y - neigh.Y;
+            float dX = curr.X - neigh.X;
+            float dY = curr.Y - neigh.Y;
 
             if (Mathf.Abs(dX) + Mathf.Abs(dY) == 2)
             {

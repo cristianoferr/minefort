@@ -12,7 +12,12 @@ namespace Rimworld.model
             // components = new List<GameComponent>();
         }
 
-        public virtual void Initialize()
+        public virtual void Start()
+        {
+
+        }
+
+        public virtual void Update(float deltaTime)
         {
 
         }

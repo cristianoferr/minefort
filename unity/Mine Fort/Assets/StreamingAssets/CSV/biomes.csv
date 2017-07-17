@@ -1,0 +1,9 @@
+5;BIOMES;line where data start;;;;;;;;;
+;;0=unpassable;these 2 are used to determine tile height;;;value is speed... 0=never, 1=default grow speed;;;;;
+;;;;;;nyi;nyi;;;;
+Name;fileName;movementCost;minHeight;maxHeight;Tags;Farmable?;wildPlantTag;meltTemp;meltTag;freezeTemp;freezeTag
+water;ISO_Tile_Water_Block;0;0;0;water,unpass;0;;;;;
+grass;ISO_Tile_Dirt_01_Grass_01;1;0;0.4;grass,land;1;;50;sand;-1;snow,rock
+lava;ISO_Tile_Lava_01;0;0;0.5;lava,unpass;0;;;;30;land
+sand;ISO_Tile_Sand_01;0.6;0;0.3;sand,land;0.8;;200;lava;;
+snow;ISO_Tile_Snow_01;0.5;0.1;0.3;snow,land;0;;1;water;-1;snow

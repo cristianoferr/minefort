@@ -3,6 +3,7 @@ using Rimworld.model.entities;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using UnityEngine;
 
 namespace Rimworld.model.io
 {
@@ -46,7 +47,12 @@ namespace Rimworld.model.io
             return prop;
         }
 
-        public GameEntity Spawn(World world, Position pos = null)
+        public GameEntity Spawn(World world)
+        {
+            return Spawn(world, Vector3.zero);
+        }
+
+            public GameEntity Spawn(World world, Vector3 pos)
         {
             Utils.Log("Spawning template: " + tagsAsText);
             GameEntity result = Activator.CreateInstance(entityToSpawn) as GameEntity;
@@ -69,11 +75,11 @@ namespace Rimworld.model.io
                 }
 
             }
-            result.Initialize();
+            result.Start();
             return result;
         }
 
-        private void SpawnSubComponent(World world, Position pos, GameEntity result, Property subComp)
+        private void SpawnSubComponent(World world, Vector3 pos, GameEntity result, Property subComp)
         {
             Template subTempl = owner.GetTemplateWithTag(subComp);
             if (subTempl == null)

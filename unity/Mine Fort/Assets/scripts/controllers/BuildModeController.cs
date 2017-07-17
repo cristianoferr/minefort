@@ -1,6 +1,7 @@
 ﻿using Rimworld.logic.Jobs;
 using Rimworld.model;
 using Rimworld.model.entities;
+using Rimworld.model.entities.map.tiles;
 using Rimworld.model.furniture;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace Rimworld.controllers
     {
 
         public GameConsts.BuildMode buildMode = GameConsts.BuildMode.FLOOR;
-        GameConsts.TileType buildModeTile = GameConsts.TileType.Floor;
+        TileData buildModeTile = null;
         public string buildModeObjectType;
 
 
@@ -41,7 +42,7 @@ namespace Rimworld.controllers
         public void SetMode_BuildFloor()
         {
             buildMode = GameConsts.BuildMode.FLOOR;
-            buildModeTile = GameConsts.TileType.Floor;
+            buildModeTile = World.current.biome.RandomTile();
 
             GameObject.FindObjectOfType<MouseController>().StartBuildMode();
         }
@@ -49,7 +50,7 @@ namespace Rimworld.controllers
         public void SetMode_Bulldoze()
         {
             buildMode = GameConsts.BuildMode.FLOOR;
-            buildModeTile = GameConsts.TileType.Empty;
+            buildModeTile = null;
             GameObject.FindObjectOfType<MouseController>().StartBuildMode();
         }
 
@@ -127,8 +128,10 @@ namespace Rimworld.controllers
             }
             else if (buildMode == GameConsts.BuildMode.FLOOR)
             {
+                if (buildModeTile == null) return;
                 // We are in tile-changing mode.
                 t.Type = buildModeTile;
+                t.RandomizeHeight();
             }
             else if (buildMode == GameConsts.BuildMode.DECONSTRUCT)
             {

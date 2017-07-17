@@ -4,21 +4,47 @@ using Rimworld.logic.Jobs;
 using Rimworld.Utilities.Pathfinding;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Rimworld.model.entities.map;
+using System.Xml;
+using System.IO;
+using Rimworld.model.furniture;
+using Rimworld.model.inventory;
+using MoonSharp.Interpreter;
+
 namespace Rimworld.model.entities
 {
+    [MoonSharpUserData]
     public class World : GameEntity
     {
-
+        public DataHolder holder;
+        public Dictionary<string, Furniture> furniturePrototypes;
+        public InventoryManager inventoryManager;
 
         private World()
         {
-            mapData = new Map();
+            holder = new DataHolder(this);
+            mapData = new Map(this);
             SetupWorld(GameConsts.WORLD_WIDTH, GameConsts.WORLD_HEIGHT);
             entities = new List<PhysicalEntity>();
+            biome = new Biome();
 
         }
 
-        
+       public override  void Start()
+        {
+            holder.Start();
+            CreateFurniturePrototypes();
+            CreateCharacter(GetTileAt(width / 2, height / 2));
+        }
+
+        private void SetupWorld(int width, int height)
+        {
+            mapData.SetupWorld(width, height);
+            inventoryManager = new InventoryManager();
+            jobQueue = new JobQueue(); 
+        }
+
 
         //singleton
         static World world_;
@@ -33,11 +59,12 @@ namespace Rimworld.model.entities
                 }
                 return world_;
             }
+            set
+            {
+                world_ = value;
+            }
         }
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
+       
 
         #region properties
         public Map mapData { get; private set; }
@@ -52,29 +79,52 @@ namespace Rimworld.model.entities
 
         #endregion properties
 
+        public GameCharacter CreateCharacter(Tile t)
+        {
+            Debug.Log("CreateCharacter");
+            GameCharacter c = new GameCharacter();
+            c.currTile = t;
+            AddEntity(c);
+
+            if (cbCharacterCreated != null)
+                cbCharacterCreated(c);
+
+            return c;
+        }
+
         public bool ContainsEntity(PhysicalEntity pawn)
         {
             return entities.Contains(pawn);
         }
 
+        public void OnInventoryCreated(GameInventory inv)
+        {
+            if (cbInventoryCreated != null)
+                cbInventoryCreated(inv);
+        }
+
+        public void OnFurnitureRemoved(PhysicalEntity furn)
+        {
+            AddEntity(furn);
+        }
 
         internal PhysicalEntity AddEntity(PhysicalEntity entity)
         {
+            if (entities.Contains(entity))
+            {
+                Utils.LogError("Entities already contains "+entity);
+            }
             entities.Add(entity);
             return entity;
         }
 
-        private void SetupWorld(int width, int height)
-        {
-            mapData.SetupWorld(width, height);
-        }
-
+       
         #region Callbacks
 
         Action<Furniture> cbFurnitureCreated;
         Action<MovableEntity> cbCharacterCreated;
-        Action<Inventory> cbInventoryCreated;
-        Action<Tile> cbTileChanged;
+        Action<GameInventory> cbInventoryCreated;
+        
 
         public void RegisterFurnitureCreated(Action<Furniture> callbackfunc)
         {
@@ -96,36 +146,17 @@ namespace Rimworld.model.entities
             cbCharacterCreated -= callbackfunc;
         }
 
-        public void RegisterInventoryCreated(Action<Inventory> callbackfunc)
+        public void RegisterInventoryCreated(Action<GameInventory> callbackfunc)
         {
             cbInventoryCreated += callbackfunc;
         }
 
-        public void UnregisterInventoryCreated(Action<Inventory> callbackfunc)
+        public void UnregisterInventoryCreated(Action<GameInventory> callbackfunc)
         {
             cbInventoryCreated -= callbackfunc;
         }
 
-        public void RegisterTileChanged(Action<Tile> callbackfunc)
-        {
-            cbTileChanged += callbackfunc;
-        }
-
-        public void UnregisterTileChanged(Action<Tile> callbackfunc)
-        {
-            cbTileChanged -= callbackfunc;
-        }
-
-        // Gets called whenever ANY tile changes
-        void OnTileChanged(Tile t)
-        {
-            if (cbTileChanged == null)
-                return;
-
-            cbTileChanged(t);
-
-            InvalidateTileGraph();
-        }
+       
 
         public void DeleteRoom(Room r)
         {
@@ -139,22 +170,24 @@ namespace Rimworld.model.entities
             tileGraph = null;
         }
 
-        internal void Update(float deltaTime)
+        public override void Update(float deltaTime)
         {
+            base.Update(deltaTime);
             foreach (PhysicalEntity c in entities)
             {
                 c.Update(deltaTime);
             }
 
-            /*foreach (Furniture f in furnitures)
-            {
-                f.Update(deltaTime);
-            }*/
         }
 
-        public Tile GetTileAt(int x, int y)
+        public Tile GetTileAt(float x, float y)
         {
             return mapData.GetTileAt(x, y);
+        }
+
+        public Tile GetTileAt(Vector3 pos)
+        {
+            return mapData.GetTileAt(pos.x,pos.y);
         }
 
         public int width
@@ -173,15 +206,90 @@ namespace Rimworld.model.entities
             }
         }
 
-        #region Furniture
-        public Dictionary<string, Furniture> furniturePrototypes;
-        public List<Furniture> furnitures;
-
         // TODO: Most likely this will be replaced with a dedicated
         // class for managing job queues (plural!) that might also
         // be semi-static or self initializing or some damn thing.
         // For now, this is just a PUBLIC member of World
         public JobQueue jobQueue;
+        public Biome biome;
+
+        #region Furniture
+        
+
+
+        public void SetFurnitureJobPrototype(Job j, Furniture f)
+        {
+            furnitureJobPrototypes[f.objectType] = j;
+        }
+
+        void LoadFurnitureLua()
+        {
+            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "LUA");
+            filePath = System.IO.Path.Combine(filePath, "Furniture.lua");
+            string myLuaCode = System.IO.File.ReadAllText(filePath);
+
+            //Debug.Log("My LUA Code");
+            //Debug.Log(myLuaCode);
+
+            // Instantiate the singleton
+            new FurnitureActions(myLuaCode);
+
+        }
+
+        void CreateFurniturePrototypes()
+        {
+            LoadFurnitureLua();
+
+
+            furniturePrototypes = new Dictionary<string, Furniture>();
+            furnitureJobPrototypes = new Dictionary<string, Job>();
+
+            // READ FURNITURE PROTOTYPE XML FILE HERE
+            // TODO:  Probably we should be getting past a StreamIO handle or the raw
+            // text here, rather than opening the file ourselves.
+
+            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Data");
+            filePath = System.IO.Path.Combine(filePath, "Furniture.xml");
+            string furnitureXmlText = System.IO.File.ReadAllText(filePath);
+
+            XmlTextReader reader = new XmlTextReader(new StringReader(furnitureXmlText));
+
+            int furnCount = 0;
+            if (reader.ReadToDescendant("Furnitures"))
+            {
+                if (reader.ReadToDescendant("Furniture"))
+                {
+                    do
+                    {
+                        furnCount++;
+
+                        Furniture furn = new Furniture();
+                        furn.ReadXmlPrototype(reader);
+
+                        furniturePrototypes[furn.objectType] = furn;
+
+
+
+                    } while (reader.ReadToNextSibling("Furniture"));
+                }
+                else
+                {
+                    Debug.LogError("The furniture prototype definition file doesn't have any 'Furniture' elements.");
+                }
+            }
+            else
+            {
+                Debug.LogError("Did not find a 'Furnitures' element in the prototype definition file.");
+            }
+
+            Debug.Log("Furniture prototypes read: " + furnCount.ToString());
+
+            // This bit will come from parsing a LUA file later, but for now we still need to
+            // implement furniture behaviour directly in C# code.
+            //furniturePrototypes["Door"].RegisterUpdateAction( FurnitureActions.Door_UpdateAction );
+            //furniturePrototypes["Door"].IsEnterable = FurnitureActions.Door_IsEnterable;
+
+        }
 
         public bool IsFurniturePlacementValid(string furnitureType, Tile t)
         {
@@ -209,7 +317,7 @@ namespace Rimworld.model.entities
             }
 
             furn.RegisterOnRemovedCallback(OnFurnitureRemoved);
-            furnitures.Add(furn);
+            AddEntity(furn);
 
             // Do we need to recalculate our rooms?
             if (doRoomFloodFill && furn.roomEnclosure)
@@ -236,10 +344,7 @@ namespace Rimworld.model.entities
             return furn;
         }
 
-        public void OnFurnitureRemoved(Furniture furn)
-        {
-            furnitures.Remove(furn);
-        }
+      
 
         internal void AddRoom(Room newRoom)
         {

@@ -1,31 +1,40 @@
 ﻿
 using Rimworld.model.entities.map;
+using System;
+using UnityEngine;
+
 namespace Rimworld.model.entities
 {
     public class Map
     {
         private Chunk[,] chunks { get; set; }
 
-        public Map()
+        public Map(World world)
         {
+            this.world = world;
         }
-        public Room GetOutsideRoom(Position position)
+        public Room GetOutsideRoom(Vector3 position)
         {
             return GetChunkAt(position).outsideRoom;
         }
+        public Room GetOutsideRoom(float x, float y)
+        {
+            return GetChunkAt(x,y).outsideRoom;
+        }
 
-        public Chunk GetChunkAt(Position position)
+        public Chunk GetChunkAt(Vector3 position)
         {
             return GetChunkAt(position.x, position.y);
         }
         public Chunk GetChunkAt(float x, float y)
         {
+            while (x < 0) { x = GameConsts.WORLD_WIDTH + x; }
+            while (y < 0) { y = GameConsts.WORLD_HEIGHT + y; }
+            while (x >= GameConsts.WORLD_WIDTH) { x = x-GameConsts.WORLD_WIDTH ; }
+            while (y >= GameConsts.WORLD_HEIGHT) { y = y-GameConsts.WORLD_HEIGHT ; }
             float cx = (int)(x / GameConsts.CHUNK_SIZE);
             float cy = (int)(y / GameConsts.CHUNK_SIZE);
-            if (x < 0) cx = chunkWidth - 1 - (x / GameConsts.CHUNK_SIZE);
-            if (y < 0) cy = chunkHeight - 1 - (y / GameConsts.CHUNK_SIZE);
-            if (cx >= chunkWidth) cx = cx - chunkWidth;
-            if (cy >= chunkHeight) cy = cy - chunkHeight;
+            
             return chunks[(int)cx, (int)cy];
         }
 
@@ -43,11 +52,37 @@ namespace Rimworld.model.entities
             {
                 for (int j = 0; j < chunkHeight; j++)
                 {
-                    chunks[i, j] = new Chunk(this, i, j);
+                    chunks[i, j] = new Chunk(this, i, j,OnTileChanged);
                 }
             }
 
         }
+
+        #region CallBacks
+        Action<Tile> cbTileChanged;
+        private World world;
+
+        public void RegisterTileChanged(Action<Tile> callbackfunc)
+        {
+            cbTileChanged += callbackfunc;
+        }
+
+        public void UnregisterTileChanged(Action<Tile> callbackfunc)
+        {
+            cbTileChanged -= callbackfunc;
+        }
+
+        // Gets called whenever ANY tile changes
+        void OnTileChanged(Tile t)
+        {
+            if (cbTileChanged == null)
+                return;
+
+            cbTileChanged(t);
+
+            world.InvalidateTileGraph();
+        }
+        #endregion CallBacks
 
 
         public Tile GetTileAt(float x, float y)
@@ -58,7 +93,7 @@ namespace Rimworld.model.entities
             int py = (int)(y % GameConsts.CHUNK_SIZE);
             return chunk.GetTileAt(px, py);
         }
-        public Tile GetTileAt(Position position)
+        public Tile GetTileAt(Vector3 position)
         {
             return GetTileAt(position.x, position.y);
 

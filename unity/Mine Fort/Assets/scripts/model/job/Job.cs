@@ -1,11 +1,14 @@
-﻿using Rimworld.model.entities;
+﻿using MoonSharp.Interpreter;
+using Rimworld.model.entities;
 using Rimworld.model.furniture;
+using Rimworld.model.inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Rimworld.logic.Jobs
 {
+    [MoonSharpUserData]
     public class Job
     {
 
@@ -44,9 +47,9 @@ namespace Rimworld.logic.Jobs
 
         public bool canTakeFromStockpile = true;
 
-        public Dictionary<string, Inventory> inventoryRequirements;
+        public Dictionary<string, GameInventory> inventoryRequirements;
 
-        public Job(Tile tile, string jobObjectType, Action<Job> cbJobComplete, float jobTime, Inventory[] inventoryRequirements, bool jobRepeats = false)
+        public Job(Tile tile, string jobObjectType, Action<Job> cbJobComplete, float jobTime, GameInventory[] inventoryRequirements, bool jobRepeats = false)
         {
             this.tile = tile;
             this.jobObjectType = jobObjectType;
@@ -57,10 +60,10 @@ namespace Rimworld.logic.Jobs
             cbJobWorkedLua = new List<string>();
             cbJobCompletedLua = new List<string>();
 
-            this.inventoryRequirements = new Dictionary<string, Inventory>();
+            this.inventoryRequirements = new Dictionary<string, GameInventory>();
             if (inventoryRequirements != null)
             {
-                foreach (Inventory inv in inventoryRequirements)
+                foreach (GameInventory inv in inventoryRequirements)
                 {
                     this.inventoryRequirements[inv.objectType] = inv.Clone();
                 }
@@ -78,17 +81,17 @@ namespace Rimworld.logic.Jobs
             cbJobCompletedLua = new List<string>(other.cbJobWorkedLua);
 
 
-            this.inventoryRequirements = new Dictionary<string, Inventory>();
+            this.inventoryRequirements = new Dictionary<string, GameInventory>();
             if (inventoryRequirements != null)
             {
-                foreach (Inventory inv in other.inventoryRequirements.Values)
+                foreach (GameInventory inv in other.inventoryRequirements.Values)
                 {
                     this.inventoryRequirements[inv.objectType] = inv.Clone();
                 }
             }
         }
 
-        public Inventory[] GetInventoryRequirementValues()
+        public GameInventory[] GetInventoryRequirementValues()
         {
             return inventoryRequirements.Values.ToArray();
         }
@@ -221,7 +224,7 @@ namespace Rimworld.logic.Jobs
 
         public bool HasAllMaterial()
         {
-            foreach (Inventory inv in inventoryRequirements.Values)
+            foreach (GameInventory inv in inventoryRequirements.Values)
             {
                 if (inv.maxStackSize > inv.stackSize)
                     return false;
@@ -230,7 +233,7 @@ namespace Rimworld.logic.Jobs
             return true;
         }
 
-        public int DesiresInventoryType(Inventory inv)
+        public int DesiresInventoryType(GameInventory inv)
         {
             if (acceptsAnyInventoryItem)
             {
@@ -252,9 +255,9 @@ namespace Rimworld.logic.Jobs
             return inventoryRequirements[inv.objectType].maxStackSize - inventoryRequirements[inv.objectType].stackSize;
         }
 
-        public Inventory GetFirstDesiredInventory()
+        public GameInventory GetFirstDesiredInventory()
         {
-            foreach (Inventory inv in inventoryRequirements.Values)
+            foreach (GameInventory inv in inventoryRequirements.Values)
             {
                 if (inv.maxStackSize > inv.stackSize)
                     return inv;

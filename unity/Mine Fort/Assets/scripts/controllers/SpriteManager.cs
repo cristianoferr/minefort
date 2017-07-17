@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using UnityEngine;
@@ -24,16 +25,16 @@ namespace Rimworld.controllers
             LoadSprites();
         }
 
-        void LoadSprites()
+        public void LoadSprites()
         {
             sprites = new Dictionary<string, Sprite>();
 
-            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Images");
             //filePath = System.IO.Path.Combine( Application.streamingAssetsPath, "CursorCircle.png" );
 
             //LoadSprite("CursorCircle", filePath);
+            
 
-            LoadSpritesFromDirectory(filePath);
+            LoadSpritesFromDirectory(System.IO.Path.Combine(Application.streamingAssetsPath, "Images"));
 
         }
 
@@ -67,6 +68,8 @@ namespace Rimworld.controllers
             }
 
         }
+
+       
 
         void LoadImage(string spriteCategory, string filePath)
         {
