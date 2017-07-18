@@ -118,7 +118,8 @@ namespace Rimworld.controllers
                 for (int y = 0; y < world.width; y++)
                 {
                     Tile tile = world.GetTileAt(x, y);
-                    tile.Type = world.biome.RandomTile(tag);
+                    //this ignore the biome...
+                    tile.Type = world.biomes.GetTileDataWithTag(tag);
                 }
             }
         }

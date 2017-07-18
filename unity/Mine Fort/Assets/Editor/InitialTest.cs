@@ -28,10 +28,11 @@ public class InitialTest
         //Assert.IsNotNull(biomes);
 
         Biomes biomes = new Biomes();
-        Biome biome = new Biome();
+        Biome biome = new Biome(biomes);
         //TileSet tileSet = biome.tileSet;
 
         biomes.AddBiome("Tropical",biome);
+        Assert.IsTrue(biomes.GetBiome("Tropical") == biome);
         Biome biomeTest = biomes.GetBiome("Tropical");
         Assert.IsNotNull(biomeTest);
         Biome biomeTestNull = biomes.GetBiome("Tropical!!!");
@@ -41,12 +42,12 @@ public class InitialTest
         Tile tile = world.GetTileAt(0, 0);
         Assert.IsNotNull(tile);
 
-        TileData tileDataGround = new TileData();
+       // TileData tileDataGround = new TileData();
 
 
         biome = world.biome;
         Assert.IsNotNull(biome);
-        Assert.IsNotNull(biome.tileData);
+      //  Assert.IsNotNull(biome.tileData);
 
        /* TileData td = biome.GetTileWithTag(GameConsts.TAG_TILE_TEST);
         Assert.IsTrue(td.name=="test");

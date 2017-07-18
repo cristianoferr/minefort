@@ -1,0 +1,9 @@
+5;BIOMES;MAX_HEIGHT;MIN_HEIGHT;scale
+;;10;0;30
+;;;;lower numbers=smaller features (10 looks like a swamp)
+Name;minHeight;maxHeight;tags;
+water;0;0.2;water;
+sand;0.2;0.4;sand;
+grass;0.4;0.6;grass;
+rock;0.6;0.8;rock;
+snow;0.8;1;snow;

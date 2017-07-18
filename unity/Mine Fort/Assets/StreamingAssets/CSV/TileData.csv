@@ -1,0 +1,14 @@
+5;TILEDATA;;;;;;;;
+;;;;;;;;;
+;;;;nyi;nyi;nyi;nyi;nyi;nyi
+Name;fileName;movementCost;Tags;Farmable?;wildPlantTag;meltTemp;meltTag;freezeTemp;freezeTag
+water;ISO_Tile_Water_Block;0;water,unpass;0;;;;;
+grass;ISO_Tile_Dirt_01_Grass_01;1;grass,land;1;;50;sand;-1;snow,rock
+lava;ISO_Tile_Lava_01;0;lava,unpass;0;;;;30;land
+sand;ISO_Tile_Sand_01;0.6;sand,land;0.8;;200;lava;;
+sand2;ISO_Tile_Sand_02;0.6;sand,land;0.8;;200;lava;;
+sand3;ISO_Tile_Sand_03;0.6;sand,land;0.8;;200;lava;;
+snow;ISO_Tile_Snow_01;0.5;snow,land;0;;1;water;-1;snow
+snow2;ISO_Tile_Snow_02;0.5;snow,land;0;;1;water;-1;snow
+rock1;ISO_Tile_Stone_01;0.8;rock,land;0;;200;lava;;
+rock2;ISO_Tile_Stone_02;0.8;rock,land;0;;200;lava;;

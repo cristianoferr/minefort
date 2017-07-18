@@ -52,7 +52,7 @@ namespace Rimworld.model.entities
             entitiesHere.Add(physicalEntity);
         }
 
-        internal void RandomizeHeight()
+        /*internal void RandomizeHeight()
         {
             if (_type == null) return;
             height = UnityEngine.Random.Range(_type.MinHeight, _type.MaxHeight);
@@ -60,7 +60,7 @@ namespace Rimworld.model.entities
             {
                 cbTileChanged(this);
             }
-        }
+        }*/
 
         #region ISelectableInterface implementation
 
@@ -165,9 +165,13 @@ namespace Rimworld.model.entities
                 _type = value;
                 if (oldType == null)
                 {
-                    RandomizeHeight();
+                    //RandomizeHeight();
                 }
                 // Call the callback and let things know we've changed.
+                if (_type == null)
+                {
+                    Utils.LogError("Setting tile.type to null!");
+                }
 
                 if (cbTileChanged != null && oldType != _type)
                 {
@@ -249,7 +253,12 @@ namespace Rimworld.model.entities
             {
                 return position.z;
             }
-            set { position.z = value; }
+            set { position.z = value;
+                if (cbTileChanged != null)
+                {
+                    cbTileChanged(this);
+                }
+            }
         }
 
         public int charactersCount

@@ -131,7 +131,8 @@ namespace Rimworld.controllers
                 if (buildModeTile == null) return;
                 // We are in tile-changing mode.
                 t.Type = buildModeTile;
-                t.RandomizeHeight();
+                t.height = 0;
+                //t.RandomizeHeight();
             }
             else if (buildMode == GameConsts.BuildMode.DECONSTRUCT)
             {

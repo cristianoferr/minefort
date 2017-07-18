@@ -85,7 +85,6 @@ public class TileTestController : MonoBehaviour {
     private void RandomizeTile(Tile tile)
     {
         tile.Type = world.biome.RandomTile();
-        tile.height = UnityEngine.Random.Range(tile.Type.MinHeight, tile.Type.MaxHeight);
     }
 
     float randomizeTileTimer = 2f;

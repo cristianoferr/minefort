@@ -25,17 +25,26 @@ namespace Rimworld.model.entities
         {
             holder = new DataHolder(this);
             mapData = new Map(this);
+            biomes = new Biomes();
             SetupWorld(GameConsts.WORLD_WIDTH, GameConsts.WORLD_HEIGHT);
             entities = new List<PhysicalEntity>();
-            biome = new Biome();
 
         }
 
        public override  void Start()
         {
             holder.Start();
+            biomes.RandomBiome();
             CreateFurniturePrototypes();
             CreateCharacter(GetTileAt(width / 2, height / 2));
+        }
+
+        public Biome biome
+        {
+            get
+            {
+                return biomes.currBiome;
+            }
         }
 
         private void SetupWorld(int width, int height)
@@ -211,7 +220,7 @@ namespace Rimworld.model.entities
         // be semi-static or self initializing or some damn thing.
         // For now, this is just a PUBLIC member of World
         public JobQueue jobQueue;
-        public Biome biome;
+        public Biomes biomes;
 
         #region Furniture
         

@@ -1,4 +1,6 @@
-﻿using Rimworld.model.entities;
+﻿using Rimworld.model;
+using Rimworld.model.entities;
+using Rimworld.model.entities.map;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +9,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Rimworld.model.io
+namespace Rimworld.io
 {
     public class DataLoader
     {
@@ -44,11 +46,13 @@ namespace Rimworld.model.io
 
         private static void LoadCSV(string spriteCategory, string filePath)
         {
-            if (!filePath.Contains(".csv") || filePath.Contains(".meta"))
+            if (!filePath.EndsWith(".csv"))
             {
                 return;
             }
             string[] csvLines = System.IO.File.ReadAllLines(filePath);
+            filePath = filePath.Replace("\\", "/").Replace(".csv", "");
+            filePath = filePath.Substring(filePath.LastIndexOf("/")+1);
             int lineStart = 0;
             string dataDict = "undef";
             for (int i = 0; i < csvLines.Length; i++)
@@ -58,20 +62,42 @@ namespace Rimworld.model.io
                 if (i == 0) {
                     lineStart = int.Parse(lineData[0])-1;
                     dataDict = lineData[1];
+                    
                 }
-                if (i >= lineStart)
+                if (i == 1)
                 {
-                    ReadCSVLine(lineData, dataDict);
+                    ReadHeader(lineData, dataDict, filePath);
+                }
+                    if (i >= lineStart)
+                {
+                    ReadCSVLine(lineData, dataDict, filePath);
                 }
             }
 
         }
 
-        private static void ReadCSVLine(string[] lineData,string dataDict)
+        private static void ReadHeader(string[] lineData, string dataDict, string fileName)
         {
             if (dataDict == GameConsts.DATA_DICT_BIOME)
             {
-                world.biome.LoadFromCSV(lineData);
+                Biome biome = world.biomes.GetBiome(fileName);
+                biome.maxHeight = float.Parse(lineData[2]);
+                biome.minHeight = float.Parse(lineData[3]);
+                biome.scale = float.Parse(lineData[4]);
+            }
+        }
+
+        private static void ReadCSVLine(string[] lineData,string dataDict, string fileName)
+        {
+            if (dataDict == GameConsts.DATA_DICT_BIOME)
+            {
+                Biome biome = world.biomes.GetBiome(fileName);
+                biome.LoadFromCSV(lineData);
+            }
+
+            if (dataDict == GameConsts.DATA_DICT_TILEDATA)
+            {
+                world.biomes.LoadTileDataFromCSV(lineData);
             }
         }
     }

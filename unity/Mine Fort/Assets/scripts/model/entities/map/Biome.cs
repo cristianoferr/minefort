@@ -7,53 +7,70 @@ using Rimworld.model.entities.map.tiles;
 
 namespace Rimworld.model.entities.map
 {
+    //specific data about the tiledata for this biome
+    class TileBiome
+    {
+        public string name;
+        public string tags;
+        public float minHeight;
+        public float maxHeight;
+    }
     public class Biome : TagObject
     {
 
-        public Biome()
+        public Biome(Biomes biomes)
         {
-            tileData = new List<TileData>();
+            tileData = new List<TileBiome>();
+            this.biomes = biomes;
+            maxHeight = 1;
+            minHeight = 0;
+            scale = 100;
         }
-        public IList<TileData> tileData;
+        IList<TileBiome> tileData;
+        private Biomes biomes;
+        internal float scale;
+
+        public float maxHeight { get; internal set; }
+        public float minHeight { get; internal set; }
+        
 
         internal TileData RandomTile(string tag=null)
         {
             if (tag == null)
             {
-                return tileData[Utils.Random(0, tileData.Count)];
+                return biomes.GetTileDataWithName(tileData[Utils.Random(0, tileData.Count)].name);
             }
-            return tileData.Where(x => x.ContainsTags(tag)).OrderBy(x => Utils.Random(0, 100)).FirstOrDefault();
+            return GetTileWithTag(tag);
+        }
+
+        internal TileData GetTileForHeight(float height)
+        {
+
+            TileBiome tb = tileData.Where(x => x.minHeight <= height && x.maxHeight >= height).OrderBy(x => Utils.Random(0, 100)).FirstOrDefault();
+            if (tb == null)
+            {
+                Utils.LogError("No tileBiome found for height: "+height);
+                return null;
+            }
+            return biomes.GetTileDataWithTag(tb.tags);
         }
 
         internal void LoadFromCSV(string[] lineData)
         {
-            TileData td = new TileData();
-            int i = 0;
-            td.name = lineData[i++];
-            td.fileName = lineData[i++];
-            td.MovementCost= float.Parse(lineData[i++]);
-            td.MinHeight = float.Parse(lineData[i++]);
-            td.MaxHeight = float.Parse(lineData[i++]);
-            string[] tags = lineData[i++].Split(',');
-            foreach(string tag in tags)
-            {
-                td.AddTag(tag);
-            }
-            tileData.Add(td);
+
+            TileBiome tb = new TileBiome();
+            int i = 0;//0=name
+            tb.name = lineData[i++];
+            tb.minHeight = float.Parse(lineData[i++]);
+            tb.maxHeight = float.Parse(lineData[i++]);
+            tb.tags = lineData[i++];
+           
+            tileData.Add(tb);
         }
 
         public TileData GetTileWithTag(string tag)
         {
-            try
-            {
-                return tileData.Where(x => x.ContainsTags(tag)).OrderBy(x => Utils.Random(0, 100)).FirstOrDefault();
-            }
-            catch (Exception)
-            {
-
-                return null;
-            }
-            
+            return biomes.GetTileDataWithTag(tileData[Utils.Random(0, tileData.Count)].tags);
         }
     }
 }
