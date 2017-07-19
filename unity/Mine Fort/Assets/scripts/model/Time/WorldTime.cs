@@ -10,7 +10,7 @@
 using System;
 using System.Globalization;
 using System.Text;
-using Rimworld.Localization;
+using MineFort.Localization;
 using UnityEngine;
 
 public struct WorldTime : IFormattable

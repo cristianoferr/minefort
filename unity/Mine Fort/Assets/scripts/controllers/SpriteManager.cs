@@ -6,7 +6,7 @@ using System.Xml;
 using UnityEngine;
 
 
-namespace Rimworld.controllers
+namespace MineFort.controllers
 {
     /// <summary>
     /// Sprite Manager isn't responsible for actually creating GameObjects.

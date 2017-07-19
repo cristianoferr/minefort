@@ -1,7 +1,7 @@
-﻿using Rimworld.model.components.brain;
+﻿using MineFort.model.components.brain;
 using System.Collections.Generic;
 
-namespace Rimworld.model.components
+namespace MineFort.model.components
 {
     public class TraitManagerComponent : GameComponent
     {

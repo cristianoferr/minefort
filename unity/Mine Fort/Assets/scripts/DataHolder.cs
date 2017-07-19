@@ -1,11 +1,11 @@
 ﻿using System;
-using Rimworld.logic;
-using Rimworld.model.entities;
-using Rimworld.model.entities.map;
-using Rimworld.model.io;
-using Rimworld.io;
+using MineFort.logic;
+using MineFort.model.entities;
+using MineFort.model.entities.map;
+using MineFort.model.io;
+using MineFort.io;
 
-namespace Rimworld
+namespace MineFort
 {
     public class DataHolder
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace Rimworld.model.components
+namespace MineFort.model.components
 {
     public class HeartComponent : GameComponent
     {

@@ -7,9 +7,9 @@
 // ====================================================
 #endregion
 
-using Rimworld.Entities;
-using Rimworld.model.Inventory;
-using Rimworld.Rooms;
+using MineFort.Entities;
+using MineFort.model.Inventory;
+using MineFort.Rooms;
 using Scheduler;
 
 /// <summary>

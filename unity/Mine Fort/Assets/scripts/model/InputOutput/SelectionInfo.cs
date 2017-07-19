@@ -7,7 +7,7 @@
 // ====================================================
 #endregion
 using System.Collections.Generic;
-using Rimworld.Entities;
+using MineFort.Entities;
 
 public class SelectionInfo
 {

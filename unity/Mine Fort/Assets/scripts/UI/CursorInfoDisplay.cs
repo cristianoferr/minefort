@@ -6,7 +6,7 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
-using Rimworld.controllers;
+using MineFort.controllers;
 using System.Text;
 using UnityEngine;
 
@@ -64,7 +64,7 @@ public class CursorInfoDisplay
 
     public string GetCurrentBuildRequirements()
     {
-        Rimworld.OrderActions.Build buildOrder = PrototypeManager.Furniture.Get(bmc.BuildModeType).GetOrderAction<Rimworld.OrderActions.Build>();
+        MineFort.OrderActions.Build buildOrder = PrototypeManager.Furniture.Get(bmc.BuildModeType).GetOrderAction<MineFort.OrderActions.Build>();
         if (buildOrder != null)
         {
             StringBuilder sb = new StringBuilder();

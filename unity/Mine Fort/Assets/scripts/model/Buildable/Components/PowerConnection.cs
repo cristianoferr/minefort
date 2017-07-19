@@ -12,10 +12,10 @@ using System.Linq;
 using System.Xml.Serialization;
 using MoonSharp.Interpreter;
 using Newtonsoft.Json;
-using Rimworld.Localization;
-using Rimworld.PowerNetwork;
+using MineFort.Localization;
+using MineFort.PowerNetwork;
 
-namespace Rimworld.Buildable.Components
+namespace MineFort.Buildable.Components
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]

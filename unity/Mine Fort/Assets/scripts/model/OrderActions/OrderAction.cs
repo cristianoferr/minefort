@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Rimworld.OrderActions
+namespace MineFort.OrderActions
 {
     [Serializable]
     public abstract class OrderAction

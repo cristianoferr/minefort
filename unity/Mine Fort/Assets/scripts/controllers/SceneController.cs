@@ -7,7 +7,7 @@
 // ====================================================
 #endregion
 
-using Rimworld.controllers;
+using MineFort.controllers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -110,6 +110,6 @@ public static class SceneController
             WorldController.Instance.Destroy();
         }
 
-        Rimworld.Localization.LocalizationTable.UnregisterDelegates();
+        MineFort.Localization.LocalizationTable.UnregisterDelegates();
     }
 }

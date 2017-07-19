@@ -9,7 +9,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Rimworld.Entities
+namespace MineFort.Entities
 {
     /// <summary>
     /// Character name manager that holds all the possible names and tries to give a random and unused name everytime is requested.

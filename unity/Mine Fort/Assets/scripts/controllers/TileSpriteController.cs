@@ -1,9 +1,9 @@
-﻿using Rimworld.model.entities;
+﻿using MineFort.model.entities;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Rimworld.controllers
+namespace MineFort.controllers
 {
     public class TileSpriteController : BaseSpriteController<Tile>
     {

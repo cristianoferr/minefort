@@ -1,13 +1,13 @@
-﻿using Rimworld.logic;
-using Rimworld.model.entities;
+﻿using MineFort.logic;
+using MineFort.model.entities;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Rimworld.logic;
-using Rimworld.model;
+using MineFort.logic;
+using MineFort.model;
 using System;
 
-namespace Rimworld.controllers
+namespace MineFort.controllers
 {
     public class MouseController : MonoBehaviour
     {

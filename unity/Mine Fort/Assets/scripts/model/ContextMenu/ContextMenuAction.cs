@@ -7,12 +7,12 @@
 // ====================================================
 #endregion
 using System;
-using Rimworld.Entities;
-using Rimworld.model.entities;
+using MineFort.Entities;
+using MineFort.model.entities;
 
 public class ContextMenuAction
 {
-    public Action<ContextMenuAction, Rimworld.model.entities.GameCharacter> Action;
+    public Action<ContextMenuAction, MineFort.model.entities.GameCharacter> Action;
     public string Parameter;
 
     public bool RequireCharacterSelected { get; set; }
@@ -28,7 +28,7 @@ public class ContextMenuAction
                 if (mouseController.IsCharacterSelected())
                 {
                     ISelectable actualSelection = mouseController.mySelection.GetSelectedStuff();
-                    Action(this, actualSelection as Rimworld.model.entities.GameCharacter);
+                    Action(this, actualSelection as MineFort.model.entities.GameCharacter);
                 }
             }
             else

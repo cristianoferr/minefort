@@ -11,9 +11,9 @@ using System.Linq;
 using MoonSharp.Interpreter;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using Rimworld.model.entities.map;
+using MineFort.model.entities.map;
 
-namespace Rimworld.Rooms
+namespace MineFort.Rooms
 {
     [MoonSharpUserData]
     public class Room

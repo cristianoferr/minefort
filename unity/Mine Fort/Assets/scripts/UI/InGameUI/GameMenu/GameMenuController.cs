@@ -7,10 +7,10 @@
 // ====================================================
 #endregion
 using System;
-using Rimworld.Localization;
+using MineFort.Localization;
 using UnityEngine;
 using UnityEngine.UI;
-using Rimworld.controllers;
+using MineFort.controllers;
 
 public class GameMenuController : MonoBehaviour
 {

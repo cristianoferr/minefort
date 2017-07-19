@@ -9,12 +9,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Pathfinding;
+using MineFort.Pathfinding;
 using UnityEngine;
-using Rimworld.model.entities;
-using Rimworld.model;
+using MineFort.model.entities;
+using MineFort.model;
 
-namespace Rimworld.Entities.States
+namespace MineFort.Entities.States
 {
     public class MoveState : State
     {

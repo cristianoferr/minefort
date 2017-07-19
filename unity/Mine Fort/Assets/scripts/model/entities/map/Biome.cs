@@ -1,10 +1,10 @@
-﻿using Rimworld.model;
+﻿using MineFort.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rimworld.model.entities.map
+namespace MineFort.model.entities.map
 {
     //specific data about the TileType for this biome
     class TileBiome

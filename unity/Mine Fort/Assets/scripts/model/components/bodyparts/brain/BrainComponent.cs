@@ -1,4 +1,4 @@
-﻿namespace Rimworld.model.components
+﻿namespace MineFort.model.components
 {
     public class BrainComponent : GameComponent
     {

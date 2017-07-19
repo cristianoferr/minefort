@@ -9,7 +9,7 @@
 
 using System;
 
-namespace Rimworld.PowerNetwork
+namespace MineFort.PowerNetwork
 {
     public interface IPluggable
     {

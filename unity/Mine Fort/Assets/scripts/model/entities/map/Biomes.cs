@@ -1,10 +1,10 @@
-﻿using Rimworld.model.entities.map;
+﻿using MineFort.model.entities.map;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rimworld.model.entities.map
+namespace MineFort.model.entities.map
 {
    public class Biomes
     {

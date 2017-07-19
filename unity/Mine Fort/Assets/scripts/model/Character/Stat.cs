@@ -8,7 +8,7 @@
 #endregion
 using System.Xml;
 
-namespace Rimworld.Entities
+namespace MineFort.Entities
 {
     public class Stat : IPrototypable
     {

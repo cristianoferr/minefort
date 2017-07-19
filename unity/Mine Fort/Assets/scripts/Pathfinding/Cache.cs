@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Rimworld.Pathfinding
+namespace MineFort.Pathfinding
 {
     public class Cache
     {

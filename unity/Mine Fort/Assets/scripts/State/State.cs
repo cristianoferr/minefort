@@ -6,10 +6,10 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
-using Rimworld.model.entities;
+using MineFort.model.entities;
 using System.Collections.Generic;
 
-namespace Rimworld.Entities.States
+namespace MineFort.Entities.States
 {
     public abstract class State
     {

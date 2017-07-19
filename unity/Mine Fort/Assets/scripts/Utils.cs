@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using UnityEngine;
 
-namespace Rimworld
+namespace MineFort
 {
     public class Utils
     {

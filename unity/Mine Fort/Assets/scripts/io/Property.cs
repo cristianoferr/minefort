@@ -1,7 +1,7 @@
-﻿using Rimworld.model.components;
+﻿using MineFort.model.components;
 using System.Runtime.Serialization;
 
-namespace Rimworld.model.io
+namespace MineFort.model.io
 {
     [DataContract]
     public class Property : TagObject

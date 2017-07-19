@@ -12,7 +12,7 @@ using System.IO;
 using MoonSharp.Interpreter;
 using UnityEngine;
 using UnityEngine.UI;
-using Rimworld.controllers;
+using MineFort.controllers;
 
 /// <summary>
 /// This will just keep a reference to all the dialog boxes since there inactive on start you cant find them.

@@ -10,7 +10,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Rimworld.Localization
+namespace MineFort.Localization
 {
     /// <summary>
     /// Holds information about a language's configuration data.

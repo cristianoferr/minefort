@@ -9,10 +9,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Localization;
+using MineFort.Localization;
 using UnityEngine;
 using UnityEngine.UI;
-using Rimworld.controllers;
+using MineFort.controllers;
 
 /// <summary>
 /// Our main options/settings menu class (will contain all options).

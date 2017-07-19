@@ -1,12 +1,12 @@
 ﻿
-using Rimworld.Entities;
-using Rimworld.Localization;
-using Rimworld.logic;
+using MineFort.Entities;
+using MineFort.Localization;
+using MineFort.logic;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Rimworld.model.entities
+namespace MineFort.model.entities
 {
     public class PhysicalEntity : GameEntity, ISelectable
     {

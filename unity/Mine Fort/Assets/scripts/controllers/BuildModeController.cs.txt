@@ -1,11 +1,11 @@
-﻿using Rimworld.logic.Jobs;
-using Rimworld.model;
-using Rimworld.model.entities;
-using Rimworld.model.entities.map.tiles;
-using Rimworld.model.furniture;
+﻿using MineFort.logic.Jobs;
+using MineFort.model;
+using MineFort.model.entities;
+using MineFort.model.entities.map.tiles;
+using MineFort.model.furniture;
 using UnityEngine;
 
-namespace Rimworld.controllers
+namespace MineFort.controllers
 {
 
 

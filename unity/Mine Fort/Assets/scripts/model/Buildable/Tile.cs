@@ -12,15 +12,15 @@ using System.Collections.Generic;
 using System.Linq;
 using MoonSharp.Interpreter;
 using Newtonsoft.Json.Linq;
-using Rimworld.Entities;
-using Rimworld.Localization;
-using Rimworld.Pathfinding;
-using Rimworld.Rooms;
+using MineFort.Entities;
+using MineFort.Localization;
+using MineFort.Pathfinding;
+using MineFort.Rooms;
 using UnityEngine;
-using Rimworld.model;
-using Rimworld.model.entities;
-using Rimworld.model.Inventory;
-using Rimworld.model.entities.map;
+using MineFort.model;
+using MineFort.model.entities;
+using MineFort.model.Inventory;
+using MineFort.model.entities.map;
 
 [MoonSharpUserData]
 [System.Diagnostics.DebuggerDisplay("Tile {X},{Y},{Z}")]

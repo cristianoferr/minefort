@@ -7,9 +7,9 @@
 // ====================================================
 #endregion
 using System.Collections.Generic;
-using Rimworld.Entities;
+using MineFort.Entities;
 using UnityEngine;
-using Rimworld.model.entities;
+using MineFort.model.entities;
 
 // these enums should make it easy to add 10 if walking and add 100 if helmet is off
 namespace Animation

@@ -1,5 +1,5 @@
 ﻿
-namespace Rimworld.model
+namespace MineFort.model
 {
     public class Dimension
     {

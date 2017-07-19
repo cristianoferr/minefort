@@ -1,9 +1,9 @@
 ﻿
 using Boo.Lang;
-using Rimworld.model.inventory;
-using Rimworld.model.Inventory;
+using MineFort.model.inventory;
+using MineFort.model.Inventory;
 using UnityEngine;
-namespace Rimworld.model.entities
+namespace MineFort.model.entities
 {
     //C vvvxxxx
     public class MovableEntity : PhysicalEntity

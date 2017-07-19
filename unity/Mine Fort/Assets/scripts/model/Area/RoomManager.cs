@@ -12,9 +12,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using Rimworld.model.entities;
+using MineFort.model.entities;
 
-namespace Rimworld.Rooms
+namespace MineFort.Rooms
 {
     public class RoomManager : IEnumerable<Room>
     {

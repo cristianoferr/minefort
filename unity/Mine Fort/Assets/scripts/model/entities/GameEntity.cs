@@ -1,8 +1,8 @@
-﻿using Rimworld.model.components;
+﻿using MineFort.model.components;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Rimworld.model
+namespace MineFort.model
 {
     //gameentity: qualquer coisa spawnavel.
     public abstract class GameEntity : TagObject

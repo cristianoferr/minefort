@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Xml;
 using MoonSharp.Interpreter;
 using Newtonsoft.Json.Linq;
-using Rimworld.Localization;
+using MineFort.Localization;
 using UnityEngine;
-using Rimworld.Entities.States;
-using Rimworld.Entities;
-using Rimworld.model.Inventory;
+using MineFort.Entities.States;
+using MineFort.Entities;
+using MineFort.model.Inventory;
 
-namespace Rimworld.model.entities
+namespace MineFort.model.entities
 {
     [MoonSharpUserData]
     public class GameCharacter : MovableEntity, ISelectable, IContextActionProvider, IUpdatable

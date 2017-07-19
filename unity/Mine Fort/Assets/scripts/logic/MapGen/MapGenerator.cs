@@ -1,12 +1,12 @@
-﻿using Rimworld.model.entities;
-using Rimworld.model.entities.map;
+﻿using MineFort.model.entities;
+using MineFort.model.entities.map;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Rimworld.logic.MapGen
+namespace MineFort.logic.MapGen
 {
    public class MapGenerator
     {

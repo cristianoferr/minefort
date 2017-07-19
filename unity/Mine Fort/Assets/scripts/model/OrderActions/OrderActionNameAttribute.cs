@@ -8,7 +8,7 @@
 #endregion
 using System;
 
-namespace Rimworld.OrderActions
+namespace MineFort.OrderActions
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class OrderActionNameAttribute : Attribute

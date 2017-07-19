@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 using MoonSharp.Interpreter;
 using Newtonsoft.Json;
 
-namespace Rimworld.Buildable.Components
+namespace MineFort.Buildable.Components
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]

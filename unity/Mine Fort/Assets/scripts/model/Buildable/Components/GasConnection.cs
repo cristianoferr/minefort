@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Rimworld.Rooms;
+using MineFort.Rooms;
 
-namespace Rimworld.Buildable.Components
+namespace MineFort.Buildable.Components
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]

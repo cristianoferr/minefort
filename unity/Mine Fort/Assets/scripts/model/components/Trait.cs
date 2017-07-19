@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rimworld.model.components.brain
+namespace MineFort.model.components.brain
 {
     public class Trait
     {

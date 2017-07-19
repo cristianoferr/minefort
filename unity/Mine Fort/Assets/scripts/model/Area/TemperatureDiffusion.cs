@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
-using Rimworld.Rooms;
+using MineFort.Rooms;
 using UnityEngine;
 
 [MoonSharpUserData]

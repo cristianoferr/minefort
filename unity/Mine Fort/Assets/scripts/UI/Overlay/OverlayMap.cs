@@ -10,9 +10,9 @@
 using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
-using Rimworld.Localization;
+using MineFort.Localization;
 using UnityEngine;
-using Rimworld.controllers;
+using MineFort.controllers;
 
 /// <summary>
 /// This game object manages a mesh+texture+renderer+material that is

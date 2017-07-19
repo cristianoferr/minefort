@@ -1,5 +1,5 @@
 ﻿
-namespace Rimworld.model.entities.physical
+namespace MineFort.model.entities.physical
 {
     public class GETownCenter : PhysicalEntity
     {

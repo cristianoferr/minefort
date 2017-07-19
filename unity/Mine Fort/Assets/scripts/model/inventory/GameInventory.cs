@@ -4,10 +4,10 @@ using System.Linq;
 using System.Xml;
 using MoonSharp.Interpreter;
 using Newtonsoft.Json.Linq;
-using Rimworld.Entities;
-using Rimworld.model.entities;
+using MineFort.Entities;
+using MineFort.model.entities;
 
-namespace Rimworld.model.Inventory
+namespace MineFort.model.Inventory
 {
     [MoonSharpUserData]
     [System.Diagnostics.DebuggerDisplay("GameInventory {ObjectType} {StackSize}/{MaxStackSize}")]

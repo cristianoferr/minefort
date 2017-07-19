@@ -7,7 +7,7 @@
 // ====================================================
 #endregion
 
-using Rimworld.model.Inventory;
+using MineFort.model.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;

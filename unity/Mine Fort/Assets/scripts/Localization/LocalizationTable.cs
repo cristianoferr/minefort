@@ -14,7 +14,7 @@ using System.Linq;
 using System.Xml;
 using UnityEngine;
 
-namespace Rimworld.Localization
+namespace MineFort.Localization
 {
     /// <summary>
     /// The central class containing localization information.

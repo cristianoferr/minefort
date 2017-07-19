@@ -14,8 +14,8 @@ using MoonSharp.Interpreter;
 using Scheduler;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Rimworld.model.Inventory;
-using Rimworld.controllers;
+using MineFort.model.Inventory;
+using MineFort.controllers;
 
 [MoonSharpUserData]
 public class TradeController

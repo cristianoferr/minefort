@@ -15,7 +15,7 @@ using System.Collections.Generic;
 /// Latest Version: https://gist.github.com/WardBenjamin/991dfa64e94892924b67efe569e35050
 /// License: CC0 (http://creativecommons.org/publicdomain/zero/1.0/)
 /// UPDATES: N/A
-/// 8/31/16 - Fixed according to Rimworld StyleCop settings
+/// 8/31/16 - Fixed according to MineFort StyleCop settings
 public class MinHeap<T> : IEnumerable<T> where T : class, IComparable<T>
 {
     #region Fields

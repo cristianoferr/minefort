@@ -3,14 +3,14 @@ using UnityEditor;
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
-using Rimworld;
-using Rimworld.model.entities.physical;
-using Rimworld.model.entities;
-using Rimworld.model.io;
-using Rimworld.model;
-using Rimworld.model.components;
-using Rimworld.model.components.brain;
-using Rimworld.model.entities.map;
+using MineFort;
+using MineFort.model.entities.physical;
+using MineFort.model.entities;
+using MineFort.model.io;
+using MineFort.model;
+using MineFort.model.components;
+using MineFort.model.components.brain;
+using MineFort.model.entities.map;
 
 public class InitialTest
 {
@@ -100,7 +100,7 @@ public class InitialTest
         Template templNullTag = holder.templates.GetTemplateWithTag(GameConsts.TAG_HUMANOID + " lixo " + GameConsts.TAG_ORGANIC);
         Assert.IsNull(templNullTag);
 
-        Rimworld.model.entities.GameCharacter human = templHuman.Spawn(world, new Vector3(10, 10, 0)) as Rimworld.model.entities.GameCharacter;
+        MineFort.model.entities.GameCharacter human = templHuman.Spawn(world, new Vector3(10, 10, 0)) as MineFort.model.entities.GameCharacter;
         Assert.IsNotNull(human);
 
         TraitManagerComponent traits = human.GetComponent(GameConsts.COMPONENT_TYPE.TRAIT_MANAGER) as TraitManagerComponent;

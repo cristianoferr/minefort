@@ -9,9 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Entities;
-using Rimworld.Jobs;
-using Rimworld.model.Inventory;
+using MineFort.Entities;
+using MineFort.Jobs;
+using MineFort.model.Inventory;
 
 public class JobQueue
 {
@@ -113,7 +113,7 @@ public class JobQueue
     /// <summary>
     /// Search for a job that can be performed by the specified character. Tests that the job can be reached and there is enough inventory to complete it, somewhere.
     /// </summary>
-    public Job GetJob(Rimworld.model.entities.GameCharacter character)
+    public Job GetJob(MineFort.model.entities.GameCharacter character)
     {
         DebugLog("{0},{1} GetJob() (Queue size: {2})", character.GetName(), character.ID, jobQueue.Count);
         if (jobQueue.Count == 0)
@@ -214,11 +214,11 @@ public class JobQueue
     /// <param name="job"></param>
     /// <param name="character"></param>
     /// <returns></returns>
-    public bool CharacterCantReachHelper(Job job, Rimworld.model.entities.GameCharacter character)
+    public bool CharacterCantReachHelper(Job job, MineFort.model.entities.GameCharacter character)
     {
         if (job.CharsCantReach != null)
         {
-            foreach (Rimworld.model.entities.GameCharacter charTemp in job.CharsCantReach)
+            foreach (MineFort.model.entities.GameCharacter charTemp in job.CharsCantReach)
             {
                 if (charTemp == character)
                 {

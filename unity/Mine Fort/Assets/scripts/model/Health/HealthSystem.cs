@@ -8,7 +8,7 @@
 #endregion
 using System;
 using MoonSharp.Interpreter;
-using Rimworld.Localization;
+using MineFort.Localization;
 
 [MoonSharpUserData]
 [Serializable]

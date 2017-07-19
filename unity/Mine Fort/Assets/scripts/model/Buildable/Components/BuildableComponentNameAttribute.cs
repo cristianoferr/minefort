@@ -8,7 +8,7 @@
 #endregion
 using System;
 
-namespace Rimworld.Buildable.Components
+namespace MineFort.Buildable.Components
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class BuildableComponentNameAttribute : Attribute

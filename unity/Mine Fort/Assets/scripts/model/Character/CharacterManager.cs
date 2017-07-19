@@ -13,10 +13,10 @@ using System.Linq;
 using MoonSharp.Interpreter;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using Rimworld.model.entities;
-using Rimworld.model.Inventory;
+using MineFort.model.entities;
+using MineFort.model.Inventory;
 
-namespace Rimworld.Entities
+namespace MineFort.Entities
 {
     /// <summary>
     /// Character manager that holds all the characters.

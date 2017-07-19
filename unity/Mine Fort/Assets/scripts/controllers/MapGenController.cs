@@ -1,6 +1,6 @@
-﻿using Rimworld;
-using Rimworld.logic.MapGen;
-using Rimworld.model.entities;
+﻿using MineFort;
+using MineFort.logic.MapGen;
+using MineFort.model.entities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

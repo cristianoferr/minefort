@@ -8,13 +8,13 @@
 #endregion
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Pathfinding;
+using MineFort.Pathfinding;
 using UnityEngine;
-using Rimworld.model.entities;
-using Rimworld.model.Inventory;
-using Rimworld.model.inventory;
+using MineFort.model.entities;
+using MineFort.model.Inventory;
+using MineFort.model.inventory;
 
-namespace Rimworld.Entities.States
+namespace MineFort.Entities.States
 {
     public enum HaulAction
     {

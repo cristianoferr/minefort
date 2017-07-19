@@ -6,12 +6,12 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
-using Rimworld.controllers;
+using MineFort.controllers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Rimworld.UI
+namespace MineFort.UI
 {
     public class MouseCursor
     {

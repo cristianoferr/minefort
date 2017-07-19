@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rimworld.model.components
+namespace MineFort.model.components
 {
     public class LegComponent:GameComponent
     {

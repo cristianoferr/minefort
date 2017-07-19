@@ -1,10 +1,10 @@
 ﻿
-using Rimworld.Rooms;
-using Rimworld.model.entities.map;
+using MineFort.Rooms;
+using MineFort.model.entities.map;
 using System;
 using UnityEngine;
 
-namespace Rimworld.model.entities
+namespace MineFort.model.entities
 {
     public class Map
     {

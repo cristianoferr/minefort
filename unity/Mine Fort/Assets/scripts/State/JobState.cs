@@ -8,10 +8,10 @@
 #endregion
 
 using System.Collections.Generic;
-using Rimworld.Pathfinding;
-using Rimworld.model.entities;
+using MineFort.Pathfinding;
+using MineFort.model.entities;
 
-namespace Rimworld.Entities.States
+namespace MineFort.Entities.States
 {
     [System.Diagnostics.DebuggerDisplay("JobState: {job}")]
     public class JobState : State

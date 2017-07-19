@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using Rimworld.Jobs;
+using MineFort.Jobs;
 
-namespace Rimworld.OrderActions
+namespace MineFort.OrderActions
 {
     [Serializable]
     [XmlRoot("OrderAction")]

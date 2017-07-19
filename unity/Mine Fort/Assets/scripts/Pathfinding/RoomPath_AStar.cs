@@ -9,8 +9,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Pathfinding;
-using Rimworld.Rooms;
+using MineFort.Pathfinding;
+using MineFort.Rooms;
 using UnityEngine;
 
 public class RoomPath_AStar

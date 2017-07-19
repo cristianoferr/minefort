@@ -1,9 +1,9 @@
 ﻿
-using Rimworld.Rooms;
+using MineFort.Rooms;
 using System;
 using System.Collections.Generic;
 
-namespace Rimworld.model.entities.map
+namespace MineFort.model.entities.map
 {
     public class Chunk
     {

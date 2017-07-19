@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Buildable.Components;
+using MineFort.Buildable.Components;
 using UnityEngine;
 
 public class FurnitureSpriteController : BaseSpriteController<Furniture>

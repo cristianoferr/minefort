@@ -9,7 +9,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Rimworld.Localization
+namespace MineFort.Localization
 {
     /**
      * <summary>

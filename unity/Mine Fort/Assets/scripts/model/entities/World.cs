@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Rimworld.model.entities.map;
+using MineFort.model.entities.map;
 using System.Xml;
 using System.IO;
-using Rimworld.model.furniture;
-using Rimworld.model.inventory;
+using MineFort.model.furniture;
+using MineFort.model.inventory;
 using MoonSharp.Interpreter;
 
-namespace Rimworld.model.entities
+namespace MineFort.model.entities
 {
     [MoonSharpUserData]
     public class World_Old : GameEntity

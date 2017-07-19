@@ -14,11 +14,11 @@ using System.Xml;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Newtonsoft.Json.Linq;
-using Rimworld.Entities;
-using Rimworld.Localization;
-using Rimworld.model.entities;
+using MineFort.Entities;
+using MineFort.Localization;
+using MineFort.model.entities;
 
-namespace Rimworld.Rooms
+namespace MineFort.Rooms
 {
     /// <summary>
     /// Room Behaviors are functions added to specific rooms, such as an airlock, a dining room, or an abattoir.

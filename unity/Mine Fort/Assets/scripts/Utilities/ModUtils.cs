@@ -8,8 +8,8 @@
 #endregion
 
 using MoonSharp.Interpreter;
-using Rimworld.Buildable.Components;
-using Rimworld.PowerNetwork;
+using MineFort.Buildable.Components;
+using MineFort.PowerNetwork;
 using UnityEngine;
 
 [MoonSharpUserData]

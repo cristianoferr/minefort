@@ -146,7 +146,7 @@ public class DialogBoxPromptOrInfo : DialogBox
     /// <param name="key">Loalization key for the prompt's text.</param>
     public void SetPrompt(string key, params string[] additionalValues)
     {
-        string localized = Rimworld.Localization.LocalizationTable.GetLocalization(key, additionalValues);
+        string localized = MineFort.Localization.LocalizationTable.GetLocalization(key, additionalValues);
 
         gameObject.transform.Find("Prompt").GetComponent<Text>().text = localized;
     }

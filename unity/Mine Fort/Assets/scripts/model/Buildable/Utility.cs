@@ -13,12 +13,12 @@ using System.Xml;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Newtonsoft.Json.Linq;
-using Rimworld.Entities;
-using Rimworld.OrderActions;
-using Rimworld.PowerNetwork;
+using MineFort.Entities;
+using MineFort.OrderActions;
+using MineFort.PowerNetwork;
 using UnityEngine;
-using Rimworld.model.Inventory;
-using Rimworld.model.entities;
+using MineFort.model.Inventory;
+using MineFort.model.entities;
 
 /// <summary>
 /// InstalledObjects are things like walls, doors, and utility (e.g. a sofa).

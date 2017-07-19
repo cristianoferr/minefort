@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
-namespace Rimworld.Buildable.Components
+namespace MineFort.Buildable.Components
 {
     [Serializable]
     public abstract class BuildableComponent

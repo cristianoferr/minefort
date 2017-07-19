@@ -10,8 +10,8 @@
 using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
-using Rimworld.PowerNetwork;
-using Rimworld.controllers;
+using MineFort.PowerNetwork;
+using MineFort.controllers;
 
 public class LuaFunctions : IFunctions
 {
@@ -43,7 +43,7 @@ public class LuaFunctions : IFunctions
         RegisterGlobal(typeof(Connection));
         RegisterGlobal(typeof(Scheduler.Scheduler));
         RegisterGlobal(typeof(Scheduler.ScheduledEvent));
-        RegisterGlobal(typeof(Rimworld.Jobs.RequestedItem));
+        RegisterGlobal(typeof(MineFort.Jobs.RequestedItem));
         RegisterGlobal(typeof(DeveloperConsole.DevConsole));
         RegisterGlobal(typeof(Settings));
     }

@@ -8,11 +8,11 @@
 #endregion
 using System;
 using System.Linq;
-using Rimworld.Entities;
-using Rimworld.Localization;
+using MineFort.Entities;
+using MineFort.Localization;
 using UnityEngine;
 using UnityEngine.UI;
-using Rimworld.controllers;
+using MineFort.controllers;
 
 public class SelectionInfoTextField : MonoBehaviour
 {

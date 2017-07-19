@@ -6,9 +6,9 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
-using Rimworld.Entities;
-using Rimworld.Localization;
-using Rimworld.model.entities;
+using MineFort.Entities;
+using MineFort.Localization;
+using MineFort.model.entities;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-namespace Rimworld.model
+namespace MineFort.model
 {
     [DataContract]
     public class TagObject

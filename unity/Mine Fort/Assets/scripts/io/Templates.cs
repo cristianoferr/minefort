@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Rimworld.model.io
+namespace MineFort.model.io
 {
     [DataContract]
     public class Templates

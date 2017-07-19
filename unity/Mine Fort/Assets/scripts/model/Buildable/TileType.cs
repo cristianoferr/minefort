@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using MoonSharp.Interpreter;
-using Rimworld.Jobs;
-using Rimworld.OrderActions;
-using Rimworld.model;
+using MineFort.Jobs;
+using MineFort.OrderActions;
+using MineFort.model;
 
 [MoonSharpUserData]
 public class TileType : TagObject, IPrototypable, IEquatable<TileType>

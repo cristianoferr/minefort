@@ -7,7 +7,7 @@
 // ====================================================
 #endregion
 using System.Collections;
-using Rimworld.Localization;
+using MineFort.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 

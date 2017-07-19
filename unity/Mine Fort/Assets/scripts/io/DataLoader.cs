@@ -1,6 +1,6 @@
-﻿using Rimworld.model;
-using Rimworld.model.entities;
-using Rimworld.model.entities.map;
+﻿using MineFort.model;
+using MineFort.model.entities;
+using MineFort.model.entities.map;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Rimworld.io
+namespace MineFort.io
 {
     public class DataLoader
     {

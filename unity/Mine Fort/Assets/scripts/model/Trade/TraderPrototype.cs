@@ -11,7 +11,7 @@ using System.Linq;
 using System.Xml;
 using Animation;
 using UnityEngine;
-using Rimworld.model.Inventory;
+using MineFort.model.Inventory;
 
 public class TraderPrototype : IPrototypable
 {

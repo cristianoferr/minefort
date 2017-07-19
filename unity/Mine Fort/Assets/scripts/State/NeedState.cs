@@ -7,9 +7,9 @@
 // ====================================================
 #endregion
 
-using Rimworld.model.entities;
+using MineFort.model.entities;
 
-namespace Rimworld.Entities.States
+namespace MineFort.Entities.States
 {
     public class NeedState : State
     {

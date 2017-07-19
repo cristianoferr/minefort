@@ -10,7 +10,7 @@
 using System;
 using System.Xml;
 using MoonSharp.Interpreter;
-using Rimworld.Localization;
+using MineFort.Localization;
 
 /// <summary>
 /// Contains the description of a single overlay type. Contains LUA function name, id and coloring details.

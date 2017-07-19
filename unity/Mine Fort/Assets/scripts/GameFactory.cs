@@ -1,7 +1,7 @@
-﻿using Rimworld.model.entities;
-using Rimworld.model.entities.physical;
+﻿using MineFort.model.entities;
+using MineFort.model.entities.physical;
 
-namespace Rimworld
+namespace MineFort
 {
     public class GameFactory
     {

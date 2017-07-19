@@ -5,13 +5,13 @@ using System.Text;
 using UnityEngine;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
-using Rimworld.logic;
-using Rimworld.model.entities;
-using Rimworld.model.Inventory;
+using MineFort.logic;
+using MineFort.model.entities;
+using MineFort.model.Inventory;
 using Newtonsoft.Json.Linq;
-using Rimworld.Pathfinding;
+using MineFort.Pathfinding;
 
-namespace Rimworld.model.inventory
+namespace MineFort.model.inventory
 {
     [MoonSharpUserData]
     public class InventoryManager

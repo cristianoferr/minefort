@@ -12,10 +12,10 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Rimworld.Jobs;
-using Rimworld.model.Inventory;
+using MineFort.Jobs;
+using MineFort.model.Inventory;
 
-namespace Rimworld.Buildable.Components
+namespace MineFort.Buildable.Components
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]

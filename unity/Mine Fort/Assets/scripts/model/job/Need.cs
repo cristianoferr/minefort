@@ -9,9 +9,9 @@
 using System.Collections.Generic;
 using System.Xml;
 using MoonSharp.Interpreter;
-using Rimworld.model.entities;
+using MineFort.model.entities;
 
-namespace Rimworld.Entities
+namespace MineFort.Entities
 {
     [MoonSharpUserData]
     public class Need : IPrototypable

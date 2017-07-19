@@ -8,10 +8,10 @@
 #endregion
 
 using MoonSharp.Interpreter;
-using Rimworld.model.Inventory;
+using MineFort.model.Inventory;
 using UnityEngine;
 
-namespace Rimworld.Jobs
+namespace MineFort.Jobs
 {
     [MoonSharpUserData]
     public class RequestedItem
@@ -34,7 +34,7 @@ namespace Rimworld.Jobs
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Rimworld.Job.RequestedItem"/> class with the amount needed to fill the inventory item passed in.
+        /// Initializes a new instance of the <see cref="MineFort.Job.RequestedItem"/> class with the amount needed to fill the inventory item passed in.
         /// </summary>
         public RequestedItem(GameInventory inventory)
             : this(inventory.Type, inventory.MaxStackSize - inventory.StackSize)

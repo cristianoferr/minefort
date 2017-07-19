@@ -8,9 +8,9 @@
 #endregion
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.OrderActions;
-using Rimworld.Rooms;
-using Rimworld.controllers;
+using MineFort.OrderActions;
+using MineFort.Rooms;
+using MineFort.controllers;
 
 public enum BuildMode
 {
@@ -185,7 +185,7 @@ public class BuildModeController
                     {
                         // We want to use a crated furniture, so set requested items to crated version.
                         job.RequestedItems.Clear();
-                        job.RequestedItems.Add(this.BuildModeType, new Rimworld.Jobs.RequestedItem(this.BuildModeType, 1));
+                        job.RequestedItems.Add(this.BuildModeType, new MineFort.Jobs.RequestedItem(this.BuildModeType, 1));
                         useCratedObject = false;
                     }
 

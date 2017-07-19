@@ -7,12 +7,12 @@
 ---- ARQ: 
 
 ---- ARQ: TileSpriteController
-using Rimworld.model.entities;
+using MineFort.model.entities;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Rimworld.controllers
+namespace MineFort.controllers
 {
     public class TileSpriteController : MonoBehaviour
     {
@@ -138,11 +138,11 @@ namespace Rimworld.controllers
 ----- ARQ: WorldController
 
 using System;
-using Rimworld.model.entities;
+using MineFort.model.entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Rimworld.controllers
+namespace MineFort.controllers
 {
     public class WorldController : MonoBehaviour
     {
@@ -298,14 +298,14 @@ namespace Rimworld.controllers
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Rimworld.model.entities.map;
+using MineFort.model.entities.map;
 using System.Xml;
 using System.IO;
-using Rimworld.model.furniture;
-using Rimworld.model.inventory;
+using MineFort.model.furniture;
+using MineFort.model.inventory;
 using MoonSharp.Interpreter;
 
-namespace Rimworld.model.entities
+namespace MineFort.model.entities
 {
     [MoonSharpUserData]
     public class World_Old : GameEntity
@@ -736,7 +736,7 @@ using Newtonsoft.Json.Linq;
 using ProjectPorcupine.Localization;
 using UnityEngine;
 
-namespace Rimworld.model.entities
+namespace MineFort.model.entities
 {
     [MoonSharpUserData]
     public class GameCharacter : MovableEntity, ISelectable, IContextActionProvider, IUpdatable

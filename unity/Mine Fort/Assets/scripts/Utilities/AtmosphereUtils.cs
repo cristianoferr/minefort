@@ -8,7 +8,7 @@
 #endregion
 
 using System;
-using Rimworld.Rooms;
+using MineFort.Rooms;
 using UnityEngine;
 
 public static class AtmosphereUtils

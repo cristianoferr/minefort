@@ -8,11 +8,11 @@
 #endregion
 
 using System.Linq;
-using Rimworld.Localization;
+using MineFort.Localization;
 using UnityEngine;
 using UnityEngine.UI;
-using Rimworld.model.Inventory;
-using Rimworld.controllers;
+using MineFort.model.Inventory;
+using MineFort.controllers;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class SpawnInventoryController

@@ -9,11 +9,11 @@
 
 using System;
 using System.Collections.Generic;
-using Rimworld.Pathfinding;
+using MineFort.Pathfinding;
 using Random = UnityEngine.Random;
-using Rimworld.model.entities;
+using MineFort.model.entities;
 
-namespace Rimworld.Entities.States
+namespace MineFort.Entities.States
 {
     [System.Diagnostics.DebuggerDisplay("Idle: ")]
     public class IdleState : State

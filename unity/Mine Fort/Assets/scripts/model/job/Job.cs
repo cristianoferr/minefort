@@ -11,13 +11,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using MoonSharp.Interpreter;
-using Rimworld.Entities;
-using Rimworld.Jobs;
-using Rimworld.Localization;
-using Rimworld.Pathfinding;
+using MineFort.Entities;
+using MineFort.Jobs;
+using MineFort.Localization;
+using MineFort.Pathfinding;
 using UnityEngine;
-using Rimworld.model.entities;
-using Rimworld.model.Inventory;
+using MineFort.model.entities;
+using MineFort.model.Inventory;
 
 [MoonSharpUserData]
 [System.Diagnostics.DebuggerDisplay("Job {JobObjectType}")]
@@ -57,7 +57,7 @@ public class Job : ISelectable, IPrototypable
     // The job has been stopped, either because it's non-repeating or was canceled.
     private List<string> jobCompletedLua;
 
-    private List<Rimworld.model.entities.GameCharacter> charsCantReach = new List<Rimworld.model.entities.GameCharacter>();
+    private List<MineFort.model.entities.GameCharacter> charsCantReach = new List<MineFort.model.entities.GameCharacter>();
 
     // Required for IPrototypable
     public Job()
@@ -225,7 +225,7 @@ public class Job : ISelectable, IPrototypable
         }
     }
 
-    public List<Rimworld.model.entities.GameCharacter> CharsCantReach
+    public List<MineFort.model.entities.GameCharacter> CharsCantReach
     {
         get
         {

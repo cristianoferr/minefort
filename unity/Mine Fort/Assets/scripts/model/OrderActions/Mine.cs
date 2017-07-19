@@ -9,7 +9,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace Rimworld.OrderActions
+namespace MineFort.OrderActions
 {
     [Serializable]
     [XmlRoot("OrderAction")]

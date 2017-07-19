@@ -8,11 +8,11 @@
 #endregion
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Pathfinding;
-using Rimworld.model.entities;
-using Rimworld.model.Inventory;
+using MineFort.Pathfinding;
+using MineFort.model.entities;
+using MineFort.model.Inventory;
 
-namespace Rimworld.Entities.States
+namespace MineFort.Entities.States
 {
     public class DumpState : State
     {

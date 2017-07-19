@@ -12,9 +12,9 @@ using System.IO;
 using System.Xml;
 using ICSharpCode.SharpZipLib.Zip;
 using UnityEngine;
-using Rimworld.controllers;
+using MineFort.controllers;
 
-namespace Rimworld.Localization
+namespace MineFort.Localization
 {
     /*
                                                  ,  ,
@@ -226,7 +226,7 @@ namespace Rimworld.Localization
             }
 
             // At this point we should have an subfolder in Application.streamingAssetsPath/Localization
-            // called RimworldLocalization-*branch name*. Now we need to move all files from that directory
+            // called MineFortLocalization-*branch name*. Now we need to move all files from that directory
             // to Application.streamingAssetsPath/Localization.
             FileInfo[] fileInfo = localizationFolderInfo.GetFiles();
             foreach (FileInfo file in fileInfo)
@@ -243,7 +243,7 @@ namespace Rimworld.Localization
                 UnityDebugger.Debugger.LogError("LocalizationDownloader", "There should be only one directory");
             }
 
-            // Move files from RimworldLocalization-*branch name* to Application.streamingAssetsPath/Localization.
+            // Move files from MineFortLocalization-*branch name* to Application.streamingAssetsPath/Localization.
             string[] filesToMove = Directory.GetFiles(dirInfo[0].FullName);
 
             foreach (string file in filesToMove)
@@ -254,7 +254,7 @@ namespace Rimworld.Localization
                 File.Delete(file);
             }
 
-            // Remove RimworldLocalization-*branch name*
+            // Remove MineFortLocalization-*branch name*
             Directory.Delete(dirInfo[0].FullName);
 
             UnityDebugger.Debugger.Log("LocalizationDownloader", "New localization files successfully downloaded!");

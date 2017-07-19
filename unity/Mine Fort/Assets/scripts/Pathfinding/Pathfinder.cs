@@ -9,11 +9,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Rimworld.Rooms;
+using MineFort.Rooms;
 using UnityEngine;
-using Rimworld.model.Inventory;
+using MineFort.model.Inventory;
 
-namespace Rimworld.Pathfinding
+namespace MineFort.Pathfinding
 {
     public static class Pathfinder
     {

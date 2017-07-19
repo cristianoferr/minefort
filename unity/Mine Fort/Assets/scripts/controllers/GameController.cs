@@ -1,11 +1,11 @@
-﻿using Rimworld.Localization;
+﻿using MineFort.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Rimworld.controllers
+namespace MineFort.controllers
 {
     public class GameController : MonoBehaviour
     {

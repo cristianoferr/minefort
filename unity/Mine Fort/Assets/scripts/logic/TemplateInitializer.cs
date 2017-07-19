@@ -1,9 +1,9 @@
 ﻿
-using Rimworld.model;
-using Rimworld.model.components;
-using Rimworld.model.entities;
-using Rimworld.model.io;
-namespace Rimworld.logic
+using MineFort.model;
+using MineFort.model.components;
+using MineFort.model.entities;
+using MineFort.model.io;
+namespace MineFort.logic
 {
     public class TemplateInitializer
     {

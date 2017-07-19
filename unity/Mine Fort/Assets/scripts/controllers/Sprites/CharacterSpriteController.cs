@@ -6,11 +6,11 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
-using Rimworld.model.entities;
+using MineFort.model.entities;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Rimworld.Entities
+namespace MineFort.Entities
 {
     public enum SpriteSwapRedColor
     {

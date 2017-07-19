@@ -1,11 +1,11 @@
-﻿using Rimworld.model.components;
-using Rimworld.model.entities;
+﻿using MineFort.model.components;
+using MineFort.model.entities;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
-namespace Rimworld.model.io
+namespace MineFort.model.io
 {
     [DataContract]
     public class Template : Property

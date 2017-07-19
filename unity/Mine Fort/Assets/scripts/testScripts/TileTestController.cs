@@ -1,11 +1,11 @@
-﻿using Rimworld.model.entities;
+﻿using MineFort.model.entities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Rimworld;
-using Rimworld.model.entities.map;
-using Rimworld.controllers;
+using MineFort;
+using MineFort.model.entities.map;
+using MineFort.controllers;
 
 public class TileTestController : MonoBehaviour {
     /*
@@ -33,7 +33,7 @@ public class TileTestController : MonoBehaviour {
 
                 tile_data.RegisterTileTypeChangedCallback((tile)=> { OnTileTypeChanged(tile, tile_go,tx,ty); });
                 tile_go.transform.parent = this.gameObject.transform;
-                tile_data.Type = biome.RandomTile();// Rimworld.model.GameConsts.TileType.Floor;
+                tile_data.Type = biome.RandomTile();// MineFort.model.GameConsts.TileType.Floor;
                 
             }
         }
