@@ -7,11 +7,12 @@
 // ====================================================
 #endregion
 
+using Rimworld.model.Inventory;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class InventorySpriteController : BaseSpriteController<Inventory>
+public sealed class InventorySpriteController : BaseSpriteController<GameInventory>
 {
     private GameObject inventoryUIPrefab;
 
@@ -25,13 +26,13 @@ public sealed class InventorySpriteController : BaseSpriteController<Inventory>
         world.InventoryManager.InventoryCreated += OnCreated;
 
         // Check for pre-existing inventory, which won't do the callback.
-        foreach (Inventory inventory in world.InventoryManager.Inventories.SelectMany(pair => pair.Value))
+        foreach (GameInventory inventory in world.InventoryManager.Inventories.SelectMany(pair => pair.Value))
         {
             OnCreated(inventory);
         }
     }
 
-    public static SpriteRenderer SetSprite(GameObject inventoryGO, Inventory inventory, string sortingLayerName = "Inventory")
+    public static SpriteRenderer SetSprite(GameObject inventoryGO, GameInventory inventory, string sortingLayerName = "Inventory")
     {
         SpriteRenderer sr = inventoryGO.GetComponent<SpriteRenderer>();
         if (sr == null)
@@ -85,7 +86,7 @@ public sealed class InventorySpriteController : BaseSpriteController<Inventory>
     public override void RemoveAll()
     {
         world.InventoryManager.InventoryCreated -= OnCreated;
-        foreach (Inventory inventory in world.InventoryManager.Inventories.SelectMany(pair => pair.Value))
+        foreach (GameInventory inventory in world.InventoryManager.Inventories.SelectMany(pair => pair.Value))
         {
             inventory.StackSizeChanged -= OnChanged;
         }
@@ -93,7 +94,7 @@ public sealed class InventorySpriteController : BaseSpriteController<Inventory>
         base.RemoveAll();
     }
 
-    protected override void OnCreated(Inventory inventory)
+    protected override void OnCreated(GameInventory inventory)
     {
         // This creates a new GameObject and adds it to our scene.
         GameObject inventoryGameObject = new GameObject();
@@ -129,7 +130,7 @@ public sealed class InventorySpriteController : BaseSpriteController<Inventory>
         inventory.StackSizeChanged += OnChanged;
     }
 
-    protected override void OnChanged(Inventory inventory)
+    protected override void OnChanged(GameInventory inventory)
     {
         // Make sure the furniture's graphics are correct.
         if (objectGameObjectMap.ContainsKey(inventory) == false)
@@ -156,7 +157,7 @@ public sealed class InventorySpriteController : BaseSpriteController<Inventory>
         }
     }
 
-    protected override void OnRemoved(Inventory inventory)
+    protected override void OnRemoved(GameInventory inventory)
     {
         inventory.StackSizeChanged -= OnChanged;
         GameObject inventoryGameObject = objectGameObjectMap[inventory];

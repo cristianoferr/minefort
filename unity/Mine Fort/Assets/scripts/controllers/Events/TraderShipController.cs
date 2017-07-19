@@ -8,6 +8,7 @@
 #endregion
 
 using Animation;
+using Rimworld.controllers;
 using UnityEngine;
 
 public class TraderShipController : MonoBehaviour

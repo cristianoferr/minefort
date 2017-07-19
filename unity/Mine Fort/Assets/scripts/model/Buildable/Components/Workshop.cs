@@ -13,6 +13,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Rimworld.Jobs;
+using Rimworld.model.Inventory;
 
 namespace Rimworld.Buildable.Components
 {
@@ -351,7 +352,7 @@ namespace Rimworld.Buildable.Components
             {
                 if (outPlace.IsEmpty)
                 {
-                    World.Current.InventoryManager.PlaceInventory(outPlace.Tile, new Inventory(outPlace.ObjectType, outPlace.Amount));
+                    World.Current.InventoryManager.PlaceInventory(outPlace.Tile, new GameInventory(outPlace.ObjectType, outPlace.Amount));
                 }
                 else
                 {
@@ -371,7 +372,7 @@ namespace Rimworld.Buildable.Components
         private void PlaceInventoryToWorkshopInput(Job job)
         {
             job.CancelJob();
-            foreach (Inventory heldInventory in job.DeliveredItems.Values)
+            foreach (GameInventory heldInventory in job.DeliveredItems.Values)
             {
                 if (heldInventory.StackSize > 0)
                 {

@@ -6,6 +6,7 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using Rimworld.model.Inventory;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,7 +27,7 @@ public class Trade
         Player = player;
         Trader = trader;
 
-        List<Inventory> totalStock = new List<Inventory>();
+        List<GameInventory> totalStock = new List<GameInventory>();
         totalStock.AddRange(player.Stock);
         totalStock.AddRange(trader.Stock);
         TradeItems = totalStock.GroupBy(s => s.Type).Select(g => new TradeItem

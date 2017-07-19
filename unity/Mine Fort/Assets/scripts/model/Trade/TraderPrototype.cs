@@ -11,6 +11,7 @@ using System.Linq;
 using System.Xml;
 using Animation;
 using UnityEngine;
+using Rimworld.model.Inventory;
 
 public class TraderPrototype : IPrototypable
 {
@@ -138,7 +139,7 @@ public class TraderPrototype : IPrototypable
             Currency = curency,
             Name = PotentialNames[Random.Range(0, PotentialNames.Count - 1)],
             SaleMarginMultiplier = Random.Range(MinSaleMarginMultiplier, MaxSaleMarginMultiplier),
-            Stock = new List<Inventory>()
+            Stock = new List<GameInventory>()
         };
 
         foreach (TraderPotentialInventory potentialStock in PotentialStock)
@@ -149,7 +150,7 @@ public class TraderPrototype : IPrototypable
             {
                 if (!string.IsNullOrEmpty(potentialStock.Type))
                 {
-                    Inventory inventory = new Inventory(
+                    GameInventory inventory = new GameInventory(
                         potentialStock.Type,
                         Random.Range(potentialStock.MinQuantity, potentialStock.MaxQuantity));
 
@@ -157,11 +158,11 @@ public class TraderPrototype : IPrototypable
                 }
                 else if (!string.IsNullOrEmpty(potentialStock.Category))
                 {
-                    List<Inventory> potentialObjects = GetInventoryCommonWithCategory(potentialStock.Category);
+                    List<GameInventory> potentialObjects = GetInventoryCommonWithCategory(potentialStock.Category);
 
-                    foreach (Inventory potentialObject in potentialObjects)
+                    foreach (GameInventory potentialObject in potentialObjects)
                     {
-                        Inventory inventory = new Inventory(
+                        GameInventory inventory = new GameInventory(
                             potentialObject.Type,
                             Random.Range(potentialStock.MinQuantity, potentialStock.MaxQuantity));
 
@@ -215,7 +216,7 @@ public class TraderPrototype : IPrototypable
         }
     }
 
-    private List<Inventory> GetInventoryCommonWithCategory(string category)
+    private List<GameInventory> GetInventoryCommonWithCategory(string category)
     {
         return PrototypeManager.Inventory.Values.Where(i => i.Category == category).ToList();
     }

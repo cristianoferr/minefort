@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Scheduler;
+using Rimworld.controllers;
 
 public class AutosaveManager
 {

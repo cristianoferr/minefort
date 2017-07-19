@@ -8,7 +8,7 @@ using Rimworld.model.entities.map;
 using Rimworld.controllers;
 
 public class TileTestController : MonoBehaviour {
-
+    /*
     public Sprite floorSprite;
     public Sprite emptySprite;
 
@@ -44,20 +44,6 @@ public class TileTestController : MonoBehaviour {
 
 
 
-    /*
-     function isoTo2D(pt:Point):Point{
-  var tempPt:Point = new Point(0, 0);
-  tempPt.x = (2 * pt.y + pt.x) / 2;
-  tempPt.y = (2 * pt.y - pt.x) / 2;
-  return(tempPt);
-}
-         function twoDToIso(pt:Point):Point{
-  var tempPt:Point = new Point(0,0);
-  tempPt.x = pt.x - pt.y;
-  tempPt.y = (pt.x + pt.y) / 2;
-  return(tempPt);
-}
-         */
 
 
 
@@ -94,28 +80,14 @@ public class TileTestController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-      /*  randomizeTileTimer -= Time.deltaTime;
-        if (randomizeTileTimer < 0)
-        {
-            RandomizeTiles(world);
-            randomizeTileTimer = 2f;
-        }*/
 	}
 
     void OnTileTypeChanged(Tile tile_data,GameObject tile_go,float x,float y)
     {
         tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", tile_data.Type.fileName);
-      /*  if (tile_data.Type == Rimworld.model.GameConsts.TileType.Floor)
-        {
-            tile_go.GetComponent<SpriteRenderer>().sprite = floorSprite;
-        }
-        else
-        {
-            tile_go.GetComponent<SpriteRenderer>().sprite = emptySprite;
-        }*/
 
         tile_go.transform.position = CalcPosition(tile_go, tile_data);
         
 
-    }
+    }*/
 }

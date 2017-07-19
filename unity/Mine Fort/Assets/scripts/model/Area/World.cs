@@ -47,6 +47,7 @@ public class World
 
     #region MyCode
     public DataHolder holder;
+    //TODO: reintegrar entities com o código principal (ou separar de vez)
     public IList<PhysicalEntity> entities { get; private set; }
     public Map mapData { get; private set; }
 
@@ -85,6 +86,17 @@ public class World
             return mapData.depth;
         }
     }
+
+    public PhysicalEntity AddEntity(PhysicalEntity entity)
+    {
+        if (entities.Contains(entity))
+        {
+            Utils.LogError("Entities already contains " + entity);
+        }
+        entities.Add(entity);
+        return entity;
+    }
+
     #endregion
 
     /// <summary>

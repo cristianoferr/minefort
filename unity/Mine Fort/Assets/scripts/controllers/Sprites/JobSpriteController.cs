@@ -7,6 +7,7 @@
 // ====================================================
 #endregion
 using Rimworld.Entities;
+using Rimworld.model.entities;
 using UnityEngine;
 
 public class JobSpriteController : BaseSpriteController<Job>
@@ -30,7 +31,7 @@ public class JobSpriteController : BaseSpriteController<Job>
             OnCreated(job);
         }
 
-        foreach (Character character in world.CharacterManager)
+        foreach (GameCharacter character in world.CharacterManager)
         {
             if (character.MyJob != null)
             {
@@ -49,7 +50,7 @@ public class JobSpriteController : BaseSpriteController<Job>
             job.OnJobStopped -= OnRemoved;
         }
 
-        foreach (Character character in world.CharacterManager)
+        foreach (GameCharacter character in world.CharacterManager)
         {
             if (character.MyJob != null)
             {

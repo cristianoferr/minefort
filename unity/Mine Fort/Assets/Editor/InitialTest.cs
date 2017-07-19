@@ -11,11 +11,10 @@ using Rimworld.model;
 using Rimworld.model.components;
 using Rimworld.model.components.brain;
 using Rimworld.model.entities.map;
-using Rimworld.model.entities.map.tiles;
 
 public class InitialTest
 {
-    static World world = World.current;
+    static World world = World.Current;
     static DataHolder holder = world.holder;
     static GameFactory factory = new GameFactory(holder);
 
@@ -39,7 +38,7 @@ public class InitialTest
         Assert.IsNull(biomeTestNull);
         Assert.IsTrue(biomeTest==biome);
 
-        Tile tile = world.GetTileAt(0, 0);
+        Tile tile = world.GetTileAt(0, 0,0);
         Assert.IsNotNull(tile);
 
        // TileType TileTypeGround = new TileType();
@@ -120,17 +119,17 @@ public class InitialTest
     [Test]
     public void TestWorldMap()
     {
-        World world = World.current;
+        World world = World.Current;
         Assert.IsNotNull(world);
         Assert.IsNotNull(world.mapData);
         Assert.IsNotNull(world.mapData.GetOutsideRoom(new Vector3(0, 0,0)));
 
         Tile tile = world.mapData.GetTileAt(10, 20);
         Assert.IsNotNull(tile);
-        Assert.IsTrue(tile.position.x == 10);
-        Assert.IsTrue(tile.position.y == 20);
-        Assert.IsNotNull(tile.room);
-        Assert.IsTrue(tile.room == tile.chunk.outsideRoom);
+        Assert.IsTrue(tile.X == 10);
+        Assert.IsTrue(tile.Y == 20);
+        Assert.IsNotNull(tile.Room);
+        Assert.IsTrue(tile.Room == tile.chunk.outsideRoom);
 
         Chunk chunk00 = world.mapData.GetChunkAt(0, 0);
         Chunk chunk10 = world.mapData.GetChunkAt(GameConsts.CHUNK_SIZE, 0);

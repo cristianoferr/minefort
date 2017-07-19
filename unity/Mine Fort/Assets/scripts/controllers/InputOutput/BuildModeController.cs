@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Rimworld.OrderActions;
 using Rimworld.Rooms;
+using Rimworld.controllers;
 
 public enum BuildMode
 {

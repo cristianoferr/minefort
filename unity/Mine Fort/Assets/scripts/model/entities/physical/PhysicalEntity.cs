@@ -1,25 +1,56 @@
 ﻿
+using Rimworld.Entities;
+using Rimworld.Localization;
 using Rimworld.logic;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Rimworld.model.entities
 {
-    public class PhysicalEntity : GameEntity, ISelectableInterface
+    public class PhysicalEntity : GameEntity, ISelectable
     {
+        /// Unique ID of the character.
+        public readonly int ID;
+        /// What ID we currently are sitting at
+        private static int currentID = 0;
+
         public PhysicalEntity()
             : base()
         {
           //  position = new Vector3(0, 0, 0);
             dimension = new Dimension(1, 1);
+            ID = currentID++;
         }
 
-        public string name { get; set; }
+        public string Name { get; set; }
         //If true then cbOnChanged is called on update
         protected bool hasChanged = false;
-        // public Vector3 position;
 
-        Tile _currTile=null;
+        /// Stats, for character.
+        public Dictionary<string, Stat> Stats { get; protected set; }
+
+        internal bool selected = false;
+        public bool IsSelected
+        {
+            get
+            {
+                return selected;
+            }
+
+            set
+            {
+                if (value == false)
+                {
+                    VisualPath.Instance.RemoveVisualPoints(ID);
+                }
+
+                selected = value;
+            }
+        }
+
+
+        Tile _currTile =null;
         /// <summary>
         /// The tile the Character is considered to still be standing in.
         /// </summary>
@@ -101,26 +132,35 @@ namespace Rimworld.model.entities
 
 
         #region ISelectableInterface
-        public string GetName()
+
+        public virtual string GetJobDescription()
         {
-            return this.name;
+            return "";
+        }
+            public string GetName()
+        {
+            return this.Name;
         }
 
-        public string GetDescription()
+        public virtual string GetDescription()
         {
-            return "This is a piece of furniture."; // TODO: Add "Description" property and matching XML field.
+            return "This is a physical entity"; // TODO: Add "Description" property and matching XML field.
         }
 
-        public string GetHitPointString()
+        public virtual IEnumerable<string> GetAdditionalInfo()
         {
-            return "18/18"; // TODO: Add a hitpoint system to...well...everything
+            foreach (string stat in Stats.Keys)
+            {
+                yield return LocalizationTable.GetLocalization("stat_" + stat.ToLower(), Stats[stat].Value);
+            }
         }
+
         #endregion ISelectableInterface
 
-        /// <summary>
-        /// Returns a float representing the Character's X position, which can
-        /// be part-way between two tiles during movement.
-        /// </summary>
+            /// <summary>
+            /// Returns a float representing the Character's X position, which can
+            /// be part-way between two tiles during movement.
+            /// </summary>
         public float X
         {
             get

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Rimworld.Rooms;
 using UnityEngine;
+using Rimworld.model.Inventory;
 
 namespace Rimworld.Pathfinding
 {
@@ -104,7 +105,7 @@ namespace Rimworld.Pathfinding
                 Tile targetTile = null;
                 float distance = 0f;
 
-                foreach (Inventory inventory in World.Current.InventoryManager.Inventories.Where(dictEntry => types.Contains(dictEntry.Key)).SelectMany(dictEntry => dictEntry.Value))
+                foreach (GameInventory inventory in World.Current.InventoryManager.Inventories.Where(dictEntry => types.Contains(dictEntry.Key)).SelectMany(dictEntry => dictEntry.Value))
                 {
                     if (inventory.Tile == null || !inventory.CanBePickedUp(canTakeFromStockpile))
                     {
@@ -156,7 +157,7 @@ namespace Rimworld.Pathfinding
 
                 Tile targetTile = null;
                 float distance = 0f;
-                foreach (Inventory inventory in World.Current.InventoryManager.Inventories[type])
+                foreach (GameInventory inventory in World.Current.InventoryManager.Inventories[type])
                 {
                     if (inventory.Tile == null)
                     {

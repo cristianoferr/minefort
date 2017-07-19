@@ -11,6 +11,7 @@ using System.Linq;
 using Rimworld.Entities;
 using UnityEngine;
 using Rimworld.controllers;
+using Rimworld.model.entities;
 
 public class ContextMenu : MonoBehaviour
 {
@@ -103,7 +104,7 @@ public class ContextMenu : MonoBehaviour
 
         if (tile.Characters != null)
         {
-            foreach (Character character in tile.Characters)
+            foreach (GameCharacter character in tile.Characters)
             {
                 providers.Add(character);
             }

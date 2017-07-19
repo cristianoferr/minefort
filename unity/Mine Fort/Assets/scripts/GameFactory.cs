@@ -8,12 +8,12 @@ namespace Rimworld
         public GameFactory(DataHolder holder)
         {
             this.holder = holder;
-            this.world = World.current;
+            this.world = World.Current;
         }
-        public GameCharacter SpawnPawn(int pointsToSpend)
+       /* public GameCharacter SpawnPawn(int pointsToSpend)
         {
             return world.AddEntity(new GameCharacter()) as GameCharacter;
-        }
+        }*/
 /*
         public model.entities.physical.GEStockPile SpawnStockPile(int x, int y, int width, int height)
         {

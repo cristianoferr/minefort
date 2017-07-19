@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using Rimworld.PowerNetwork;
+using Rimworld.controllers;
 
 public class LuaFunctions : IFunctions
 {

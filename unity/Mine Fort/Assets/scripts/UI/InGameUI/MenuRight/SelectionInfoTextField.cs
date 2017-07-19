@@ -12,6 +12,7 @@ using Rimworld.Entities;
 using Rimworld.Localization;
 using UnityEngine;
 using UnityEngine.UI;
+using Rimworld.controllers;
 
 public class SelectionInfoTextField : MonoBehaviour
 {

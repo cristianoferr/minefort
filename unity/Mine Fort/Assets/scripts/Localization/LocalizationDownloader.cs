@@ -12,6 +12,7 @@ using System.IO;
 using System.Xml;
 using ICSharpCode.SharpZipLib.Zip;
 using UnityEngine;
+using Rimworld.controllers;
 
 namespace Rimworld.Localization
 {

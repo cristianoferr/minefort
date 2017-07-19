@@ -17,6 +17,8 @@ using Rimworld.Entities;
 using Rimworld.OrderActions;
 using Rimworld.PowerNetwork;
 using UnityEngine;
+using Rimworld.model.Inventory;
+using Rimworld.model.entities;
 
 /// <summary>
 /// InstalledObjects are things like walls, doors, and utility (e.g. a sofa).
@@ -426,7 +428,7 @@ public class Utility : ISelectable, IPrototypable, IContextActionProvider, IBuil
         {
             foreach (OrderAction.InventoryInfo inv in deconstructOrder.Inventory)
             {
-                World.Current.InventoryManager.PlaceInventoryAround(Tile, new Inventory(inv.Type, inv.Amount));
+                World.Current.InventoryManager.PlaceInventoryAround(Tile, new GameInventory(inv.Type, inv.Amount));
             }
         }
 
@@ -700,7 +702,7 @@ public class Utility : ISelectable, IPrototypable, IContextActionProvider, IBuil
         }
     }
 
-    private void InvokeContextMenuLuaAction(ContextMenuAction action, Character character)
+    private void InvokeContextMenuLuaAction(ContextMenuAction action, GameCharacter character)
     {
         FunctionsManager.Utility.Call(action.Parameter, this, character);
     }

@@ -15,11 +15,8 @@ namespace Rimworld.model.entities
     [MoonSharpUserData]
     public class GameCharacter : MovableEntity, ISelectable, IContextActionProvider, IUpdatable
     {
-        /// Unique ID of the character.
-        public readonly int ID;
 
-        /// What ID we currently are sitting at
-        private static int currentID = 0;
+
 
 
        
@@ -34,7 +31,6 @@ namespace Rimworld.model.entities
         /// Tile where job should be carried out, if different from MyJob.tile.
         private Tile jobTile;
 
-        private bool selected = false;
 
         private Color characterColor;
         private Color characterUniformColor;
@@ -50,14 +46,14 @@ namespace Rimworld.model.entities
         private Queue<State> stateQueue;
 
         /// Use only for serialization
-        public GameCharacter()
+        public GameCharacter():base()
         {
+
             Needs = new Need[PrototypeManager.Need.Count];
             InitializeCharacterValues();
-            ID = currentID++;
         }
 
-        public GameCharacter(Tile tile, Color color, Color uniformColor, Color skinColor, string name)
+        public GameCharacter(Tile tile, Color color, Color uniformColor, Color skinColor, string name):base()
         {
             CurrTile = tile;
             characterColor = color;
@@ -70,14 +66,12 @@ namespace Rimworld.model.entities
             {
                 new NeedState(this)
             };
-            ID = currentID++;
         }
 
         /// A callback to trigger when character information changes (notably, the position).
         public event Action<GameCharacter> OnCharacterChanged;
 
         /// Name of the Character.
-        public string Name { get; protected set; }
 
         /// The item we are carrying (not gear/equipment).
         public GameInventory Inventory { get; set; }
@@ -91,8 +85,6 @@ namespace Rimworld.model.entities
         /// What direction our character is looking.
         public GameConsts.Facing CharFacing { get; protected set; }
 
-        /// Stats, for character.
-        public Dictionary<string, Stat> Stats { get; protected set; }
 
         /// All the needs of this character.
         public Need[] Needs { get; private set; }
@@ -128,23 +120,6 @@ namespace Rimworld.model.entities
             }
         }
 
-        public bool IsSelected
-        {
-            get
-            {
-                return selected;
-            }
-
-            set
-            {
-                if (value == false)
-                {
-                    VisualPath.Instance.RemoveVisualPoints(ID);
-                }
-
-                selected = value;
-            }
-        }
 
         /// <summary>
         /// Gets the Health of this object.
@@ -281,6 +256,7 @@ namespace Rimworld.model.entities
             }
         }
 
+        //TODO: mover isso para physicalentity
         public object ToJSON()
         {
             JObject characterJson = new JObject();
@@ -322,17 +298,14 @@ namespace Rimworld.model.entities
 
         #region ISelectableInterface implementation
 
-        public string GetName()
+        
+
+        public override string GetDescription()
         {
-            return Name;
+            return "A human.";
         }
 
-        public string GetDescription()
-        {
-            return "A human astronaut.";
-        }
-
-        public IEnumerable<string> GetAdditionalInfo()
+        public override IEnumerable<string> GetAdditionalInfo()
         {
             yield return health.TextForSelectionPanel();
 
@@ -362,7 +335,7 @@ namespace Rimworld.model.entities
             return characterUniformColor;
         }
 
-        public string GetJobDescription()
+        public override string GetJobDescription()
         {
             if (MyJob == null)
             {

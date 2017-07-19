@@ -95,7 +95,6 @@ public class ModsManager
         LoadPrototypes("Quest.xml", PrototypeManager.Quest.LoadPrototypes);
         LoadPrototypes("Headlines.xml", PrototypeManager.Headline.LoadPrototypes);
         LoadPrototypes("Overlay.xml", PrototypeManager.Overlay.LoadPrototypes);
-        LoadPrototypes("Ships.xml", PrototypeManager.Ship.LoadPrototypes);
 
         LoadCharacterNames("CharacterNames.txt");
 

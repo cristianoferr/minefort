@@ -92,7 +92,7 @@ namespace Rimworld.model.Inventory
             }
         }
 
-        public int AvailableGameInventory
+        public int AvailableInventory
         {
             get
             {
@@ -137,9 +137,9 @@ namespace Rimworld.model.Inventory
 
         public void ReleaseClaim(GameCharacter character)
         {
-            bool noneAvailable = AvailableGameInventory == 0;
+            bool noneAvailable = AvailableInventory == 0;
             claims.RemoveAll(claim => claim.character == character);
-            if (noneAvailable && AvailableGameInventory > 0)
+            if (noneAvailable && AvailableInventory > 0)
             {
                 World.Current.jobQueue.ReevaluateWaitingQueue(this);
             }
@@ -180,7 +180,7 @@ namespace Rimworld.model.Inventory
         {
             // Does GameInventory have hitpoints? How does it get destroyed? Maybe it's just a percentage chance based on damage.
             yield return string.Format("StackSize: {0}", stackSize);
-            yield return string.Format("Available Amount: {0}", AvailableGameInventory);
+            yield return string.Format("Available Amount: {0}", AvailableInventory);
             yield return string.Format("Category: {0}", BasePrice);
             yield return string.Format("BasePrice: {0:N2}", BasePrice);
         }

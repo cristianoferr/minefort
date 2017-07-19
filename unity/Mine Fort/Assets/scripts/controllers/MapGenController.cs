@@ -10,7 +10,7 @@ public class MapGenController : MonoBehaviour {
     MapGenerator mapGen;
 	// Use this for initialization
 	void Start () {
-        mapGen = new MapGenerator(World.current);
+        mapGen = new MapGenerator(World.Current);
 	}
 	
 	// Update is called once per frame
@@ -21,6 +21,6 @@ public class MapGenController : MonoBehaviour {
     public void regenerateMap()
     {
         int seed = Utils.Random(0, 10000);
-        mapGen.RegenerateMap(seed,  World.current.biome);
+        mapGen.RegenerateMap(seed,  World.Current.biome);
     }
 }

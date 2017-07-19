@@ -16,6 +16,7 @@ using MoonSharp.Interpreter.Interop;
 using Newtonsoft.Json.Linq;
 using Rimworld.Entities;
 using Rimworld.Localization;
+using Rimworld.model.entities;
 
 namespace Rimworld.Rooms
 {
@@ -439,7 +440,7 @@ namespace Rimworld.Rooms
             return true;
         }
 
-        private void InvokeContextMenuLuaAction(ContextMenuAction action, Character character)
+        private void InvokeContextMenuLuaAction(ContextMenuAction action, GameCharacter character)
         {
             FunctionsManager.RoomBehavior.Call(action.Parameter, this, character);
         }

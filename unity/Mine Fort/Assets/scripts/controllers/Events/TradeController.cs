@@ -14,6 +14,8 @@ using MoonSharp.Interpreter;
 using Scheduler;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Rimworld.model.Inventory;
+using Rimworld.controllers;
 
 [MoonSharpUserData]
 public class TradeController
@@ -103,7 +105,7 @@ public class TradeController
             if (tradeItem.TradeAmount > 0)
             {
                 Tile tile = World.Current.GetTileAt((int)tradingCoordinates.x, (int)tradingCoordinates.y, (int)tradingCoordinates.z);
-                Inventory inv = new Inventory(tradeItem.Type, tradeItem.TradeAmount, tradeItem.TradeAmount);
+                GameInventory inv = new GameInventory(tradeItem.Type, tradeItem.TradeAmount, tradeItem.TradeAmount);
                 World.Current.InventoryManager.PlaceInventoryAround(tile, inv, 6);
             }
             else if (tradeItem.TradeAmount < 0)

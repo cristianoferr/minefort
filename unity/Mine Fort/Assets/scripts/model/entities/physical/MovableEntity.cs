@@ -22,7 +22,7 @@ namespace Rimworld.model.entities
             //Debug.Log("Character Update");
             base.Update(deltaTime);
 
-            Update_DoMovement(deltaTime);
+            //Update_DoMovement(deltaTime);
 
         }
 

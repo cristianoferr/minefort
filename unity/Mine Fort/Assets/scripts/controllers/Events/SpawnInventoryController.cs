@@ -11,6 +11,8 @@ using System.Linq;
 using Rimworld.Localization;
 using UnityEngine;
 using UnityEngine.UI;
+using Rimworld.model.Inventory;
+using Rimworld.controllers;
 
 [MoonSharp.Interpreter.MoonSharpUserData]
 public class SpawnInventoryController
@@ -50,7 +52,7 @@ public class SpawnInventoryController
             return;
         }
 
-        Inventory inventoryChange = new Inventory(InventoryToBuild, AmountToCreate);
+        GameInventory inventoryChange = new GameInventory(InventoryToBuild, AmountToCreate);
 
         // You can't spawn on occupied tiles
         if (t.Furniture != null)
@@ -93,7 +95,7 @@ public class SpawnInventoryController
 
     private void CreateInventoryEntries()
     {
-        foreach (Inventory inventory in PrototypeManager.Inventory.Values.OrderByDescending(inv => inv.Category))
+        foreach (GameInventory inventory in PrototypeManager.Inventory.Values.OrderByDescending(inv => inv.Category))
         {
             GameObject inventorySlot_go = new GameObject();
             inventorySlot_go.name = "Slot - " + inventory.Type;
@@ -121,7 +123,7 @@ public class SpawnInventoryController
         }
     }
 
-    private void CreateButtonComponents(GameObject go, Inventory inventory, int[] amounts)
+    private void CreateButtonComponents(GameObject go, GameInventory inventory, int[] amounts)
     {
         foreach (int amount in amounts)
         {

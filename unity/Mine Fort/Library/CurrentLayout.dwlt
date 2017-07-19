@@ -13,14 +13,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: -1912
-    y: 51
-    width: 1904
-    height: 981
+    x: 585
+    y: 346
+    width: 1105
+    height: 542
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -41,9 +41,9 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1904
-    height: 981
-  m_MinSize: {x: 950, y: 300}
+    width: 1105
+    height: 542
+  m_MinSize: {x: 950, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -61,7 +61,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1904
+    width: 1105
     height: 30
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -81,8 +81,8 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 961
-    width: 1904
+    y: 522
+    width: 1105
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -103,12 +103,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 30
-    width: 1904
-    height: 931
-  m_MinSize: {x: 713, y: 492}
-  m_MaxSize: {x: 18008, y: 14042}
+    width: 1105
+    height: 492
+  m_MinSize: {x: 711, y: 471}
+  m_MaxSize: {x: 18008, y: 14021}
   vertical: 1
-  controlID: 139
+  controlID: 346
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -128,12 +128,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1904
-    height: 931
-  m_MinSize: {x: 713, y: 492}
-  m_MaxSize: {x: 18008, y: 14042}
+    width: 1105
+    height: 492
+  m_MinSize: {x: 711, y: 471}
+  m_MaxSize: {x: 18008, y: 14021}
   vertical: 0
-  controlID: 140
+  controlID: 347
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -152,12 +152,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1377
-    height: 931
-  m_MinSize: {x: 202, y: 421}
+    width: 594
+    height: 492
+  m_MinSize: {x: 200, y: 321}
   m_MaxSize: {x: 4002, y: 8021}
   vertical: 1
-  controlID: 46
+  controlID: 304
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -174,17 +174,17 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1377
-    height: 221
-  m_MinSize: {x: 202, y: 221}
+    width: 594
+    height: 246
+  m_MinSize: {x: 102, y: 121}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 15}
+  m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 15}
   - {fileID: 16}
   - {fileID: 17}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -200,11 +200,11 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 221
-    width: 1377
-    height: 710
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+    y: 246
+    width: 594
+    height: 246
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -226,14 +226,14 @@ MonoBehaviour:
   - {fileID: 12}
   m_Position:
     serializedVersion: 2
-    x: 1377
+    x: 594
     y: 0
-    width: 236
-    height: 931
-  m_MinSize: {x: 234, y: 492}
-  m_MaxSize: {x: 10004, y: 14042}
+    width: 234
+    height: 492
+  m_MinSize: {x: 234, y: 471}
+  m_MaxSize: {x: 10004, y: 14021}
   vertical: 1
-  controlID: 93
+  controlID: 235
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -250,10 +250,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 236
-    height: 414
-  m_MinSize: {x: 204, y: 221}
-  m_MaxSize: {x: 4004, y: 4021}
+    width: 234
+    height: 221
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -274,9 +274,9 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 414
-    width: 236
-    height: 517
+    y: 221
+    width: 234
+    height: 271
   m_MinSize: {x: 234, y: 271}
   m_MaxSize: {x: 10004, y: 10021}
   m_ActualView: {fileID: 19}
@@ -298,10 +298,10 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1613
+    x: 828
     y: 0
-    width: 291
-    height: 931
+    width: 277
+    height: 492
   m_MinSize: {x: 277, y: 71}
   m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 21}
@@ -333,11 +333,11 @@ MonoBehaviour:
   m_DepthBufferBits: 32
   m_Pos:
     serializedVersion: 2
-    x: -1912
-    y: 321
-    width: 1375
-    height: 689
-  m_MaximizeOnPlay: 1
+    x: 585
+    y: 641
+    width: 592
+    height: 225
+  m_MaximizeOnPlay: 0
   m_Gizmos: 0
   m_Stats: 0
   m_SelectedSizes: 00000000060000000000000000000000000000000000000000000000000000000000000000000000
@@ -345,10 +345,10 @@ MonoBehaviour:
   m_ZoomArea:
     m_HRangeLocked: 0
     m_VRangeLocked: 0
-    m_HBaseRangeMin: -687.5
-    m_HBaseRangeMax: 687.5
-    m_VBaseRangeMin: -336
-    m_VBaseRangeMax: 336
+    m_HBaseRangeMin: -296
+    m_HBaseRangeMax: 296
+    m_VBaseRangeMin: -104
+    m_VBaseRangeMax: 104
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -365,25 +365,25 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 17
-      width: 1375
-      height: 672
+      width: 592
+      height: 208
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 687.5, y: 336}
+    m_Translation: {x: 296, y: 104}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -687.5
-      y: -336
-      width: 1375
-      height: 672
+      x: -296
+      y: -104
+      width: 592
+      height: 208
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_TargetTexture: {fileID: 0}
   m_CurrentColorSpace: 0
-  m_LastWindowPixelSize: {x: 1375, y: 689}
+  m_LastWindowPixelSize: {x: 592, y: 225}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000100000100
@@ -409,10 +409,10 @@ MonoBehaviour:
   m_DepthBufferBits: 32
   m_Pos:
     serializedVersion: 2
-    x: -1912
-    y: 100
-    width: 1375
-    height: 200
+    x: 687
+    y: 579
+    width: 592
+    height: 225
   m_SceneLighting: 1
   lastFramingTime: 5698.2051603058135
   m_2DMode: 1
@@ -483,10 +483,10 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: -1920
-    y: 92
-    width: 1387
-    height: 464
+    x: 585
+    y: 395
+    width: 592
+    height: 225
 --- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -554,15 +554,15 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: -533
-    y: 100
-    width: 232
-    height: 393
+    x: 1181
+    y: 395
+    width: 230
+    height: 200
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: 00fcffff00000000
+    m_SelectedIDs: 1047feff
+    m_LastClickedID: -112880
+    m_ExpandedIDs: 1447feff00000000888f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -607,10 +607,10 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: -533
-    y: 514
-    width: 232
-    height: 496
+    x: 1181
+    y: 616
+    width: 230
+    height: 250
   m_SearchFilter:
     m_NameFilter: 
     m_ClassNames: []
@@ -623,19 +623,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets
+    - Assets/scripts/controllers
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets
+  - Assets/scripts/controllers
   m_LastFoldersGridSize: 16
-  m_LastProjectPath: F:\Java\repositorios\github\minefort\unity\Mine Fort
+  m_LastProjectPath: G:\java\repositorios\gitHub\minefort\unity\Mine Fort
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 2e2a0000
-    m_LastClickedID: 10798
-    m_ExpandedIDs: 000000002e2a0000f83200006e370000b2450000fe450000ffffff7f
+    scrollPos: {x: 0, y: 84}
+    m_SelectedIDs: c8850000
+    m_LastClickedID: 34248
+    m_ExpandedIDs: 00000000187e0000c28200003c850000288d00005a8d000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -663,7 +663,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: d6220000
     m_LastClickedID: 8918
-    m_ExpandedIDs: 000000002e2a0000f83200006e370000b2450000fe450000
+    m_ExpandedIDs: 00000000187e0000c28200003c850000288d00005a8d000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -688,9 +688,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: 1047feff
+    m_LastClickedInstanceID: -112880
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: 661e0000ea2200003c93feffbe74feff3e63feffca090000aa0300000c060000be0300006a0500009886fffff00200002a070000300000006c0600007c0500007806000042060000c8030000ca96ffffb496ffffcc0300001e0f00001e0600001c0f0000022b010056050000be0c00001a0a00009c030000600a0000ba0d00006a070000a025000008630000ec2b00002e070000e22b0000720a0000740a0000482000008e0c0000fa1d0000b49efeffea1d0000c2260000e0f1000042f70000ac97ddfffa290000b4130000920a00009417000008260000e20c000060040000303c0000fa36000098190000400f00001e0801007e0f0100400f0100dc630000440f0100da630000c0250000c029000074eb0000d22a00000877000018d171ff6c2c0000682c00006a2c0000622c000010c30300c4240000ac240000c8250000ce2500006e3c0000de250000c2250000d6250000783c0000dc250000cc250000882700006a2300009e250000f2270000a82700008825000012270000943f00008c2b00008a2b0000662b0000882b000016c70000f06f0000407b0000447b0000286200004e7b000064350100f22c0000002c00007425000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -715,7 +715,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 27}
     m_GridSize: 16
   m_DirectoriesAreaWidth: 110
 --- !u!114 &20
@@ -786,6 +786,116 @@ MonoBehaviour:
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
+    - id: '[Assembly-CSharp-Editor.dll]'
+      name: Assembly-CSharp-Editor.dll
+      fullName: G:/java/repositorios/gitHub/minefort/unity/Mine Fort/Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor.dll][InitialTest]'
+      name: InitialTest
+      fullName: InitialTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor.dll][InitialTest][TestaConversaoCoordenadaIso]'
+      name: TestaConversaoCoordenadaIso
+      fullName: InitialTest.TestaConversaoCoordenadaIso
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor.dll][InitialTest][TestaTileSet]'
+      name: TestaTileSet
+      fullName: InitialTest.TestaTileSet
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor.dll][InitialTest][TestMapChunks]'
+      name: TestMapChunks
+      fullName: InitialTest.TestMapChunks
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor.dll][InitialTest][TestSpawnStockPile]'
+      name: TestSpawnStockPile
+      fullName: InitialTest.TestSpawnStockPile
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor.dll][InitialTest][TestTemplateInitializer]'
+      name: TestTemplateInitializer
+      fullName: InitialTest.TestTemplateInitializer
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor.dll][InitialTest][TestWorldMap]'
+      name: TestWorldMap
+      fullName: InitialTest.TestWorldMap
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-CSharp-Editor-firstpass.dll]'
+      name: Assembly-CSharp-Editor-firstpass.dll
+      fullName: G:/java/repositorios/gitHub/minefort/unity/Mine Fort/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll
+      resultStatus: 2
+      duration: 0
+      messages: Has no TestFixtures
+      output: 
+      stacktrace: 
+      notRunnable: 1
+      ignoredOrSkipped: 0
+      description: 
+    - id: '[Assembly-UnityScript-Editor-firstpass.dll]'
+      name: Assembly-UnityScript-Editor-firstpass.dll
+      fullName: G:/java/repositorios/gitHub/minefort/unity/Mine Fort/Library/ScriptAssemblies/Assembly-UnityScript-Editor-firstpass.dll
+      resultStatus: 2
+      duration: 0
+      messages: Has no TestFixtures
+      output: 
+      stacktrace: 
+      notRunnable: 1
+      ignoredOrSkipped: 0
+      description: 
     m_ResultText: 
     m_ResultStacktrace: 
     m_TestListState:
@@ -832,10 +942,10 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: -297
-    y: 100
-    width: 289
-    height: 910
+    x: 1415
+    y: 395
+    width: 275
+    height: 471
   m_ScrollPosition: {x: 0, y: 0}
   m_InspectorMode: 0
   m_PreviewResizer:

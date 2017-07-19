@@ -1,0 +1,231 @@
+##########Menu Items##########
+menu_apply=Apply
+menu_construction=Construction
+menu_orders=Orders
+menu_work=Work
+menu_world=World
+menu_options=Options
+menu_settings=Settings
+menu_furniture=Furniture
+menu_floor=Floor
+menu_save=Save
+save=Save
+load=Load
+job_list=Job List
+menu_resume=Resume
+menu_quests=Quests
+menu_quit=Quit
+menu_quit_game=Quit Game
+menu_quit_to_menu=Main Menu
+button_menu={0}
+new_game=New Game
+height=Height
+width=Width
+depth=Depth
+okay=Okay
+cancel=Cancel
+filename=Filename
+button_yes=Yes
+button_no=No
+new_world=New World
+
+##########Furniture##########
+furn_steel_wall=Steel Wall
+furn_steel_wall_desc=A wall made out of steel.
+furn_door=Door
+furn_door_desc=A door.
+furn_stockpile=Stockpile
+furn_stockpile_desc=A storage for your materials.
+furn_oxygen_generator=Oxygen Generator
+furn_oxygen_generator_desc=Generating oxygen for your astronauts.
+furn_mining_drone_station=Mining Drone
+furn_mining_drone_station_desc=Mining materials out of nothing.
+furn_metal_smelter=Metal Smelter
+furn_metal_smelter_desc=Smelts your raw iron into metal.
+furn_airlock_door=Airlock Door
+furn_airlock_door_desc=Prevents air from leaving the base.
+furn_cloning_pod=Cloning Pod
+furn_cloning_pod_desc=Creates an additional worker, then is destroyed.
+furn_fission_reactor=Fission Reactor
+furn_fission_reactor_desc=Generates power by smashing atoms together.
+furn_power_cell_press=Power Cell Press
+furn_power_cell_press_desc=Presses metal and uranium into Power Cells.
+furn_small_landing_pad=Small Landing Pad
+furn_small_landing_pad_desc=A landing pad for small spaceboats to land.
+furn_heater=Heater
+furn_heater_desc=Raises temperature in the room.
+furn_oxygen_compressor=Oxygen Compressor
+furn_oxygen_compressor_desc=Collects oxygen when there is enough in the room. Releases oxygen when there isn't.
+furn_solar_panel=Solar Panel
+furn_solar_panel_desc=Converts light to electricity.
+furn_simple_bed=Bed
+furn_simple_bed_desc=A simple bed.
+furn_rtg=RTG
+furn_rtg_desc=Radioisotope thermoelectric generator provides electricity and heat.
+furn_mine=A Mining Spot
+furn_mine_desc=A spot for mining ore.
+furn_accumulator=Accumulator
+furn_accumulator_desc=Stores power.
+furn_air_pump=Air Pump
+furn_air_pump_desc=Pumps air between two rooms.
+furn_vent=Vent
+furn_vent_desc=Allows air to flow between rooms
+
+##########Utility##########
+util_power_cable=Power Cable
+util_power_cable_desc=Carries power
+util_water_pipe=Water Pipe
+util_water_pipe_desc=Transports water
+
+##########Tiles##########
+tile_Empty=Empty
+tile_Empty_desc=An empty tile.
+tile_Floor=Floor
+tile_Floor_desc=Meets the highest non-skid standards.
+tile_Ladder=Ladder
+tile_Ladder_desc=High-tech space movement system. Effectiveness reduced when held by weak noodle arms.
+
+##########Room Behaviors##########
+roombehavior_airlock=Airlock
+roombehavior_airlock_desc=A room that prevents air from escaping the base.
+
+##########Inventory##########
+inv_raw_iron=Iron Ore
+inv_raw_iron_desc=Raw Iron Ore, it needs to be processed before it's useful.
+inv_ice=Ice
+inv_ice_desc=Solidified Water
+inv_raw_copper=Copper Ore
+inv_raw_copper_desc=Raw Copper Ore, it needs to be processed before it's useful.
+inv_raw_uranium=Uranium Ore
+inv_raw_uranium_desc=Raw Uranium Ore, it needs to be processed before it's useful.
+inv_steel_plate=Steel Plate
+inv_steel_plate_desc=A flat plate of steel.
+inv_power_cell=Power Cell
+inv_power_cell_desc=Uranium Power Cell
+inv_copper_plate=Copper Plate
+inv_copper_plate_desc=A flat plate of copper
+inv_copper_wire=Copper Wire
+inv_copper_wire_desc=Copper extruded into a long wire
+
+##########Job##########
+prioritize=Prioritize {0}
+cancel_job=Cancel {0}
+need_oxygen=Oxygen {0}
+need_sleep=Sleep {0}
+job_no_job_desc=None
+job_stockpile_moving_desc=Hauling to Stockpile
+job_mining_drone_station_mining_desc=Mining Ore from Machine
+job_cloning_pod_cloning_desc=Cloning Character
+job_fission_reactor_filling_desc=Filling Fission Reactor
+job_ore_mine_mining_desc=Mining Ore from Mine
+
+##########Overlay##########
+overlay_none=None
+overlay_oxygen=Oxygen
+overlay_room=Room
+overlay_power=Power
+overlay_temperature=Temperature
+overlay_debug_thermal_diffusivity=Debug: Thermal Diffusivity
+overlay_debug_heat_generation=Debug: Heat Generation
+overlay_power_network=Power Network
+overlay_fluid_network=Fluid Network
+
+##########StatusMessages##########
+message_creating_new_world=Creating new world...
+message_saving_game=Saving game...
+message_game_saved=Game saved!
+message_name_or_file_needed_for_save=You must enter a name or select a file to overwrite!
+message_file_needed_for_load=You must select a file!
+message_file_doesn't_exist=File doesn't exist!
+message_loading_game=Loading game...
+prompt_save_before_creating_new_world=Would you like to save the game before creating a new world?
+prompt_save_before_loading_new_game=Would you like to save before loading another game?
+prompt_overwrite_existing_file=File {0} already exists! Would you like to overwrite it?
+prompt_delete_file=Delete file {0}? You cannot revert this action
+prompt_confirm_quit=Are you sure you want to quit?
+tile_type=Tile Type: {0}
+room_index=Room Index: {0}
+hit_points_fraction=HitPoints: {0}/{1}
+hit_points=HitPoints: {0}
+not_applicable_shorthand=N/A
+stat_dexterity=Dexterity: {0}
+stat_strength=Strength: {0}
+generate_asteroids=Generate Asteroids
+time_string={0:h}:{0:mm} {0:tt}
+date_string=Q{0:q} Day {0:d}, {0:y}
+furniture=Furniture: {0}
+deconstruct_furniture=Deconstruct Furniture
+mine_furniture=Mine
+dummy_message_text=Set message text!!!
+temp_pathfinding_test=Pathfinding Test
+selection_panel_title=Current Selection
+selection_hp={0}/{1}
+build=Build {0}
+
+##########Power##########
+power_grid_status_online=Power Grid: <color={0}>Online</color>
+power_grid_status_offline=Power Grid: <color={0}>Offline</color>
+power_input_status=Power Input: <color={0}>{1}</color>
+power_output_status=Power Output: <color={0}>{1}</color>
+power_accumulated_fraction=Power Accumulated: {0} / {1}
+call_trade_ship_test=Call Trade Ship Test
+flip_direction=Flip Direction
+open_vent=Open Vent
+close_vent=Close Vent
+mine_ore=Mine Ore
+toggle_pressure_lock=Toggle Pressure Lock
+set_filter=Set Filter%
+change_to_raw_iron=Change to Raw Iron
+change_to_raw_copper=Change to Raw Copper
+deconstruct=Deconstruct {0}
+
+##########Settings##########
+movement=Camera Movement
+zoom_lerp_time=Camera Lerping Time
+zoom_sensitivity=Zoom Sensitivity
+confirm_settings_menu_close=Are you sure you want to close the menu and cancel all settings?
+general=General
+sound=Sound
+video=Video
+developer=Developer
+autosave=Autosave
+autosave_every=Autosave Every:
+max_autosaves=Max Autosaves:
+localization=Localization
+language=Language:
+auto_update_language=AutoUpdate:
+volume=Volume
+master_volume=Master:
+music_volume=Music:
+game_volume=Game:
+alert_volume=Alert:
+ui_volume=UI:
+advanced=Advanced
+sound_device=Device:
+locational_sound=Locational Sound:
+ui_skin=UI Skin:
+quality=Quality:
+vsync=V-Sync:
+soft_particles=Soft Particles:
+shadows=Shadows:
+anisotropic_filtering=Anisotropic Filtering:
+aa=AA:
+window=Window:
+fullscreen=Fullscreen:
+resolution=Resolution:
+scroll_sensitivity=Scroll Sensitivity:
+font_size=Font Size:
+console=Console
+utilities=Utilities
+time_stamps=Console Time Stamps:
+console_enable=Enable Console:
+developer_console=Developer Console
+performance_hud=Performance HUD:
+ui_skin=UI Skin:
+quality=Quality:
+logging_level=Logging Level:
+window_setting=Window Setting:
+developer_mode=Developer Mode:
+master_volume=Master Volume:
+music_volume=Music Volume:
+ui_scale=UI Scale:

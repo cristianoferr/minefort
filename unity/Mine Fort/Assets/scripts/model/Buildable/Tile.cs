@@ -115,7 +115,7 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
     public int Y { get; private set; }
 
     public int Z { get; private set; }
-    public int height { get; set; }
+    public float height { get; set; }
 
     public float MovementModifier { get; set; }
 
