@@ -1,6 +1,4 @@
-﻿using MineFort.model.entities;
-using MineFort.model.entities.physical;
-
+﻿
 namespace MineFort
 {
     public class GameFactory

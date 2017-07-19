@@ -13,6 +13,7 @@ using MoonSharp.Interpreter;
 using MineFort.Jobs;
 using MineFort.OrderActions;
 using MineFort.model;
+using MineFort;
 
 [MoonSharpUserData]
 public class TileType : TagObject, IPrototypable, IEquatable<TileType>

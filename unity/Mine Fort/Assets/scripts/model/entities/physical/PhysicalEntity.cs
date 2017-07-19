@@ -2,11 +2,12 @@
 using MineFort.Entities;
 using MineFort.Localization;
 using MineFort.logic;
+using MineFort.model;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MineFort.model.entities
+namespace MineFort.Entities
 {
     public class PhysicalEntity : GameEntity, ISelectable
     {

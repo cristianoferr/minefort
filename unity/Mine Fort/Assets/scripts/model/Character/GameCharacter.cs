@@ -9,8 +9,9 @@ using UnityEngine;
 using MineFort.Entities.States;
 using MineFort.Entities;
 using MineFort.model.Inventory;
+using MineFort.model;
 
-namespace MineFort.model.entities
+namespace MineFort.Entities
 {
     [MoonSharpUserData]
     public class GameCharacter : MovableEntity, ISelectable, IContextActionProvider, IUpdatable

@@ -1,4 +1,6 @@
-﻿using MineFort.model.components;
+﻿using MineFort.Components;
+using MineFort.Entities;
+using MineFort.model.components;
 using MineFort.model.entities;
 using System;
 using System.Collections.Generic;

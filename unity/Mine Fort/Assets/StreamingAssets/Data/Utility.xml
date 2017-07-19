@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Utilities>
+    <Utility type="power_cable">
+        <TypeTag>Power</TypeTag>
+
+        <OrderAction type="Build">
+            <Job time="1" />
+            <Inventory type="copper_wire" amount="2" />
+        </OrderAction>
+
+        <OrderAction type="Deconstruct">
+            <Job time="1" />
+            <Inventory type="copper_wire" amount="1" />
+        </OrderAction>
+        
+        <ContextMenuAction FunctionName="UtilityContextTest1" Text="Test Context 1" RequireCharacterSelected="false"/>
+        <ContextMenuAction FunctionName="UtilityContextTest2" Text="Test Context 2" RequireCharacterSelected="false"/>
+        
+        <LocalizationCode>util_power_cable</LocalizationCode>
+        <UnlocalizedDescription>util_power_cable_desc</UnlocalizedDescription>
+    </Utility>
+    
+    <Utility type="fluid_pipe">
+        <TypeTag>Fluid</TypeTag>
+
+        <OrderAction type="Build">
+            <Job time="1" />
+            <Inventory type="steel_plate" amount="2" />
+        </OrderAction>
+
+        <OrderAction type="Deconstruct">
+            <Job time="1" />
+            <Inventory type="steel_plate" amount="1" />
+        </OrderAction>
+        
+        <LocalizationCode>util_fluid_pipe</LocalizationCode>
+        <UnlocalizedDescription>util_fluid_pipe_desc</UnlocalizedDescription>
+    </Utility>
+</Utilities>

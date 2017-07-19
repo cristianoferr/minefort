@@ -1,5 +1,7 @@
 ﻿
-namespace MineFort.model.components
+using MineFort.model;
+
+namespace MineFort.Components
 {
     public class HeartComponent : GameComponent
     {

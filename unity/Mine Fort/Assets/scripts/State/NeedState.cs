@@ -13,7 +13,7 @@ namespace MineFort.Entities.States
 {
     public class NeedState : State
     {
-        public NeedState(model.entities.GameCharacter character, State nextState = null)
+        public NeedState(GameCharacter character, State nextState = null)
             : base("Need", character, nextState)
         {
         }

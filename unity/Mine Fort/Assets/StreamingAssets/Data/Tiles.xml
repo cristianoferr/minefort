@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tiles>
+  <!-- TODO: DeconstructionJob -->
+  <Tile type="empty">
+    <BaseMovementCost>1</BaseMovementCost>
+    <LinksToNeighbours>false</LinksToNeighbours>
+
+    <OrderAction type="ChangeTileType">
+      <Job time="0" />
+    </OrderAction>
+
+    <LocalizationCode>tile_empty</LocalizationCode>
+    <UnlocalizedDescription>tile_empty_desc</UnlocalizedDescription>
+  </Tile>
+
+  <Tile type="floor">
+    <BaseMovementCost>1</BaseMovementCost>
+    <LinksToNeighbours>false</LinksToNeighbours>
+
+    <OrderAction type="ChangeTileType">
+      <Job time="0.1" />
+    </OrderAction>
+
+    <LocalizationCode>tile_floor</LocalizationCode>
+    <UnlocalizedDescription>tile_floor_desc</UnlocalizedDescription>
+  </Tile>
+
+  <Tile type="ladder">
+    <BaseMovementCost>1.5</BaseMovementCost>
+    <LinksToNeighbours>false</LinksToNeighbours>
+
+    <CanPlaceHere functionName="CanBuildHere_Ladder"/>
+
+    <OrderAction type="ChangeTileType">
+      <Job time="0.5" />
+      <Inventory type="steel_plate" amount="1" />
+    </OrderAction>
+
+    <LocalizationCode>tile_ladder</LocalizationCode>
+    <UnlocalizedDescription>tile_ladder_desc</UnlocalizedDescription>
+  </Tile>
+</Tiles>

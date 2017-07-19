@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Overlays>
+    <!-- List of overlay prototypes -->
+    <!-- type attribute is mandatory and must be unique -->
+    <!-- colorMap: selection of coloring scheme for overlay (defaults to "jet") -->
+    <!-- content: lua function name, called on each tile, must return int -->
+    <Overlay type="oxygen" colorMap="Jet">oxygenValueAt</Overlay>
+    <Overlay type="room" colorMap="Random">roomNumberValueAt</Overlay>
+    <Overlay type="power" colorMap="Jet">powerValueAt</Overlay>
+    <Overlay type="temperature" colorMap="Jet">temperatureValueAt</Overlay>
+    <Overlay type="power_network" colorMap="Palette">PowerGridAt</Overlay>
+    <Overlay type="fluid_network" colorMap="Palette">FluidGridAt</Overlay>
+    <Overlay type="debug_thermal_diffusivity" colorMap="Jet">thermalDiffusivityValueAt</Overlay>
+    <Overlay type="debug_heat_generation" colorMap="Jet">heatGenerationValueAt</Overlay>
+</Overlays>

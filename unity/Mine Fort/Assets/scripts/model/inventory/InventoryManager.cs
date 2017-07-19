@@ -10,6 +10,7 @@ using MineFort.model.entities;
 using MineFort.model.Inventory;
 using Newtonsoft.Json.Linq;
 using MineFort.Pathfinding;
+using MineFort.Entities;
 
 namespace MineFort.model.inventory
 {

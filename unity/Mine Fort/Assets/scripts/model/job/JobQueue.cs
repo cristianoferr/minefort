@@ -113,7 +113,7 @@ public class JobQueue
     /// <summary>
     /// Search for a job that can be performed by the specified character. Tests that the job can be reached and there is enough inventory to complete it, somewhere.
     /// </summary>
-    public Job GetJob(MineFort.model.entities.GameCharacter character)
+    public Job GetJob(GameCharacter character)
     {
         DebugLog("{0},{1} GetJob() (Queue size: {2})", character.GetName(), character.ID, jobQueue.Count);
         if (jobQueue.Count == 0)
@@ -214,11 +214,11 @@ public class JobQueue
     /// <param name="job"></param>
     /// <param name="character"></param>
     /// <returns></returns>
-    public bool CharacterCantReachHelper(Job job, MineFort.model.entities.GameCharacter character)
+    public bool CharacterCantReachHelper(Job job, GameCharacter character)
     {
         if (job.CharsCantReach != null)
         {
-            foreach (MineFort.model.entities.GameCharacter charTemp in job.CharsCantReach)
+            foreach (GameCharacter charTemp in job.CharsCantReach)
             {
                 if (charTemp == character)
                 {

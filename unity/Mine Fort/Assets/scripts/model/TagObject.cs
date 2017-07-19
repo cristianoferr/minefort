@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-namespace MineFort.model
+namespace MineFort
 {
     [DataContract]
     public class TagObject

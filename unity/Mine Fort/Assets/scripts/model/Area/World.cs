@@ -105,7 +105,7 @@ public class World
     /// <param name="width">Width in tiles.</param>
     /// <param name="height">Height in tiles.</param>
     /// <param name="depth">Depth in amount.</param>
-    public World(int width, int height, int depth)
+    public World(int width, int height, int depth):this()
     {
 
         // Creates an empty world.
@@ -123,12 +123,6 @@ public class World
         tileGraph = new Path_TileGraph(this);
         roomGraph = new Path_RoomGraph(this);
 
-
-        holder = new DataHolder(this);
-        mapData = new Map(this);
-        biomes = new Biomes();
-        entities = new List<PhysicalEntity>();
-
         // Make one character.
         CharacterManager.Create(GetTileAt((Width / 2) - 1, Height / 2, 0));
     }
@@ -138,10 +132,14 @@ public class World
     /// </summary>
     public World()
     {
+        mapData = new Map(this);
+        holder = new DataHolder(this);
+        biomes = new Biomes();
+        entities = new List<PhysicalEntity>();
 
     }
 
-  
+
 
     /// <summary>
     /// Releases the TimeManager events when <see cref="World"/> is reclaimed by garbage collection.

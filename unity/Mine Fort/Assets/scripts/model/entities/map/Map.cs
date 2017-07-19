@@ -35,7 +35,7 @@ namespace MineFort.model.entities
             while (y >= GameConsts.WORLD_HEIGHT) { y = y-GameConsts.WORLD_HEIGHT ; }
             float cx = (int)(x / GameConsts.CHUNK_SIZE);
             float cy = (int)(y / GameConsts.CHUNK_SIZE);
-            
+
             return chunks[(int)cx, (int)cy];
         }
 

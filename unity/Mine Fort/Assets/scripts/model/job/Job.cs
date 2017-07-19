@@ -57,7 +57,7 @@ public class Job : ISelectable, IPrototypable
     // The job has been stopped, either because it's non-repeating or was canceled.
     private List<string> jobCompletedLua;
 
-    private List<MineFort.model.entities.GameCharacter> charsCantReach = new List<MineFort.model.entities.GameCharacter>();
+    private List<GameCharacter> charsCantReach = new List<GameCharacter>();
 
     // Required for IPrototypable
     public Job()
@@ -225,7 +225,7 @@ public class Job : ISelectable, IPrototypable
         }
     }
 
-    public List<MineFort.model.entities.GameCharacter> CharsCantReach
+    public List<GameCharacter> CharsCantReach
     {
         get
         {

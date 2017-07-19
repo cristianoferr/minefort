@@ -1,5 +1,8 @@
 ﻿
-namespace MineFort.model.components
+using MineFort.Entities;
+using MineFort.model;
+
+namespace MineFort.Components
 {
     public class GameComponent : GameEntity
     {

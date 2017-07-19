@@ -1,5 +1,5 @@
 ﻿
-namespace MineFort.model.entities.physical
+namespace MineFort.Entities
 {
     public class GEStockPile : PhysicalEntity
     {

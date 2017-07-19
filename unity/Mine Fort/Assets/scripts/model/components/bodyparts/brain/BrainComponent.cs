@@ -1,4 +1,7 @@
-﻿namespace MineFort.model.components
+﻿using MineFort.Components;
+using MineFort.model;
+
+namespace MineFort.Components
 {
     public class BrainComponent : GameComponent
     {

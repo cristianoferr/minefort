@@ -1,5 +1,7 @@
 ﻿
-namespace MineFort.model.entities.physical
+using MineFort.Entities;
+
+namespace MineFort.Entities
 {
     public class GETownCenter : PhysicalEntity
     {

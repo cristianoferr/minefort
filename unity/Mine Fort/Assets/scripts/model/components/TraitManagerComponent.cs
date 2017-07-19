@@ -1,4 +1,5 @@
-﻿using MineFort.model.components.brain;
+﻿using MineFort.Components;
+using MineFort.model.components.brain;
 using System.Collections.Generic;
 
 namespace MineFort.model.components

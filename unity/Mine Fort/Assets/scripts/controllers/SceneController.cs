@@ -8,6 +8,7 @@
 #endregion
 
 using MineFort.controllers;
+using MineFort.model;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -45,7 +46,8 @@ public static class SceneController
 
         if (NewWorldSize == Vector3.zero)
         {
-            return new World(100, 100, 5);
+            //TODO: change world size to be dynamic
+            return new World(GameConsts.WORLD_WIDTH, GameConsts.WORLD_HEIGHT, GameConsts.WORLD_DEPTH);
         }
         else
         {

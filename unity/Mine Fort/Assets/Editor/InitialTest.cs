@@ -4,13 +4,12 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 using MineFort;
-using MineFort.model.entities.physical;
-using MineFort.model.entities;
 using MineFort.model.io;
 using MineFort.model;
 using MineFort.model.components;
 using MineFort.model.components.brain;
 using MineFort.model.entities.map;
+using MineFort.Entities;
 
 public class InitialTest
 {
@@ -100,7 +99,7 @@ public class InitialTest
         Template templNullTag = holder.templates.GetTemplateWithTag(GameConsts.TAG_HUMANOID + " lixo " + GameConsts.TAG_ORGANIC);
         Assert.IsNull(templNullTag);
 
-        MineFort.model.entities.GameCharacter human = templHuman.Spawn(world, new Vector3(10, 10, 0)) as MineFort.model.entities.GameCharacter;
+        GameCharacter human = templHuman.Spawn(world, new Vector3(10, 10, 0)) as GameCharacter;
         Assert.IsNotNull(human);
 
         TraitManagerComponent traits = human.GetComponent(GameConsts.COMPONENT_TYPE.TRAIT_MANAGER) as TraitManagerComponent;

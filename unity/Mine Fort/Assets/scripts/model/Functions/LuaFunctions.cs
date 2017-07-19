@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using MineFort.PowerNetwork;
 using MineFort.controllers;
+using MineFort.model.Inventory;
 
 public class LuaFunctions : IFunctions
 {
@@ -35,7 +36,7 @@ public class LuaFunctions : IFunctions
         // If we want to be able to instantiate a new object of a class
         //   i.e. by doing    SomeClass.__new()
         // We need to make the base type visible.
-        RegisterGlobal(typeof(Inventory));
+        RegisterGlobal(typeof(GameInventory));
         RegisterGlobal(typeof(Job));
         RegisterGlobal(typeof(ModUtils));
         RegisterGlobal(typeof(World));

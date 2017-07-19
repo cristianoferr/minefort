@@ -1,4 +1,6 @@
 ﻿
+using MineFort.Components;
+using MineFort.Entities;
 using MineFort.model;
 using MineFort.model.components;
 using MineFort.model.entities;
@@ -69,7 +71,7 @@ namespace MineFort.logic
             templateHumanoid.AddTag(GameConsts.TAG_HUMANOID);
             templateHumanoid.AddTag(GameConsts.TAG_ORGANIC);
             templateHumanoid.AddTag(GameConsts.TAG_PHYSICAL);
-            templateHumanoid.entityToSpawn = typeof(model.entities.GameCharacter);
+            templateHumanoid.entityToSpawn = typeof(GameCharacter);
 
             Property propBodyParts = templateHumanoid.AddComponent(GameConsts.TEMPL_HUMANOID_BODYPARTS);
             propBodyParts.AddTag(GameConsts.TAG_BODYPARTS);

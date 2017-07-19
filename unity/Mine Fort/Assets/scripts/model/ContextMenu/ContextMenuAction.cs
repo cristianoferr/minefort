@@ -12,7 +12,7 @@ using MineFort.model.entities;
 
 public class ContextMenuAction
 {
-    public Action<ContextMenuAction, MineFort.model.entities.GameCharacter> Action;
+    public Action<ContextMenuAction, GameCharacter> Action;
     public string Parameter;
 
     public bool RequireCharacterSelected { get; set; }
@@ -28,7 +28,7 @@ public class ContextMenuAction
                 if (mouseController.IsCharacterSelected())
                 {
                     ISelectable actualSelection = mouseController.mySelection.GetSelectedStuff();
-                    Action(this, actualSelection as MineFort.model.entities.GameCharacter);
+                    Action(this, actualSelection as GameCharacter);
                 }
             }
             else

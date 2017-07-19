@@ -1,8 +1,10 @@
-﻿using MineFort.model.components;
+﻿using MineFort.Components;
+using MineFort.model;
+using MineFort.model.components;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MineFort.model
+namespace MineFort.Entities
 {
     //gameentity: qualquer coisa spawnavel.
     public abstract class GameEntity : TagObject

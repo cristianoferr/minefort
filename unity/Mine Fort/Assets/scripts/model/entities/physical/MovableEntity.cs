@@ -3,7 +3,7 @@ using Boo.Lang;
 using MineFort.model.inventory;
 using MineFort.model.Inventory;
 using UnityEngine;
-namespace MineFort.model.entities
+namespace MineFort.Entities
 {
     //C vvvxxxx
     public class MovableEntity : PhysicalEntity
