@@ -5,123 +5,115 @@ using UnityEngine;
 
 namespace Rimworld.controllers
 {
-    public class TileSpriteController : MonoBehaviour
+    public class TileSpriteController : BaseSpriteController<Tile>
     {
-
-        Dictionary<Tile, GameObject> tileGameObjectMap;
-
-        World world
-        {
-            get { return World.current; }
-        }
-
         // Use this for initialization
-        void Start()
+        public TileSpriteController(World world) : base(world, "Tiles")
         {
-            // Instantiate our dictionary that tracks which GameObject is rendering which Tile data.
-            tileGameObjectMap = new Dictionary<Tile, GameObject>();
+            world.OnTileChanged += OnChanged;
+            world.OnTileTypeChanged += OnChanged;
 
-            // Create a GameObject for each of our tiles, so they show visually. (and redunt reduntantly)
-            for (int x = 0; x < world.mapData.width; x++)
+            for (int x = 0; x < world.Width; x++)
             {
-                for (int y = 0; y < world.mapData.height; y++)
+                for (int y = 0; y < world.Height; y++)
                 {
-                    // Get the tile data
-                    Tile tile_data = world.mapData.GetTileAt(x, y);
-
-                    // This creates a new GameObject and adds it to our scene.
-                    GameObject tile_go = new GameObject();
-
-                    // Add our tile/GO pair to the dictionary.
-                    tileGameObjectMap.Add(tile_data, tile_go);
-
-                    tile_go.name = "Tile_" + x + "_" + y;
-                   // tile_go.transform.position = new Vector3(tile_data.X, tile_data.Y, 0);
-                    tile_go.transform.SetParent(this.transform, true);
-
-                    // Add a Sprite Renderer
-                    // Add a default sprite for empty tiles.
-                    SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
-                    sr.sprite = SpriteManager.current.GetSprite("Tile", tile_data.Type.fileName);
-                    sr.sortingLayerName = "Tiles";
-
-                    OnTileChanged(tile_data);
+                    for (int z = 0; z < world.Depth; z++)
+                    {
+                        Tile tile = world.GetTileAt(x, y, z);
+                        OnCreated(tile);
+                    }
                 }
             }
-
-            // Register our callback so that our GameObject gets updated whenever
-            // the tile's type changes.
-            world.mapData.RegisterTileChanged(OnTileChanged);
         }
 
-        // THIS IS AN EXAMPLE -- NOT CURRENTLY USED (and probably out of date)
-        void DestroyAllTileGameObjects()
+        public override void RemoveAll()
         {
-            // This function might get called when we are changing floors/levels.
-            // We need to destroy all visual **GameObjects** -- but not the actual tile data!
+            world.OnTileChanged -= OnChanged;
 
-            while (tileGameObjectMap.Count > 0)
-            {
-                Tile tile_data = tileGameObjectMap.Keys.First();
-                GameObject tile_go = tileGameObjectMap[tile_data];
+            base.RemoveAll();
+        }
 
-                // Remove the pair from the map
-                tileGameObjectMap.Remove(tile_data);
+        protected override void OnCreated(Tile tile)
+        {
+            // This creates a new GameObject and adds it to our scene.
+            GameObject tile_go = new GameObject();
 
-                // Unregister the callback!
-                tile_data.UnregisterTileTypeChangedCallback(OnTileChanged);
+            // Add our tile/GO pair to the dictionary.
+            objectGameObjectMap.Add(tile, tile_go);
 
-                // Destroy the visual GameObject
-                Destroy(tile_go);
-            }
+            tile_go.name = "Tile_" + tile.X + "_" + tile.Y + "_" + tile.Z;
+            tile_go.transform.position = new Vector3(tile.X, tile.Y, tile.Z);
+            tile_go.transform.SetParent(objectParent.transform, true);
 
-            // Presumably, after this function gets called, we'd be calling another
-            // function to build all the GameObjects for the tiles on the new floor/level
+            // Add a Sprite Renderer
+            // Add a default sprite for empty tiles.
+            SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
+            sr.sprite = SpriteManager.GetSprite("Tile", "empty");
+            sr.sortingLayerName = "Tiles";
+
+            OnChanged(tile);
         }
 
         // This function should be called automatically whenever a tile's data gets changed.
-        void OnTileChanged(Tile tile_data)
+        protected override void OnChanged(Tile tile)
         {
-
-            if (tileGameObjectMap.ContainsKey(tile_data) == false)
+            if (objectGameObjectMap.ContainsKey(tile) == false)
             {
-                Debug.LogError("tileGameObjectMap doesn't contain the tile_data -- did you forget to add the tile to the dictionary? Or maybe forget to unregister a callback?");
+                UnityDebugger.Debugger.LogError("TileSpriteController", "tileGameObjectMap doesn't contain the tile_data -- did you forget to add the tile to the dictionary? Or maybe forget to unregister a callback?");
                 return;
             }
 
-            GameObject tile_go = tileGameObjectMap[tile_data];
+            GameObject tile_go = objectGameObjectMap[tile];
 
             if (tile_go == null)
             {
-                Debug.LogError("tileGameObjectMap's returned GameObject is null -- did you forget to add the tile to the dictionary? Or maybe forget to unregister a callback?");
+                UnityDebugger.Debugger.LogError("TileSpriteController", "tileGameObjectMap's returned GameObject is null -- did you forget to add the tile to the dictionary? Or maybe forget to unregister a callback?");
                 return;
             }
 
-            tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", tile_data.Type.fileName);
-            tile_go.transform.position = CalcPosition( tile_data);
-            /*if (tile_data.Type == GameConsts.TileType.Floor)
+            // TODO Evaluate this criteria and naming schema!
+            if (DoesTileSpriteExist(tile.Type.Type + "_heavy") && (tile.WalkCount >= 30))
             {
-                tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", "Floor");
+                if (tile.ForceTileUpdate || tile.WalkCount == 30)
+                {
+                    ChangeTileSprite(tile_go, tile.Type.Type + "_heavy");
+                }
             }
-            else if (tile_data.Type == GameConsts.TileType.Empty)
+            else if (DoesTileSpriteExist(tile.Type.Type + "_low") && (tile.WalkCount >= 10))
             {
-                tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", "Empty");
+                if (tile.ForceTileUpdate || tile.WalkCount == 10)
+                {
+                    ChangeTileSprite(tile_go, tile.Type.Type + "_low");
+                }
             }
             else
             {
-                Debug.LogError("OnTileTypeChanged - Unrecognized tile type.");
-            }*/
+                ChangeTileSprite(tile_go, tile.Type.Type);
+            }
 
-
+            if (tile.Type == TileType.Empty)
+            {
+                tile_go.SetActive(false);
+            }
+            else
+            {
+                tile_go.SetActive(true);
+            }
         }
-        private Vector3 CalcPosition( Tile tile)
+
+        protected override void OnRemoved(Tile tile)
         {
-            
-            Vector3 pos = Utils.TwoDToIso(tile.X, tile.Y, tile.height);
-            return pos;
         }
 
+        private void ChangeTileSprite(GameObject tile_go, string name)
+        {
+            // TODO How to manage if not all of the names are present?
+            tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.GetSprite("Tile", name);
+        }
 
-
+        private bool DoesTileSpriteExist(string name)
+        {
+            return SpriteManager.HasSprite("Tile", name);
+        }
     }
 }

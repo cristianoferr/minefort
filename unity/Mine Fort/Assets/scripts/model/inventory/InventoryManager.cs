@@ -7,134 +7,199 @@ using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using Rimworld.logic;
 using Rimworld.model.entities;
-using Rimworld.logic.Jobs;
-using Rimworld.model.Pathfinding;
+using Rimworld.model.Inventory;
+using Newtonsoft.Json.Linq;
+using Rimworld.Pathfinding;
 
 namespace Rimworld.model.inventory
 {
     [MoonSharpUserData]
     public class InventoryManager
     {
-
-        // This is a list of all "live" inventories.
-        // Later on this will likely be organized by rooms instead
-        // of a single master list. (Or in addition to.)
-        public Dictionary<string, List<GameInventory>> inventories;
+        private static readonly string InventoryManagerLogChanel = "InventoryManager";
 
         public InventoryManager()
         {
-            inventories = new Dictionary<string, List<GameInventory>>();
+            Inventories = new Dictionary<string, List<GameInventory>>();
         }
 
-        void CleanupInventory(GameInventory inv)
+        public event Action<GameInventory> InventoryCreated;
+
+        public Dictionary<string, List<GameInventory>> Inventories { get; private set; }
+
+        public static bool CanBePickedUp(GameInventory inventory, bool canTakeFromStockpile)
         {
-            if (inv.stackSize == 0)
+            // You can't pick up stuff that isn't on a tile or if it's locked
+            if (inventory == null || inventory.Tile == null || inventory.Locked)
             {
-                if (inventories.ContainsKey(inv.objectType))
-                {
-                    inventories[inv.objectType].Remove(inv);
-                }
-                if (inv.tile != null)
-                {
-                    inv.tile.inventory = null;
-                    inv.tile = null;
-                }
-                if (inv.character != null)
-                {
-                    inv.character.inventory = null;
-                    inv.character = null;
-                }
-            }
-
-        }
-
-        public bool PlaceInventory(Tile tile, GameInventory inv)
-        {
-
-            bool tileWasEmpty = tile.inventory == null;
-
-            if (tile.PlaceInventory(inv) == false)
-            {
-                // The tile did not accept the inventory for whatever reason, therefore stop.
                 return false;
             }
 
-            CleanupInventory(inv);
+            Furniture furniture = inventory.Tile.Furniture;
+            return furniture == null || canTakeFromStockpile == true || furniture.HasTypeTag("Storage") == false;
+        }
 
-            // We may also created a new stack on the tile, if the tile was previously empty.
-            if (tileWasEmpty)
+        public Tile GetFirstTileWithValidInventoryPlacement(int maxOffset, Tile inTile, GameInventory inv)
+        {
+            for (int offset = 0; offset <= maxOffset; offset++)
             {
-                if (inventories.ContainsKey(tile.inventory.objectType) == false)
+                int offsetX = 0;
+                int offsetY = 0;
+                Tile tile;
+
+                // searching top & bottom line of the square
+                for (offsetX = -offset; offsetX <= offset; offsetX++)
                 {
-                    inventories[tile.inventory.objectType] = new List<GameInventory>();
+                    offsetY = offset;
+                    tile = World.Current.GetTileAt(inTile.X + offsetX, inTile.Y + offsetY, inTile.Z);
+                    if (CanPlaceInventoryAt(tile, inv))
+                    {
+                        return tile;
+                    }
+
+                    offsetY = -offset;
+                    tile = World.Current.GetTileAt(inTile.X + offsetX, inTile.Y + offsetY, inTile.Z);
+                    if (CanPlaceInventoryAt(tile, inv))
+                    {
+                        return tile;
+                    }
                 }
 
-                inventories[tile.inventory.objectType].Add(tile.inventory);
+                // searching left & right line of the square
+                for (offsetY = -offset; offsetY <= offset; offsetY++)
+                {
+                    offsetX = offset;
+                    tile = World.Current.GetTileAt(inTile.X + offsetX, inTile.Y + offsetY, inTile.Z);
+                    if (CanPlaceInventoryAt(tile, inv))
+                    {
+                        return tile;
+                    }
 
-                World.current.OnInventoryCreated(tile.inventory);
+                    offsetX = -offset;
+                    tile = World.Current.GetTileAt(inTile.X + offsetX, inTile.Y + offsetY, inTile.Z);
+                    if (CanPlaceInventoryAt(tile, inv))
+                    {
+                        return tile;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public bool PlaceInventoryAround(Tile tile, GameInventory inventory, int radius = 3)
+        {
+            tile = GetFirstTileWithValidInventoryPlacement(radius, tile, inventory);
+            if (tile == null)
+            {
+                return false;
+            }
+
+            return PlaceInventory(tile, inventory);
+        }
+
+        public bool PlaceInventory(Tile tile, GameInventory inventory)
+        {
+            bool tileWasEmpty = tile.Inventory == null;
+
+            if (tile.PlaceInventory(inventory) == false)
+            {
+                // The tile did not accept the inventory for whatever reason, therefore stop.
+                return false;
+
+                // TODO: Geoffrotism. Is this where we would hook in to handle inventory not being able to be placed in a tile.
+            }
+
+            CleanupInventory(inventory);
+
+            // We may also have to create a new stack on the tile, if the startTile was previously empty.
+            if (tileWasEmpty)
+            {
+                if (Inventories.ContainsKey(tile.Inventory.Type) == false)
+                {
+                    Inventories[tile.Inventory.Type] = new List<GameInventory>();
+                }
+
+                Inventories[tile.Inventory.Type].Add(tile.Inventory);
+                InvokeInventoryCreated(tile.Inventory);
             }
 
             return true;
         }
 
-        public bool PlaceInventory(Job job, GameInventory inv)
+        public bool ConsumeInventory(Tile tile, int amount)
         {
-            if (job.inventoryRequirements.ContainsKey(inv.objectType) == false)
+            if (tile.Inventory == null)
             {
-                Debug.LogError("Trying to add inventory to a job that it doesn't want.");
                 return false;
-            }
-
-            job.inventoryRequirements[inv.objectType].stackSize += inv.stackSize;
-
-            if (job.inventoryRequirements[inv.objectType].maxStackSize < job.inventoryRequirements[inv.objectType].stackSize)
-            {
-                inv.stackSize = job.inventoryRequirements[inv.objectType].stackSize - job.inventoryRequirements[inv.objectType].maxStackSize;
-                job.inventoryRequirements[inv.objectType].stackSize = job.inventoryRequirements[inv.objectType].maxStackSize;
             }
             else
             {
-                inv.stackSize = 0;
+                tile.Inventory.StackSize -= amount;
+                CleanupInventory(tile.Inventory);
+                return true;
+            }
+        }
+
+        public bool PlaceInventory(Job job, GameCharacter character)
+        {
+            GameInventory sourceInventory = character.Inventory;
+
+            // Check that it's wanted by the job
+            if (job.RequestedItems.ContainsKey(sourceInventory.Type) == false)
+            {
+                UnityDebugger.Debugger.LogError(InventoryManagerLogChanel, "Trying to add inventory to a job that it doesn't want.");
+                return false;
             }
 
-            CleanupInventory(inv);
+            // Check that there is a target to transfer to
+            if (job.DeliveredItems.ContainsKey(sourceInventory.Type) == false)
+            {
+                job.DeliveredItems[sourceInventory.Type] = new GameInventory(sourceInventory.Type, 0, sourceInventory.MaxStackSize);
+            }
+
+            GameInventory targetInventory = job.DeliveredItems[sourceInventory.Type];
+            int transferAmount = Mathf.Min(targetInventory.MaxStackSize - targetInventory.StackSize, sourceInventory.StackSize);
+
+            sourceInventory.StackSize -= transferAmount;
+            targetInventory.StackSize += transferAmount;
+
+            CleanupInventory(character);
 
             return true;
         }
 
         public bool PlaceInventory(GameCharacter character, GameInventory sourceInventory, int amount = -1)
         {
-            if (amount < 0)
+            amount = amount < 0 ? sourceInventory.StackSize : Math.Min(amount, sourceInventory.StackSize);
+            sourceInventory.ReleaseClaim(character);
+            if (character.Inventory == null)
             {
-                amount = sourceInventory.stackSize;
-            }
-            else
-            {
-                amount = Mathf.Min(amount, sourceInventory.stackSize);
-            }
+                character.Inventory = sourceInventory.Clone();
+                character.Inventory.StackSize = 0;
+                if (Inventories.ContainsKey(character.Inventory.Type) == false)
+                {
+                    Inventories[character.Inventory.Type] = new List<GameInventory>();
+                }
 
-            if (character.inventory == null)
-            {
-                character.inventory = sourceInventory.Clone();
-                character.inventory.stackSize = 0;
-                inventories[character.inventory.objectType].Add(character.inventory);
+                Inventories[character.Inventory.Type].Add(character.Inventory);
             }
-            else if (character.inventory.objectType != sourceInventory.objectType)
+            else if (character.Inventory.Type != sourceInventory.Type)
             {
-                Debug.LogError("Character is trying to pick up a mismatched inventory object type.");
+                UnityDebugger.Debugger.LogError(InventoryManagerLogChanel, "Character is trying to pick up a mismatched inventory object type.");
                 return false;
             }
 
-            character.inventory.stackSize += amount;
+            character.Inventory.StackSize += amount;
 
-            if (character.inventory.maxStackSize < character.inventory.stackSize)
+            if (character.Inventory.MaxStackSize < character.Inventory.StackSize)
             {
-                sourceInventory.stackSize = character.inventory.stackSize - character.inventory.maxStackSize;
-                character.inventory.stackSize = character.inventory.maxStackSize;
+                sourceInventory.StackSize = character.Inventory.StackSize - character.Inventory.MaxStackSize;
+                character.Inventory.StackSize = character.Inventory.MaxStackSize;
             }
             else
             {
-                sourceInventory.stackSize -= amount;
+                sourceInventory.StackSize -= amount;
             }
 
             CleanupInventory(sourceInventory);
@@ -143,31 +208,182 @@ namespace Rimworld.model.inventory
         }
 
         /// <summary>
-        /// Gets the type of the closest inventory of.
+        /// Gets <see cref="Inventory"/> closest to <see cref="tile"/>.
         /// </summary>
         /// <returns>The closest inventory of type.</returns>
-        /// <param name="objectType">Object type.</param>
-        /// <param name="t">T.</param>
-        /// <param name="desiredAmount">Desired amount. If no stack has enough, it instead returns the largest</param>
-        public GameInventory GetClosestInventoryOfType(string objectType, Tile t, int desiredAmount, bool canTakeFromStockpile)
+        public GameInventory GetClosestInventoryOfType(string type, Tile tile, bool canTakeFromStockpile)
         {
-            Path_AStar path = GetPathToClosestInventoryOfType(objectType, t, desiredAmount, canTakeFromStockpile);
-            return path.EndTile().inventory;
+            List<Tile> path = GetPathToClosestInventoryOfType(type, tile, canTakeFromStockpile);
+            return path != null ? path.Last().Inventory : null;
         }
 
-        public Path_AStar GetPathToClosestInventoryOfType(string objectType, Tile t, int desiredAmount, bool canTakeFromStockpile)
+        public bool RemoveInventoryOfType(string type, int quantity, bool onlyFromStockpiles)
         {
-            if (inventories.ContainsKey(objectType) == false)
+            if (!HasInventoryOfType(type, true))
             {
-                //Debug.LogError("GetClosestInventoryOfType -- no items of desired type.");
+                return quantity == 0;
+            }
+
+            foreach (GameInventory inventory in Inventories[type].ToList())
+            {
+                if (onlyFromStockpiles)
+                {
+                    if (inventory.Tile == null ||
+                        inventory.Tile.Furniture == null ||
+                        inventory.Tile.Furniture.Type != "Stockpile" ||
+                        inventory.Tile.Furniture.HasTypeTag("Stockpile"))
+                    {
+                        continue;
+                    }
+                }
+
+                if (quantity <= 0)
+                {
+                    break;
+                }
+
+                int removedFromStack = Math.Min(inventory.StackSize, quantity);
+                quantity -= removedFromStack;
+                inventory.StackSize -= removedFromStack;
+                CleanupInventory(inventory);
+            }
+
+            return quantity == 0;
+        }
+
+        public bool HasInventoryOfType(string type, bool canTakeFromStockpile)
+        {
+            if (Inventories.ContainsKey(type) == false || Inventories[type].Count == 0)
+            {
+                return false;
+            }
+
+            return Inventories[type].Find(inventory => inventory.CanBePickedUp(canTakeFromStockpile)) != null;
+        }
+
+        public bool HasInventoryOfType(string[] types, bool canTakeFromStockpile)
+        {
+            // Test that we have records for any of the types
+            List<string> filteredTypes = types
+                .ToList()
+                .FindAll(type => Inventories.ContainsKey(type) && Inventories[type].Count > 0);
+
+            if (filteredTypes.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (string objectType in filteredTypes)
+            {
+                if (Inventories[objectType].Find(inventory => inventory.CanBePickedUp(canTakeFromStockpile)) != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public List<Tile> GetPathToClosestInventoryOfType(string type, Tile tile, bool canTakeFromStockpile)
+        {
+            if (HasInventoryOfType(type, canTakeFromStockpile) == false)
+            {
                 return null;
             }
 
-            Path_AStar path = new Path_AStar(World.current, t, null, objectType, desiredAmount, canTakeFromStockpile);
+            // We know the objects are out there, now find the closest.
+            return Pathfinder.FindPathToInventory(tile, type, canTakeFromStockpile);
+        }
 
-            return path;
+        public List<Tile> GetPathToClosestInventoryOfType(string[] objectTypes, Tile tile, bool canTakeFromStockpile)
+        {
+            if (HasInventoryOfType(objectTypes, canTakeFromStockpile) == false)
+            {
+                return null;
+            }
 
+            // We know the objects are out there, now find the closest.
+            return Pathfinder.FindPathToInventory(tile, objectTypes, canTakeFromStockpile);
+        }
+
+        public JToken ToJson()
+        {
+            JArray inventoriesJson = new JArray();
+            foreach (GameInventory inventory in Inventories.SelectMany(pair => pair.Value))
+            {
+                // Skip any inventory without a tile, these are inventories in a character or elsewhere that will handle it itself.
+                if (inventory.Tile == null)
+                {
+                    continue;
+                }
+
+                inventoriesJson.Add(inventory.ToJSon());
+            }
+
+            return inventoriesJson;
+        }
+
+        public void FromJson(JToken inventoriesToken)
+        {
+            JArray inventoriesJArray = (JArray)inventoriesToken;
+
+            foreach (JToken inventoryToken in inventoriesJArray)
+            {
+                int x = (int)inventoryToken["X"];
+                int y = (int)inventoryToken["Y"];
+                int z = (int)inventoryToken["Z"];
+
+                GameInventory inventory = new GameInventory();
+                inventory.FromJson(inventoryToken);
+                PlaceInventory(World.Current.GetTileAt(x, y, z), inventory);
+            }
+        }
+
+        private void CleanupInventory(GameInventory inventory)
+        {
+            if (inventory.StackSize != 0)
+            {
+                return;
+            }
+
+            if (Inventories.ContainsKey(inventory.Type))
+            {
+                Inventories[inventory.Type].Remove(inventory);
+            }
+
+            if (inventory.Tile != null)
+            {
+                inventory.Tile.Inventory = null;
+                inventory.Tile = null;
+            }
+        }
+
+        private void CleanupInventory(GameCharacter character)
+        {
+            CleanupInventory(character.Inventory);
+
+            if (character.Inventory.StackSize == 0)
+            {
+                character.Inventory = null;
+            }
+        }
+
+        private void InvokeInventoryCreated(GameInventory inventory)
+        {
+            Action<GameInventory> handler = InventoryCreated;
+            if (handler != null)
+            {
+                handler(inventory);
+
+                // Let the JobQueue know there is new inventory available.
+                World.Current.jobQueue.ReevaluateReachability();
+            }
+        }
+
+        private bool CanPlaceInventoryAt(Tile tile, GameInventory inv)
+        {
+            return (tile.Inventory == null && tile.Furniture == null && tile.IsEnterable() == GameConsts.ENTERABILITY.Yes) ||
+                        (tile.Inventory != null && tile.Inventory.CanAccept(inv));
         }
     }
-
 }

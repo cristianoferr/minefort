@@ -1,4 +1,5 @@
 ﻿
+using Rimworld.Rooms;
 using Rimworld.model.entities.map;
 using System;
 using UnityEngine;
@@ -41,10 +42,11 @@ namespace Rimworld.model.entities
 
         int chunkWidth = 0;
         int chunkHeight = 0;
-        internal void SetupWorld(int width, int height)
+        internal void SetupWorld(int width, int height,int depth)
         {
             this.width = width;
             this.height = height;
+            this.depth = depth;
             chunkWidth = width / GameConsts.CHUNK_SIZE;
             chunkHeight = height / GameConsts.CHUNK_SIZE;
             chunks = new Chunk[chunkWidth, chunkHeight];
@@ -61,6 +63,7 @@ namespace Rimworld.model.entities
         #region CallBacks
         Action<Tile> cbTileChanged;
         private World world;
+        
 
         public void RegisterTileChanged(Action<Tile> callbackfunc)
         {
@@ -85,7 +88,7 @@ namespace Rimworld.model.entities
         #endregion CallBacks
 
 
-        public Tile GetTileAt(float x, float y)
+        public Tile GetTileAt(float x, float y,float z=0)
         {
             Chunk chunk = GetChunkAt(x, y);
 
@@ -102,5 +105,6 @@ namespace Rimworld.model.entities
         public int height { get; private set; }
 
         public int width { get; private set; }
+        public int depth { get; set; }
     }
 }

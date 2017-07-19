@@ -4,6 +4,14 @@ namespace Rimworld.model
 {
     public class GameConsts
     {
+        public enum Facing
+        {
+            NORTH,
+            EAST,
+            SOUTH,
+            WEST
+        }
+
         public enum ENTERABILITY { Yes, Never, Soon }
   
         public enum BuildMode
@@ -76,7 +84,7 @@ namespace Rimworld.model
 
         //usado no csv
         public const string DATA_DICT_BIOME = "BIOMES";
-        internal const string DATA_DICT_TILEDATA = "TILEDATA";
+        internal const string DATA_DICT_TileType = "TileType";
 
         public const string TAG_TILE_WATER="water";
         public const string TAG_TILE_LAND = "land";

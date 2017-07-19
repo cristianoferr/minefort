@@ -1,271 +1,573 @@
-﻿using MoonSharp.Interpreter;
-using Rimworld.model.entities;
-using Rimworld.model.furniture;
-using Rimworld.model.inventory;
+#region License
+// ====================================================
+// Project Porcupine Copyright(C) 2016 Team Porcupine
+// This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+// and you are welcome to redistribute it under certain conditions; See
+// file LICENSE, which is part of this source code package, for details.
+// ====================================================
+#endregion
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using MoonSharp.Interpreter;
+using Rimworld.Entities;
+using Rimworld.Jobs;
+using Rimworld.Localization;
+using Rimworld.Pathfinding;
+using UnityEngine;
+using Rimworld.model.entities;
+using Rimworld.model.Inventory;
 
-namespace Rimworld.logic.Jobs
+[MoonSharpUserData]
+[System.Diagnostics.DebuggerDisplay("Job {JobObjectType}")]
+public class Job : ISelectable, IPrototypable
 {
-    [MoonSharpUserData]
-    public class Job
+    // This class holds info for a queued up job, which can include
+    // things like placing furniture, moving stored inventory,
+    // working at a desk, and maybe even fighting enemies.
+    public Tile tile;
+
+    public IBuildable buildablePrototype;
+
+    // The piece of furniture that owns this job. Frequently will be null.
+    public IBuildable buildable;
+
+    public bool canTakeFromStockpile = true;
+
+    /// <summary>
+    /// If true, the work will be carried out on any adjacent tile of the target tile rather than on it.
+    /// </summary>
+    public bool adjacent;
+
+    /// <summary>
+    /// If true the job is workable if ANY of the inventory requirements are met.
+    /// Otherwise ALL requirements must be met before work can start.
+    /// This is useful for stockpile/storage jobs which can accept many types of items.
+    /// Defaults to false.
+    /// </summary>
+    public bool acceptsAny;
+
+    protected float jobTimeRequired;
+
+    protected bool jobRepeats = false;
+
+    private List<string> jobWorkedLua;
+
+    // The job has been stopped, either because it's non-repeating or was canceled.
+    private List<string> jobCompletedLua;
+
+    private List<Rimworld.model.entities.GameCharacter> charsCantReach = new List<Rimworld.model.entities.GameCharacter>();
+
+    // Required for IPrototypable
+    public Job()
     {
+    }
 
-        // This class holds info for a queued up job, which can include
-        // things like placing furniture, moving stored inventory,
-        // working at a desk, and maybe even fighting enemies.
+    public Job(Tile tile, string type, Action<Job> jobComplete, float jobTime, RequestedItem[] requestedItems, Job.JobPriority jobPriority, bool jobRepeats = false, bool need = false, bool critical = false, bool adjacent = false)
+    {
+        this.tile = tile;
+        this.Type = type;
+        this.OnJobCompleted += jobComplete;
+        this.jobTimeRequired = this.JobTime = jobTime;
+        this.jobRepeats = jobRepeats;
+        this.IsNeed = need;
+        this.Critical = critical;
+        this.Priority = jobPriority;
+        this.adjacent = adjacent;
+        this.Description = "job_error_missing_desc";
 
-        public Tile tile;
-        public float jobTime
+        jobWorkedLua = new List<string>();
+        jobCompletedLua = new List<string>();
+
+        this.DeliveredItems = new Dictionary<string, GameInventory>();
+        this.RequestedItems = new Dictionary<string, RequestedItem>();
+
+        if (requestedItems != null)
         {
-            get;
-            protected set;
-        }
-
-        protected float jobTimeRequired;
-
-        protected bool jobRepeats = false;
-
-        public string jobObjectType
-        {
-            get;
-            protected set;
-        }
-
-        public Furniture furniturePrototype;
-
-        public Furniture furniture; // The piece of furniture that owns this job. Frequently will be null.
-
-        public bool acceptsAnyInventoryItem = false;
-
-        Action<Job> cbJobCompleted;	// We have finished the work cycle and so things should probably get built or whatever. 
-        List<string> cbJobCompletedLua;
-        Action<Job> cbJobStopped;	// The job has been stopped, either because it's non-repeating or was cancelled.
-        Action<Job> cbJobWorked;	// Gets called each time some work is performed -- maybe update the UI?
-        List<string> cbJobWorkedLua;
-
-        public bool canTakeFromStockpile = true;
-
-        public Dictionary<string, GameInventory> inventoryRequirements;
-
-        public Job(Tile tile, string jobObjectType, Action<Job> cbJobComplete, float jobTime, GameInventory[] inventoryRequirements, bool jobRepeats = false)
-        {
-            this.tile = tile;
-            this.jobObjectType = jobObjectType;
-            this.cbJobCompleted += cbJobComplete;
-            this.jobTimeRequired = this.jobTime = jobTime;
-            this.jobRepeats = jobRepeats;
-
-            cbJobWorkedLua = new List<string>();
-            cbJobCompletedLua = new List<string>();
-
-            this.inventoryRequirements = new Dictionary<string, GameInventory>();
-            if (inventoryRequirements != null)
+            foreach (RequestedItem item in requestedItems)
             {
-                foreach (GameInventory inv in inventoryRequirements)
+                this.RequestedItems[item.Type] = item.Clone();
+            }
+        }
+    }
+
+    public Job(Tile tile, TileType jobTileType, Action<Job> jobCompleted, float jobTime, RequestedItem[] requestedItems, Job.JobPriority jobPriority, bool jobRepeats = false, bool adjacent = false)
+    {
+        this.tile = tile;
+        this.JobTileType = jobTileType;
+        this.Type = jobTileType.LocalizationCode;
+        this.OnJobCompleted += jobCompleted;
+        this.jobTimeRequired = this.JobTime = jobTime;
+        this.jobRepeats = jobRepeats;
+        this.Priority = jobPriority;
+        this.adjacent = adjacent;
+        this.Description = "job_error_missing_desc";
+
+        jobWorkedLua = new List<string>();
+        jobCompletedLua = new List<string>();
+
+        this.DeliveredItems = new Dictionary<string, GameInventory>();
+        this.RequestedItems = new Dictionary<string, RequestedItem>();
+        if (requestedItems != null)
+        {
+            foreach (RequestedItem item in requestedItems)
+            {
+                this.RequestedItems[item.Type] = item.Clone();
+            }
+        }
+    }
+
+    protected Job(Job other)
+    {
+        this.tile = other.tile;
+        this.Type = other.Type;
+        this.JobTileType = other.JobTileType;
+        this.OnJobCompleted = other.OnJobCompleted;
+        this.JobTime = other.JobTime;
+        this.Priority = other.Priority;
+        this.adjacent = other.adjacent;
+        this.Description = other.Description;
+        this.acceptsAny = other.acceptsAny;
+        this.OrderName = other.OrderName;
+
+        jobWorkedLua = new List<string>(other.jobWorkedLua);
+        jobCompletedLua = new List<string>(other.jobWorkedLua);
+
+        this.DeliveredItems = new Dictionary<string, GameInventory>();
+        this.RequestedItems = new Dictionary<string, RequestedItem>();
+        if (other.RequestedItems != null)
+        {
+            foreach (RequestedItem item in other.RequestedItems.Values)
+            {
+                this.RequestedItems[item.Type] = item.Clone();
+            }
+        }
+    }
+
+    // We have finished the work cycle and so things should probably get built or whatever.
+    public event Action<Job> OnJobCompleted;
+
+    public event Action<Job> OnJobStopped;
+
+    // Gets called each time some work is performed -- maybe update the UI?
+    public event Action<Job> OnJobWorked;
+
+    public enum JobPriority
+    {
+        High,
+        Medium,
+        Low
+    }
+
+    // The items needed to do this job.
+    public Dictionary<string, RequestedItem> RequestedItems { get; set; }
+
+    // The items that have been delivered to the jobsite.
+    public Dictionary<string, GameInventory> DeliveredItems { get; set; }
+
+    public string Description { get; set; }
+
+    /// <summary>
+    /// Name of order that created this job. This should prevent multiple same orders on same things if not allowed.
+    /// </summary>
+    public string OrderName { get; set; }
+
+    public string Type
+    {
+        get;
+        protected set;
+    }
+
+    public bool IsNeed
+    {
+        get;
+        protected set;
+    }
+
+    public bool Critical
+    {
+        get;
+        protected set;
+    }
+
+    public bool IsBeingWorked { get; set; }
+
+    public TileType JobTileType
+    {
+        get;
+        protected set;
+    }
+
+    public float JobTime
+    {
+        get;
+        protected set;
+    }
+
+    public JobPriority Priority
+    {
+        get;
+        protected set;
+    }
+
+    public bool IsSelected
+    {
+        get;
+        set;
+    }
+
+    public bool IsRepeating
+    {
+        get
+        {
+            return jobRepeats;
+        }
+    }
+
+    public List<Rimworld.model.entities.GameCharacter> CharsCantReach
+    {
+        get
+        {
+            return charsCantReach;
+        }
+    }
+
+    public Pathfinder.GoalEvaluator IsTileAtJobSite
+    {
+        get
+        {
+            if (tile == null)
+            {
+                return null;
+            }
+
+            // TODO: This doesn't handle multi-tile furniture
+            return Pathfinder.GoalTileEvaluator(tile, adjacent);
+        }
+    }
+
+    public RequestedItem[] GetInventoryRequirementValues()
+    {
+        return RequestedItems.Values.ToArray();
+    }
+
+    public void SetTileFromNeedFurniture(Tile currentTile, string needFurniture)
+    {
+        tile = Pathfinder.FindPathToFurniture(currentTile, needFurniture).Last();
+    }
+
+    public virtual Job Clone()
+    {
+        return new Job(this);
+    }
+
+    #region Callbacks
+    public void RegisterJobCompletedCallback(string cb)
+    {
+        jobCompletedLua.Add(cb);
+    }
+
+    public void UnregisterJobCompletedCallback(string cb)
+    {
+        jobCompletedLua.Remove(cb);
+    }
+
+    public void RegisterJobWorkedCallback(string cb)
+    {
+        jobWorkedLua.Add(cb);
+    }
+
+    public void UnregisterJobWorkedCallback(string cb)
+    {
+        jobWorkedLua.Remove(cb);
+    }
+    #endregion
+
+    public void DoWork(float workTime)
+    {
+        // We don't know if the Job can actually be worked, but still call the callbacks
+        // so that animations and whatnot can be updated.
+        if (OnJobWorked != null)
+        {
+            OnJobWorked(this);
+        }
+
+        foreach (string luaFunction in jobWorkedLua.ToList())
+        {
+            FunctionsManager.Furniture.Call(luaFunction, this);
+        }
+
+        // Check to make sure we actually have everything we need.
+        // If not, don't register the work time.
+        if (MaterialNeedsMet() == false)
+        {
+            return;
+        }
+
+        JobTime -= workTime;
+
+        if (JobTime <= 0)
+        {
+            foreach (string luaFunction in jobCompletedLua.ToList())
+            {
+                FunctionsManager.Furniture.Call(luaFunction, this);
+            }
+
+            // Do whatever is supposed to happen with a job cycle completes.
+            if (OnJobCompleted != null)
+            {
+                OnJobCompleted(this);
+            }
+
+            if (jobRepeats != true)
+            {
+                // Let everyone know that the job is officially concluded
+                if (OnJobStopped != null)
                 {
-                    this.inventoryRequirements[inv.objectType] = inv.Clone();
+                    OnJobStopped(this);
                 }
+            }
+            else
+            {
+                // This is a repeating job and must be reset.
+                JobTime += jobTimeRequired;
+            }
+        }
+    }
+
+    public void CancelJob()
+    {
+        if (OnJobStopped != null)
+        {
+            OnJobStopped(this);
+        }
+
+        // If we are a building job let our tile know we are no longer pending
+        if (buildablePrototype != null)
+        {
+            // If we are a furniture building job, Let our workspot tile know it is no longer reserved for us.
+            if (buildablePrototype.GetType() == typeof(Furniture))
+            {
+                World.Current.UnreserveTileAsWorkSpot((Furniture)buildablePrototype, tile);
             }
         }
 
-        protected Job(Job other)
+        // Remove the job out of both job queues.
+        // World.Current.jobWaitingQueue.Remove(this);
+        World.Current.jobQueue.Remove(this);
+    }
+
+    /// <summary>
+    /// Checks to see if the job has met the material requirements needed to do this job.
+    /// </summary>
+    /// <returns> Returns True if the job can do work based on material requirements.</returns>
+    public bool MaterialNeedsMet()
+    {
+        if (acceptsAny && HasAnyMaterial())
         {
-            this.tile = other.tile;
-            this.jobObjectType = other.jobObjectType;
-            this.cbJobCompleted = other.cbJobCompleted;
-            this.jobTime = other.jobTime;
-
-            cbJobWorkedLua = new List<string>(other.cbJobWorkedLua);
-            cbJobCompletedLua = new List<string>(other.cbJobWorkedLua);
-
-
-            this.inventoryRequirements = new Dictionary<string, GameInventory>();
-            if (inventoryRequirements != null)
-            {
-                foreach (GameInventory inv in other.inventoryRequirements.Values)
-                {
-                    this.inventoryRequirements[inv.objectType] = inv.Clone();
-                }
-            }
-        }
-
-        public GameInventory[] GetInventoryRequirementValues()
-        {
-            return inventoryRequirements.Values.ToArray();
-        }
-
-        virtual public Job Clone()
-        {
-            return new Job(this);
-        }
-
-        public void RegisterJobCompletedCallback(Action<Job> cb)
-        {
-            cbJobCompleted += cb;
-        }
-
-        public void UnregisterJobCompletedCallback(Action<Job> cb)
-        {
-            cbJobCompleted -= cb;
-        }
-
-        public void RegisterJobCompletedCallback(string cb)
-        {
-            cbJobCompletedLua.Add(cb);
-        }
-
-        public void UnregisterJobCompletedCallback(string cb)
-        {
-            cbJobCompletedLua.Remove(cb);
-        }
-
-
-        public void RegisterJobStoppedCallback(Action<Job> cb)
-        {
-            cbJobStopped += cb;
-        }
-
-        public void UnregisterJobStoppedCallback(Action<Job> cb)
-        {
-            cbJobStopped -= cb;
-        }
-
-        public void RegisterJobWorkedCallback(Action<Job> cb)
-        {
-            cbJobWorked += cb;
-        }
-
-        public void UnregisterJobWorkedCallback(Action<Job> cb)
-        {
-            cbJobWorked -= cb;
-        }
-
-        public void RegisterJobWorkedCallback(string cb)
-        {
-            cbJobWorkedLua.Add(cb);
-        }
-
-        public void UnregisterJobWorkedCallback(string cb)
-        {
-            cbJobWorkedLua.Remove(cb);
-        }
-
-        public void DoWork(float workTime)
-        {
-            // Check to make sure we actually have everything we need. 
-            // If not, don't register the work time.
-            if (HasAllMaterial() == false)
-            {
-                //Debug.LogError("Tried to do work on a job that doesn't have all the material.");
-
-                // Job can't actually be worked, but still call the callbacks
-                // so that animations and whatnot can be updated.
-                if (cbJobWorked != null)
-                    cbJobWorked(this);
-
-                if (cbJobWorkedLua != null)
-                {
-                    foreach (string luaFunction in cbJobWorkedLua)
-                    {
-                        FurnitureActions.CallFunction(luaFunction, this);
-                    }
-                }
-
-                return;
-            }
-
-            jobTime -= workTime;
-
-            if (cbJobWorked != null)
-                cbJobWorked(this);
-
-            if (cbJobWorkedLua != null)
-            {
-                foreach (string luaFunction in cbJobWorkedLua)
-                {
-                    FurnitureActions.CallFunction(luaFunction, this);
-                }
-            }
-
-            if (jobTime <= 0)
-            {
-                // Do whatever is supposed to happen with a job cycle completes.
-                if (cbJobCompleted != null)
-                    cbJobCompleted(this);
-
-                foreach (string luaFunc in cbJobCompletedLua)
-                {
-                    FurnitureActions.CallFunction(luaFunc, this);
-                }
-
-                if (jobRepeats == false)
-                {
-                    // Let everyone know that the job is officially concluded
-                    if (cbJobStopped != null)
-                        cbJobStopped(this);
-                }
-                else
-                {
-                    // This is a repeating job and must be reset.
-                    jobTime += jobTimeRequired;
-                }
-            }
-        }
-
-        public void CancelJob()
-        {
-            if (cbJobStopped != null)
-                cbJobStopped(this);
-
-            World.current.jobQueue.Remove(this);
-        }
-
-        public bool HasAllMaterial()
-        {
-
-            foreach (GameInventory inv in inventoryRequirements.Values)
-            {
-                if (inv.maxStackSize > inv.stackSize)
-                    return false;
-            }
-
             return true;
         }
 
-        public int DesiresInventoryType(GameInventory inv)
+        if ((acceptsAny == false) && HasAllMaterial())
         {
-            if (acceptsAnyInventoryItem)
-            {
-                return inv.maxStackSize;
-            }
-
-            if (inventoryRequirements.ContainsKey(inv.objectType) == false)
-            {
-                return 0;
-            }
-
-            if (inventoryRequirements[inv.objectType].stackSize >= inventoryRequirements[inv.objectType].maxStackSize)
-            {
-                // We already have all that we need!
-                return 0;
-            }
-
-            // The inventory is of a type we want, and we still need more.
-            return inventoryRequirements[inv.objectType].maxStackSize - inventoryRequirements[inv.objectType].stackSize;
+            return true;
         }
 
-        public GameInventory GetFirstDesiredInventory()
-        {
-            foreach (GameInventory inv in inventoryRequirements.Values)
-            {
-                if (inv.maxStackSize > inv.stackSize)
-                    return inv;
-            }
+        return false;
+    }
 
-            return null;
+    public bool HasAllMaterial()
+    {
+        if (RequestedItems == null)
+        {
+            return true;
         }
 
+        foreach (RequestedItem item in RequestedItems.Values)
+        {
+            if (DeliveredItems.ContainsKey(item.Type) == false || item.AmountNeeded(DeliveredItems[item.Type]) > 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool HasAnyMaterial()
+    {
+        return DeliveredItems.Count > 0 && DeliveredItems.First().Value.StackSize > 0;
+    }
+
+    public int AmountDesiredOfInventoryType(string type)
+    {
+        if (RequestedItems.ContainsKey(type) == false)
+        {
+            return 0;
+        }
+
+        GameInventory inventory = DeliveredItems.ContainsKey(type) ? DeliveredItems[type] : null;
+        return RequestedItems[type].AmountDesired(inventory);
+    }
+
+    public bool IsRequiredInventoriesAvailable()
+    {
+        return FulfillableInventoryRequirements() != null;
+    }
+
+    /// <summary>
+    /// Returns the first fulfillable requirement of this job. Especially useful for jobs that has a long list of materials and can use any of them.
+    /// </summary>
+    public RequestedItem GetFirstFulfillableInventoryRequirement()
+    {
+        foreach (RequestedItem item in GetInventoryRequirementValues())
+        {
+            if (World.Current.InventoryManager.HasInventoryOfType(item.Type, canTakeFromStockpile))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Fulfillable inventory requirements for job.
+    /// </summary>
+    /// <returns>A list of (string) Type for job inventory requirements that can be met. Returns null if the job requires materials which do not exist on the map.</returns>
+    public List<string> FulfillableInventoryRequirements()
+    {
+        List<string> fulfillableInventoryRequirements = new List<string>();
+
+        foreach (RequestedItem item in this.GetInventoryRequirementValues())
+        {
+            if (this.acceptsAny == false)
+            {
+                if (World.Current.InventoryManager.HasInventoryOfType(item.Type, canTakeFromStockpile) == false)
+                {
+                    // the job requires ALL inventory requirements to be met, and there is no source of a desired Type
+                    return null;
+                }
+                else
+                {
+                    fulfillableInventoryRequirements.Add(item.Type);
+                }
+            }
+            else if (World.Current.InventoryManager.HasInventoryOfType(item.Type, canTakeFromStockpile))
+            {
+                // there is a source for a desired Type that the job will accept
+                fulfillableInventoryRequirements.Add(item.Type);
+            }
+        }
+
+        return fulfillableInventoryRequirements;
+    }
+
+    public RequestedItem GetFirstDesiredItem()
+    {
+        foreach (RequestedItem item in RequestedItems.Values)
+        {
+            GameInventory inventory = DeliveredItems.ContainsKey(item.Type) ? DeliveredItems[item.Type] : null;
+
+            if (item.DesiresMore(inventory))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public void DropPriority()
+    {
+        // TODO: This casting to and from enums are a bit weird. We should decide on ONE priority system.
+        this.Priority = (Job.JobPriority)Mathf.Min((int)Job.JobPriority.Low, (int)Priority + 1);
+    }
+
+    public string GetName()
+    {
+        try
+        {
+            return LocalizationTable.GetLocalization(PrototypeManager.Furniture.Get(Type.ToString()).GetName());
+        }
+        catch
+        {
+            return LocalizationTable.GetLocalization(Type);
+        }
+    }
+
+    public string GetDescription()
+    {
+        string description = "Requirements:\n";
+        foreach (RequestedItem item in RequestedItems.Values)
+        {
+            description += string.Format("\t{0} {1}..{2}\n", item.Type, item.MinAmountRequested, item.MaxAmountRequested);
+
+            // TODO: Not sure if this works or not.
+            description = LocalizationTable.GetLocalization(description);
+        }
+
+        return description;
+    }
+
+    public string GetJobDescription()
+    {
+        return GetDescription();
+    }
+
+    /// <summary>
+    /// Add the character to the list of characters that can not reach this job.
+    /// </summary>
+    public void AddCharCantReach(GameCharacter character)
+    {
+        if (!CharsCantReach.Contains(character))
+        {
+            charsCantReach.Add(character);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns> True if the character can reach the inventory it needs.</returns>
+    public bool CanGetToInventory(GameCharacter character)
+    {
+        List<Tile> path = null;
+        path = World.Current.InventoryManager.GetPathToClosestInventoryOfType(RequestedItems.Keys.ToArray(), character.CurrTile, canTakeFromStockpile);
+        if (path != null && path.Count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Resets the list of character unable to reach the job.
+    /// </summary>
+    public void ClearCharCantReach()
+    {
+        charsCantReach = new List<GameCharacter>();
+    }
+
+    public IEnumerable<string> GetAdditionalInfo()
+    {
+        yield break;
+    }
+
+    public void ReadXmlPrototype(XmlReader reader)
+    {
+    }
+
+    public void FSMLogRequirements()
+    {
+        UnityDebugger.Debugger.Log("FSM", string.Format(" - {0} {1}", Type, acceptsAny ? "Any" : "All"));
+        foreach (RequestedItem item in RequestedItems.Values)
+        {
+            UnityDebugger.Debugger.Log("FSM", string.Format("   - {0}, min: {1}, max: {2}", item.Type, item.MinAmountRequested, item.MaxAmountRequested));
+        }
     }
 }

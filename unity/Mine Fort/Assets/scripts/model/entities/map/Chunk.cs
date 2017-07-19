@@ -1,4 +1,5 @@
 ﻿
+using Rimworld.Rooms;
 using System;
 using System.Collections.Generic;
 
@@ -21,8 +22,9 @@ namespace Rimworld.model.entities.map
             {
                 for (int j = 0; j < GameConsts.CHUNK_SIZE; j++)
                 {
-                    tiles[i, j] = new Tile(this, i, j);
-                    tiles[i, j].RegisterTileTypeChangedCallback(cbTileChanged);
+                    tiles[i, j] = new Tile(this, i, j,0);
+                    //TODO: reativar esse tile tilechanged
+                    tiles[i, j].TileChanged+=cbTileChanged;
                 }
             }
         }

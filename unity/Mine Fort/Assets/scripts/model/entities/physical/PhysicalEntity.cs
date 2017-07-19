@@ -20,19 +20,33 @@ namespace Rimworld.model.entities
         // public Vector3 position;
 
         Tile _currTile=null;
-        public Tile currTile { get {
-                return _currTile;
-            }
-            set
+        /// <summary>
+        /// The tile the Character is considered to still be standing in.
+        /// </summary>
+        public Tile CurrTile
+        {
+            get
             {
-                if (_currTile != value)
-                {
-                    _currTile = value;
-                    hasChanged = true;
-                }
+                return CurrTile;
             }
 
+            set
+            {
+                if (CurrTile != null)
+                {
+                    CurrTile.Characters.Remove(this);
+                }
+
+                CurrTile = value;
+                CurrTile.Characters.Add(this);
+
+                TileOffset = Vector3.zero;
+            }
         }
+
+        /// Tile offset for animation
+        public Vector3 TileOffset { get; set; }
+
 
         public Dimension dimension { get; private set; }
 
@@ -71,7 +85,7 @@ namespace Rimworld.model.entities
                 Utils.LogError("PlaceNear pos is null!");
                 return;
             }
-            currTile = World.current.GetTileAt(pos);
+            CurrTile = World.Current.GetTileAt(pos);
         }
 
         
@@ -103,20 +117,39 @@ namespace Rimworld.model.entities
         }
         #endregion ISelectableInterface
 
-        //X e Y serão usados visualmente
-        public virtual float X
+        /// <summary>
+        /// Returns a float representing the Character's X position, which can
+        /// be part-way between two tiles during movement.
+        /// </summary>
+        public float X
         {
             get
             {
-                return currTile.X;
+                return CurrTile.X + TileOffset.x;
             }
         }
 
-        public virtual float Y
+        /// <summary>
+        /// Returns a float representing the Character's Y position, which can
+        /// be part-way between two tiles during movement.
+        /// </summary>
+        public float Y
         {
             get
             {
-                return currTile.Y;
+                return CurrTile.Y + TileOffset.y;
+            }
+        }
+
+        /// <summary>
+        /// Returns a float representing the Character's Z position, which can
+        /// be part-way between two tiles during movement.
+        /// </summary>
+        public float Z
+        {
+            get
+            {
+                return CurrTile.Z + TileOffset.z;
             }
         }
 

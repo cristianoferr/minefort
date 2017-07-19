@@ -95,9 +95,9 @@ namespace Rimworld.io
                 biome.LoadFromCSV(lineData);
             }
 
-            if (dataDict == GameConsts.DATA_DICT_TILEDATA)
+            if (dataDict == GameConsts.DATA_DICT_TileType)
             {
-                world.biomes.LoadTileDataFromCSV(lineData);
+                world.biomes.LoadTileTypeFromCSV(lineData);
             }
         }
     }

@@ -42,14 +42,14 @@ public class InitialTest
         Tile tile = world.GetTileAt(0, 0);
         Assert.IsNotNull(tile);
 
-       // TileData tileDataGround = new TileData();
+       // TileType TileTypeGround = new TileType();
 
 
         biome = world.biome;
         Assert.IsNotNull(biome);
-      //  Assert.IsNotNull(biome.tileData);
+      //  Assert.IsNotNull(biome.TileType);
 
-       /* TileData td = biome.GetTileWithTag(GameConsts.TAG_TILE_TEST);
+       /* TileType td = biome.GetTileWithTag(GameConsts.TAG_TILE_TEST);
         Assert.IsTrue(td.name=="test");
         Assert.IsTrue(td.fileName == "ISO_Tile_Water_Block");
         Assert.IsTrue(td.MovementCost == 0.51f);

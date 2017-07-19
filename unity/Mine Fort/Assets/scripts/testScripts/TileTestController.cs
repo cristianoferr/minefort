@@ -73,11 +73,14 @@ public class TileTestController : MonoBehaviour {
     {
         for (int x = 0; x < world.width; x++)
         {
-            for (int y = 0; y < world.height; y++)
+            for (int y = 0; y < world.Height; y++)
             {
-                Tile tile = world.GetTileAt(x, y);
-                RandomizeTile(tile);
+                for (int z = 0; z < world.Depth; z++)
+                {
+                    Tile tile = world.GetTileAt(x, y, z);
+                    RandomizeTile(tile);
 
+                }
             }
         }
     }

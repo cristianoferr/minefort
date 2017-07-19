@@ -1,7 +1,4 @@
-﻿
-using Rimworld.logic;
-using Rimworld.logic.Jobs;
-using Rimworld.Utilities.Pathfinding;
+﻿/*
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,42 +12,27 @@ using MoonSharp.Interpreter;
 namespace Rimworld.model.entities
 {
     [MoonSharpUserData]
-    public class World : GameEntity
+    public class World_Old : GameEntity
     {
-        public DataHolder holder;
         public Dictionary<string, Furniture> furniturePrototypes;
-        public InventoryManager inventoryManager;
 
-        private World()
+        private World_Old()
         {
-            holder = new DataHolder(this);
-            mapData = new Map(this);
-            biomes = new Biomes();
+            
             SetupWorld(GameConsts.WORLD_WIDTH, GameConsts.WORLD_HEIGHT);
-            entities = new List<PhysicalEntity>();
 
         }
 
        public override  void Start()
         {
-            holder.Start();
-            biomes.RandomBiome();
             CreateFurniturePrototypes();
             CreateCharacter(GetTileAt(width / 2, height / 2));
         }
 
-        public Biome biome
-        {
-            get
-            {
-                return biomes.currBiome;
-            }
-        }
 
         private void SetupWorld(int width, int height)
         {
             mapData.SetupWorld(width, height);
-            inventoryManager = new InventoryManager();
             jobQueue = new JobQueue(); 
         }
 
@@ -76,14 +58,8 @@ namespace Rimworld.model.entities
        
 
         #region properties
-        public Map mapData { get; private set; }
         public Path_TileGraph tileGraph;
         public Dictionary<string, Job> furnitureJobPrototypes;
-        public static Map map
-        {
-            get { return world_.mapData; }
-        }
-        public IList<PhysicalEntity> entities { get; private set; }
 
 
         #endregion properties
@@ -92,7 +68,7 @@ namespace Rimworld.model.entities
         {
             Debug.Log("CreateCharacter");
             GameCharacter c = new GameCharacter();
-            c.currTile = t;
+            c.CurrTile = t;
             AddEntity(c);
 
             if (cbCharacterCreated != null)
@@ -199,21 +175,6 @@ namespace Rimworld.model.entities
             return mapData.GetTileAt(pos.x,pos.y);
         }
 
-        public int width
-        {
-            get
-            {
-                return mapData.width;
-            }
-        }
-
-        public int height
-        {
-            get
-            {
-                return mapData.height;
-            }
-        }
 
         // TODO: Most likely this will be replaced with a dedicated
         // class for managing job queues (plural!) that might also
@@ -355,9 +316,6 @@ namespace Rimworld.model.entities
 
       
 
-        internal void AddRoom(Room newRoom)
-        {
-            newRoom.chunk.AddRoom(newRoom);
-        }
     }
 }
+*/

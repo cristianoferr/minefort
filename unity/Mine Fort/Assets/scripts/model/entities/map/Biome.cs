@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rimworld.model.entities.map.tiles;
 
 namespace Rimworld.model.entities.map
 {
-    //specific data about the tiledata for this biome
+    //specific data about the TileType for this biome
     class TileBiome
     {
         public string name;
@@ -20,13 +19,13 @@ namespace Rimworld.model.entities.map
 
         public Biome(Biomes biomes)
         {
-            tileData = new List<TileBiome>();
+            TileType = new List<TileBiome>();
             this.biomes = biomes;
             maxHeight = 1;
             minHeight = 0;
             scale = 100;
         }
-        IList<TileBiome> tileData;
+        IList<TileBiome> TileType;
         private Biomes biomes;
         internal float scale;
 
@@ -34,25 +33,25 @@ namespace Rimworld.model.entities.map
         public float minHeight { get; internal set; }
         
 
-        internal TileData RandomTile(string tag=null)
+        internal TileType RandomTile(string tag=null)
         {
             if (tag == null)
             {
-                return biomes.GetTileDataWithName(tileData[Utils.Random(0, tileData.Count)].name);
+                return biomes.GetTileTypeWithName(TileType[Utils.Random(0, TileType.Count)].name);
             }
             return GetTileWithTag(tag);
         }
 
-        internal TileData GetTileForHeight(float height)
+        internal TileType GetTileForHeight(float height)
         {
 
-            TileBiome tb = tileData.Where(x => x.minHeight <= height && x.maxHeight >= height).OrderBy(x => Utils.Random(0, 100)).FirstOrDefault();
+            TileBiome tb = TileType.Where(x => x.minHeight <= height && x.maxHeight >= height).OrderBy(x => Utils.Random(0, 100)).FirstOrDefault();
             if (tb == null)
             {
                 Utils.LogError("No tileBiome found for height: "+height);
                 return null;
             }
-            return biomes.GetTileDataWithTag(tb.tags);
+            return biomes.GetTileTypeWithTag(tb.tags);
         }
 
         internal void LoadFromCSV(string[] lineData)
@@ -65,12 +64,12 @@ namespace Rimworld.model.entities.map
             tb.maxHeight = float.Parse(lineData[i++]);
             tb.tags = lineData[i++];
            
-            tileData.Add(tb);
+            TileType.Add(tb);
         }
 
-        public TileData GetTileWithTag(string tag)
+        public TileType GetTileWithTag(string tag)
         {
-            return biomes.GetTileDataWithTag(tileData[Utils.Random(0, tileData.Count)].tags);
+            return biomes.GetTileTypeWithTag(TileType[Utils.Random(0, TileType.Count)].tags);
         }
     }
 }

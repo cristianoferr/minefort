@@ -2,70 +2,173 @@
 using Rimworld.model.entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using MoonSharp.Interpreter;
+using Rimworld.Entities;
+using Scheduler;
+using System.Threading;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Rimworld.controllers
 {
+    [MoonSharpUserData]
     public class WorldController : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject circleCursorPrefab;
 
+        [SerializeField]
+        private GameObject inventoryUI;
+
+        #region Instances
         public static WorldController Instance { get; protected set; }
 
-        // The world and tile data
-        public World world { get; protected set; }
+        public SoundController SoundController { get; private set; }
 
-        static string loadWorldFromFile = null;
+        public TileSpriteController TileSpriteController { get; private set; }
 
-        private bool _isPaused = false;
-        public bool IsPaused
-        {
-            get
-            {
-                return _isPaused || IsModal;
-            }
-            set
-            {
-                _isPaused = value;
-            }
-        }
+        public CharacterSpriteController CharacterSpriteController { get; private set; }
 
-        void Start()
-        {
-        }
+        public JobSpriteController JobSpriteController { get; private set; }
 
-        public bool IsModal; // If true, a modal dialog box is open so normal inputs should be ignored.
+        public InventorySpriteController InventorySpriteController { get; private set; }
 
-        // Use this for initialization
-        void OnEnable()
+
+        public FurnitureSpriteController FurnitureSpriteController { get; private set; }
+
+        public UtilitySpriteController UtilitySpriteController { get; private set; }
+
+        public QuestController QuestController { get; private set; }
+
+        public BuildModeController BuildModeController { get; private set; }
+
+        public MouseController MouseController { get; private set; }
+
+        public CameraController CameraController { get; private set; }
+
+        public SpawnInventoryController SpawnInventoryController { get; private set; }
+
+        public AutosaveManager AutosaveManager { get; private set; }
+
+        public TradeController TradeController { get; private set; }
+
+        public ModsManager ModsManager { get; private set; }
+
+        public DialogBoxManager DialogBoxManager { get; private set; }
+
+        // The world and tile data.
+        public World World { get; protected set; }
+
+        #endregion
+
+        public void OnEnable()
         {
             if (Instance != null)
             {
-                Debug.LogError("There should never be two world controllers.");
+                UnityDebugger.Debugger.LogError("WorldController", "There should never be two world controllers.");
             }
+
             Instance = this;
 
-            if (loadWorldFromFile != null)
+            new FunctionsManager();
+            new PrototypeManager();
+            new CharacterNameManager();
+            new SpriteManager();
+            new AudioManager();
+
+            // FIXME: Do something real here. This is just to show how to register a C# event prototype for the Scheduler.
+            PrototypeManager.ScheduledEvent.Add(
+                new ScheduledEvent(
+                    "ping_log",
+                    (evt) => UnityDebugger.Debugger.LogFormat("Scheduler", "Event {0} fired", evt.Name)));
+
+            ModsManager = new ModsManager();
+
+            if (SceneController.LoadWorldFromFileName != null)
             {
-                //CreateWorldFromSaveFile();
-                loadWorldFromFile = null;
+                CreateWorldFromSaveFile(SceneController.LoadWorldFromFileName);
+                SceneController.LoadWorldFromFileName = null;
             }
             else
             {
                 CreateEmptyWorld();
             }
+
+            SoundController = new SoundController(World);
         }
 
-        void Update()
+        public void Start()
         {
-            // TODO: Add pause/unpause, speed controls, etc...
-            if (IsPaused == false)
+            // Create GameObject so we can have access to a transform which has a position of "Vector3.zero".
+            new GameObject("VisualPath", typeof(VisualPath));
+            GameObject go;
+
+            TileSpriteController = new TileSpriteController(World);
+            CharacterSpriteController = new CharacterSpriteController(World);
+            FurnitureSpriteController = new FurnitureSpriteController(World);
+            UtilitySpriteController = new UtilitySpriteController(World);
+            JobSpriteController = new JobSpriteController(World, FurnitureSpriteController, UtilitySpriteController);
+            InventorySpriteController = new InventorySpriteController(World, inventoryUI);
+
+            BuildModeController = new BuildModeController();
+            SpawnInventoryController = new SpawnInventoryController();
+            MouseController = new MouseController(BuildModeController, FurnitureSpriteController, UtilitySpriteController, circleCursorPrefab);
+            QuestController = new QuestController();
+            CameraController = new CameraController();
+            TradeController = new TradeController();
+            AutosaveManager = new AutosaveManager();
+
+            // Register inputs actions
+            KeyboardManager.Instance.RegisterInputAction("DevMode", KeyboardMappedInputType.KeyDown, ChangeDevMode);
+
+            // Hiding Dev Mode spawn inventory controller if devmode is off.
+            SpawnInventoryController.SetUIVisibility(SettingsKeyHolder.DeveloperMode);
+
+            CameraController.Initialize();
+
+            // Initialising controllers.
+            GameObject canvas = GameObject.Find("Canvas");
+            go = Instantiate(Resources.Load("UI/ContextMenu"), canvas.transform.position, canvas.transform.rotation, canvas.transform) as GameObject;
+            go.name = "ContextMenu";
+
+            GameObject timeScale = Instantiate(Resources.Load("UI/TimeScale"), GameObject.Find("TopRight").transform, false) as GameObject;
+            timeScale.name = "TimeScale";
+
+            GameObject dateTimeDisplay = Instantiate(Resources.Load("UI/DateTimeDisplay"), canvas.transform, false) as GameObject;
+            dateTimeDisplay.name = "DateTimeDisplay";
+
+            GameController.Instance.IsModal = false;
+
+            // Settings UI is a 'dialog box' (kinda), so it comes here.  
+            // Where as DevConsole is a constant menu item (it can appear 'anywhere' so it appears after)
+            GameObject settingsMenu = (GameObject)Instantiate(Resources.Load("UI/SettingsMenu/SettingsMenu"));
+
+            if (settingsMenu != null)
             {
-                world.Update(Time.deltaTime);
+                settingsMenu.name = "Settings Menu";
+                settingsMenu.transform.SetParent(canvas.transform, false);
+                settingsMenu.SetActive(true);
             }
 
+            // This will place it after context menu (and the inventory menu) and settings menu
+            DialogBoxManager = GameObject.Find("Dialog Boxes").GetComponent<DialogBoxManager>();
+            DialogBoxManager.transform.SetAsLastSibling();
+
+            GameObject devConsole = (GameObject)Instantiate(Resources.Load("UI/Console/DevConsole"));
+
+            if (devConsole != null)
+            {
+                devConsole.name = "DevConsole-Spawned";
+                devConsole.transform.SetParent(canvas.transform, false);
+                devConsole.transform.SetAsLastSibling();
+                devConsole.SetActive(true);
+                DeveloperConsole.DevConsole.Close();
+            }
         }
 
         /// <summary>
-        /// Gets the tile at the unity-space coordinates
+        /// Gets the tile at the Unity-space coordinates.
         /// </summary>
         /// <returns>The tile at world coordinate.</returns>
         /// <param name="coord">Unity World-Space coordinates.</param>
@@ -73,82 +176,92 @@ namespace Rimworld.controllers
         {
             int x = Mathf.FloorToInt(coord.x + 0.5f);
             int y = Mathf.FloorToInt(coord.y + 0.5f);
-            return world.GetTileAt(Utils.IsoTo2D(x, y));
+
+            return World.GetTileAt(x, y, (int)coord.z);
         }
 
-        public void NewWorld()
+        public void Destroy()
         {
-            Debug.Log("NewWorld button was clicked.");
-
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            TimeManager.Instance.Destroy();
+            KeyboardManager.Instance.Destroy();
+            Scheduler.Scheduler.Current.Destroy();
+            GameMenuManager.Instance.Destroy();
+            AudioManager.Destroy();
         }
 
-
-        public string FileSaveBasePath()
+        /// <summary>
+        /// Change the developper mode.
+        /// </summary>
+        public void ChangeDevMode()
         {
-            return System.IO.Path.Combine(Application.persistentDataPath, "Saves");
-
+            bool mode = !SettingsKeyHolder.DeveloperMode;
+            SettingsKeyHolder.DeveloperMode = mode;
+            SpawnInventoryController.SetUIVisibility(mode);
+            ///FurnitureBuildMenu.instance.RebuildMenuButtons(developerMode);
         }
 
-
-
-        public void LoadWorld(string fileName)
+        /// <summary>
+        /// Serializes current Instance of the World and starts a thread
+        /// that actually saves serialized world to HDD.
+        /// </summary>
+        /// <param name="filePath">Where to save (Full path).</param>
+        /// <returns>Returns the thread that is currently saving data to HDD.</returns>
+        public Thread SaveWorld(string filePath)
         {
-            Debug.Log("LoadWorld button was clicked.");
-
-            // Reload the scene to reset all data (and purge old references)
-            loadWorldFromFile = fileName;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-        }
-
-        void CreateEmptyWorld()
-        {
-            // Create a world with Empty tiles
-            //world = new World(100, 100);
-            world = World.current;
-            world.Start();
-            RandomizeWorld(world,"land");
-        }
-
-        private void RandomizeWorld(World world,string tag=null)
-        {
-            for (int x = 0; x < world.width; x++)
+            // Make sure the save folder exists.
+            if (Directory.Exists(GameController.Instance.FileSaveBasePath()) == false)
             {
-                for (int y = 0; y < world.width; y++)
-                {
-                    Tile tile = world.GetTileAt(x, y);
-                    //this ignore the biome...
-                    tile.Type = world.biomes.GetTileDataWithTag(tag);
-                }
+                // NOTE: This can throw an exception if we can't create the folder,
+                // but why would this ever happen? We should, by definition, have the ability
+                // to write to our persistent data folder unless something is REALLY broken
+                // with the computer/device we're running on.
+                Directory.CreateDirectory(GameController.Instance.FileSaveBasePath());
             }
+
+            StreamWriter sw = new StreamWriter(filePath);
+            JsonWriter writer = new JsonTextWriter(sw);
+
+            JObject worldJson = World.Current.ToJson();
+
+            // Launch saving operation in a separate thread.
+            // This reduces lag while saving by a little bit.
+            Thread t = new Thread(new ThreadStart(delegate { SaveWorldToHdd(worldJson, writer); }));
+            t.Start();
+
+            return t;
         }
 
-        /*void CreateWorldFromSaveFile()
+        /// <summary>
+        /// Create/overwrite the save file with the XML text.
+        /// </summary>
+        /// <param name="filePath">Full path to file.</param>
+        /// <param name="writer">TextWriter that contains serialized World data.</param>
+        private void SaveWorldToHdd(JObject worldJson, JsonWriter writer)
         {
-            Debug.Log("CreateWorldFromSaveFile");
-            // Create a world from our save file data.
+            JsonSerializer serializer = new JsonSerializer()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            };
+            serializer.Serialize(writer, worldJson);
 
-            XmlSerializer serializer = new XmlSerializer(typeof(World));
+            writer.Flush();
+        }
 
-            // This can throw an exception.
-            // TODO: Show a error message to the user.
-            string saveGameText = File.ReadAllText(loadWorldFromFile);
-
-            TextReader reader = new StringReader(saveGameText);
-
-
-            Debug.Log(reader.ToString());
-            world = (World)serializer.Deserialize(reader);
-            reader.Close();
-
-
+        private void CreateEmptyWorld()
+        {
+            World = SceneController.CreateNewWorld();
 
             // Center the Camera
-            Camera.main.transform.position = new Vector3(world.Width / 2, world.Height / 2, Camera.main.transform.position.z);
+            Camera.main.transform.position = new Vector3(World.Width / 2, World.Height / 2, Camera.main.transform.position.z);
+        }
 
-        }*/
+        private void CreateWorldFromSaveFile(string fileName)
+        {
+            UnityDebugger.Debugger.Log("WorldController", "CreateWorldFromSaveFile");
 
+            World = new World();
+            World.ReadJson(fileName);
+        }
     }
-
 }

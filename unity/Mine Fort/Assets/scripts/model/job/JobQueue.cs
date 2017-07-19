@@ -1,76 +1,280 @@
-﻿//=======================================================================
-// Copyright Martin "quill18" Glaude 2015-2016.
-//		http://quill18.com
-//=======================================================================
-
-using UnityEngine;
-using System.Collections.Generic;
+#region License
+// ====================================================
+// Project Porcupine Copyright(C) 2016 Team Porcupine
+// This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+// and you are welcome to redistribute it under certain conditions; See
+// file LICENSE, which is part of this source code package, for details.
+// ====================================================
+#endregion
 using System;
-using Rimworld.logic.Jobs;
-using Rimworld;
+using System.Collections.Generic;
+using System.Linq;
+using Rimworld.Entities;
+using Rimworld.Jobs;
+using Rimworld.model.Inventory;
 
 public class JobQueue
 {
-    Queue<Job> jobQueue;
-
-    Action<Job> cbJobCreated;
+    private SortedList<Job.JobPriority, Job> jobQueue;
+    private Dictionary<string, List<Job>> jobsWaitingForInventory;
+    private Queue<Job> unreachableJobs;
 
     public JobQueue()
     {
-        jobQueue = new Queue<Job>();
+        jobQueue = new SortedList<Job.JobPriority, Job>(new DuplicateKeyComparer<Job.JobPriority>(true));
+        jobsWaitingForInventory = new Dictionary<string, List<Job>>();
+        unreachableJobs = new Queue<Job>();
+
+        World.Current.InventoryManager.InventoryCreated += ReevaluateWaitingQueue;
     }
 
-    public void Enqueue(Job j)
+    public event Action<Job> OnJobCreated;
+
+    public bool IsEmpty()
     {
-        //Utils.Log("Adding job to queue. Existing queue size: " + jobQueue.Count);
-        if (j.jobTime < 0)
+        return jobQueue.Count == 0;
+    }
+
+    // Returns the job count in the queue.
+    // (Necessary, since jobQueue is private).
+    public int GetCount()
+    {
+        return jobQueue.Count;
+    }
+
+    /// <summary>
+    /// Add a job to the JobQueue.
+    /// </summary>
+    /// <param name="job">The job to be inserted into the Queue.</param>
+    public void Enqueue(Job job)
+    {
+        DebugLog("Enqueue({0})", job.Type);
+        if (job.JobTime < 0)
         {
             // Job has a negative job time, so it's not actually
             // supposed to be queued up.  Just insta-complete it.
-            j.DoWork(0);
+            job.DoWork(0);
             return;
         }
 
-        jobQueue.Enqueue(j);
-
-        if (cbJobCreated != null)
+        // If the job requires material but there is nothing available, store it in jobsWaitingForInventory
+        if (job.RequestedItems.Count > 0 && job.GetFirstFulfillableInventoryRequirement() == null)
         {
-            cbJobCreated(j);
+            string missing = job.acceptsAny ? "*" : job.GetFirstDesiredItem().Type;
+            DebugLog(" - missingInventory {0}", missing);
+            if (jobsWaitingForInventory.ContainsKey(missing) == false)
+            {
+                jobsWaitingForInventory[missing] = new List<Job>();
+            }
+
+            jobsWaitingForInventory[missing].Add(job);
+        }
+        else if ((job.tile != null && job.tile.IsReachableFromAnyNeighbor(true) == false) ||
+            job.CharsCantReach.Count == World.Current.CharacterManager.Characters.Count)
+        {
+            // No one can reach the job.
+            DebugLog("JobQueue", "- Job can't be reached");
+            unreachableJobs.Enqueue(job);
+        }
+        else
+        {
+            DebugLog(" - {0}", job.acceptsAny ? "Any" : "All");
+            foreach (RequestedItem item in job.RequestedItems.Values)
+            {
+                DebugLog("   - {0} Min: {1}, Max: {2}", item.Type, item.MinAmountRequested, item.MaxAmountRequested);
+            }
+
+            DebugLog(" - job ok");
+
+            jobQueue.Add(job.Priority, job);
+        }
+
+        if (OnJobCreated != null)
+        {
+            OnJobCreated(job);
         }
     }
 
+    /// <summary>
+    /// Returns the first job from the JobQueue.
+    /// </summary>
     public Job Dequeue()
     {
         if (jobQueue.Count == 0)
-            return null;
-
-        return jobQueue.Dequeue();
-    }
-
-    public void RegisterJobCreationCallback(Action<Job> cb)
-    {
-        cbJobCreated += cb;
-    }
-
-    public void UnregisterJobCreationCallback(Action<Job> cb)
-    {
-        cbJobCreated -= cb;
-    }
-
-    public void Remove(Job j)
-    {
-        // TODO: Check docs to see if there's a less memory/swappy solution
-        List<Job> jobs = new List<Job>(jobQueue);
-
-        if (jobs.Contains(j) == false)
         {
-            Utils.LogError("Trying to remove a job that doesn't exist on the queue.");
-            // Most likely, this job wasn't on the queue because a character was working it!
-            return;
+            return null;
         }
 
-        jobs.Remove(j);
-        jobQueue = new Queue<Job>(jobs);
+        Job job = jobQueue.Values[0];
+        jobQueue.RemoveAt(0);
+        return job;
     }
 
+    /// <summary>
+    /// Search for a job that can be performed by the specified character. Tests that the job can be reached and there is enough inventory to complete it, somewhere.
+    /// </summary>
+    public Job GetJob(Rimworld.model.entities.GameCharacter character)
+    {
+        DebugLog("{0},{1} GetJob() (Queue size: {2})", character.GetName(), character.ID, jobQueue.Count);
+        if (jobQueue.Count == 0)
+        {
+            return null;
+        }
+
+        // This makes a large assumption that we are the only one accessing the queue right now
+        for (int i = 0; i < jobQueue.Count; i++)
+        {
+            Job job = jobQueue.Values[i];
+            jobQueue.RemoveAt(i);
+
+            // TODO: This is a simplistic version and needs to be expanded.
+            // If we can get all material and we can walk to the tile, the job is workable.
+            if (job.IsRequiredInventoriesAvailable() && job.tile.IsReachableFromAnyNeighbor(true))
+            {
+                if (CharacterCantReachHelper(job, character))
+                {
+                    UnityDebugger.Debugger.LogError("JobQueue", "Character could not find a path to the job site.");
+                    ReInsertHelper(job);
+                    continue;
+                }
+                else if ((job.RequestedItems.Count > 0) && !job.CanGetToInventory(character))
+                {
+                    job.AddCharCantReach(character);
+                    UnityDebugger.Debugger.LogError("JobQueue", "Character could not find a path to any inventory available.");
+                    ReInsertHelper(job);
+                    continue;
+                }
+
+                return job;
+            }
+
+            DebugLog(" - job failed requirements, test the next.");
+        }
+
+        return null;
+    }
+
+    public void Remove(Job job)
+    {
+        if (jobQueue.ContainsValue(job))
+        {
+            jobQueue.RemoveAt(jobQueue.IndexOfValue(job));
+        }
+        else
+        {
+            foreach (string inventoryType in jobsWaitingForInventory.Keys)
+            {
+                if (jobsWaitingForInventory[inventoryType].Contains(job))
+                {
+                    jobsWaitingForInventory[inventoryType].Remove(job);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns an IEnumerable for every job, including jobs that are in the waiting state.
+    /// </summary>
+    public IEnumerable<Job> PeekAllJobs()
+    {
+        foreach (Job job in jobQueue.Values)
+        {
+            yield return job;
+        }
+
+        foreach (string inventoryType in jobsWaitingForInventory.Keys)
+        {
+            foreach (Job job in jobsWaitingForInventory[inventoryType])
+            {
+                yield return job;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Call this whenever a furniture gets changed or removed that might effect the reachability of an object.
+    /// </summary>
+    public void ReevaluateReachability()
+    {
+        // TODO: Should this be an event on the furniture object?
+        DebugLog(" - Reevaluate reachability of {0} jobs", unreachableJobs.Count);
+        Queue<Job> jobsToReevaluate = unreachableJobs;
+        unreachableJobs = new Queue<Job>();
+
+        foreach (Job job in jobsToReevaluate)
+        {
+            job.ClearCharCantReach();
+            Enqueue(job);
+        }
+    }
+
+    /// <summary>
+    /// Returns true if the character is already in the list of characters unable to reach the job.
+    /// </summary>
+    /// <param name="job"></param>
+    /// <param name="character"></param>
+    /// <returns></returns>
+    public bool CharacterCantReachHelper(Job job, Rimworld.model.entities.GameCharacter character)
+    {
+        if (job.CharsCantReach != null)
+        {
+            foreach (Rimworld.model.entities.GameCharacter charTemp in job.CharsCantReach)
+            {
+                if (charTemp == character)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void ReevaluateWaitingQueue(GameInventory inv)
+    {
+        DebugLog("ReevaluateWaitingQueue() new resource: {0}, count: {1}", inv.Type, inv.StackSize);
+
+        List<Job> waitingJobs = null;
+
+        // Check that there is a job waiting for this inventory.
+        if (jobsWaitingForInventory.ContainsKey(inv.Type) && jobsWaitingForInventory[inv.Type].Count > 0)
+        {
+            // Get the current list of jobs
+            waitingJobs = jobsWaitingForInventory[inv.Type];
+
+            // Replace it with an empty list
+            jobsWaitingForInventory[inv.Type] = new List<Job>();
+
+            foreach (Job job in waitingJobs)
+            {
+                // Enqueue will put them in the new waiting list we created if they still have unmet needs
+                Enqueue(job);
+            }
+        }
+
+        // Do the same thing for the AnyMaterial jobs
+        if (jobsWaitingForInventory.ContainsKey("*"))
+        {
+            waitingJobs = jobsWaitingForInventory["*"];
+            jobsWaitingForInventory["*"] = new List<Job>();
+
+            foreach (Job job in waitingJobs)
+            {
+                Enqueue(job);
+            }
+        }
+    }
+
+    private void ReInsertHelper(Job job)
+    {
+        jobQueue.Reverse();
+        Enqueue(job);
+        jobQueue.Reverse();
+    }
+
+    [System.Diagnostics.Conditional("FSM_DEBUG_LOG")]
+    private void DebugLog(string message, params object[] par)
+    {
+        UnityDebugger.Debugger.LogFormat("FSM", message, par);
+    }
 }

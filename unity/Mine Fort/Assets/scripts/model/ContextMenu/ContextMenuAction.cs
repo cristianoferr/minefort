@@ -1,0 +1,40 @@
+#region License
+// ====================================================
+// Project Porcupine Copyright(C) 2016 Team Porcupine
+// This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+// and you are welcome to redistribute it under certain conditions; See
+// file LICENSE, which is part of this source code package, for details.
+// ====================================================
+#endregion
+using System;
+using Rimworld.Entities;
+using Rimworld.model.entities;
+
+public class ContextMenuAction
+{
+    public Action<ContextMenuAction, Rimworld.model.entities.GameCharacter> Action;
+    public string Parameter;
+
+    public bool RequireCharacterSelected { get; set; }
+
+    public string LocalizationKey { get; set; }
+
+    public void OnClick(MouseController mouseController)
+    {
+        if (Action != null)
+        {
+            if (RequireCharacterSelected)
+            {
+                if (mouseController.IsCharacterSelected())
+                {
+                    ISelectable actualSelection = mouseController.mySelection.GetSelectedStuff();
+                    Action(this, actualSelection as Rimworld.model.entities.GameCharacter);
+                }
+            }
+            else
+            {
+                Action(this, null);
+            }
+        }
+    }
+}

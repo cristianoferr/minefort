@@ -1,5 +1,4 @@
 ﻿using Rimworld.model.entities.map;
-using Rimworld.model.entities.map.tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace Rimworld.model.entities.map
         public Biomes()
         {
             biomeList = new Dictionary<string, Biome>();
-            tileData = new List<TileData>();
+            TileType = new List<TileType>();
         }
 
         public Biomes(DataHolder dataHolder)
@@ -23,7 +22,7 @@ namespace Rimworld.model.entities.map
             this.dataHolder = dataHolder;
         }
 
-        public IList<TileData> tileData { get; private set; }
+        public IList<TileType> TileType { get; private set; }
 
         public void AddBiome(string name, Biome biome)
         {
@@ -46,26 +45,27 @@ namespace Rimworld.model.entities.map
             currBiome = biomeList.Values.OrderBy(x => Utils.Random(0, 100)).FirstOrDefault();
         }
 
-        public TileData GetTileDataWithName(string name)
+        public TileType GetTileTypeWithName(string name)
         {
-            TileData td= tileData.Where(x => x.name==name).FirstOrDefault();
+            TileType td= TileType.Where(x => x.name==name).FirstOrDefault();
             if (td == null)
             {
-                td = new TileData(name);
-                tileData.Add(td);
+                td = new TileType();
+                td.name = name;
+                TileType.Add(td);
             }
             return td;
         }
 
-        public TileData GetTileDataWithTag(string tags)
+        public TileType GetTileTypeWithTag(string tags)
         {
-            return tileData.Where(x => x.ContainsTags(tags)).OrderBy(x=>Utils.Random(0,100)).FirstOrDefault();
+            return TileType.Where(x => x.ContainsTags(tags)).OrderBy(x=>Utils.Random(0,100)).FirstOrDefault();
         }
 
-        internal void LoadTileDataFromCSV(string[] lineData)
+        internal void LoadTileTypeFromCSV(string[] lineData)
         {
             string name = lineData[0];
-            GetTileDataWithName(name).LoadFromCSV(lineData);
+            GetTileTypeWithName(name).LoadFromCSV(lineData);
         }
     }
 }
