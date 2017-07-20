@@ -13,7 +13,7 @@ using MineFort.Entities;
 
 public class InitialTest
 {
-    static World world = World.Current;
+    static World world = new World();
     static DataHolder holder = world.holder;
     static GameFactory factory = new GameFactory(holder);
 

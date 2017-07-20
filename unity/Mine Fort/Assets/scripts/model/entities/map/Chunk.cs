@@ -22,7 +22,7 @@ namespace MineFort.model.entities.map
             {
                 for (int j = 0; j < GameConsts.CHUNK_SIZE; j++)
                 {
-                    tiles[i, j] = new Tile(this, i, j,0);
+                    tiles[i, j] = new Tile(this, cx*GameConsts.CHUNK_SIZE+i, cy * GameConsts.CHUNK_SIZE+j, 0);
                     //TODO: reativar esse tile tilechanged
                     tiles[i, j].TileChanged+=cbTileChanged;
                 }

@@ -58,14 +58,14 @@ namespace MineFort.Entities.States
             if (movementPercentage >= 1f)
             {
                 // We have reached the next tile
-                character.CurrTile = nextTile;
-                character.CurrTile.OnEnter();
+                character.Tile = nextTile;
+                character.Tile.OnEnter();
 
                 float overshotMovement = Mathf.Clamp01(movementPercentage - 1f);
                 movementPercentage = 0f;
 
                 // Arrived at the destination or run out of path.
-                if (hasReachedDestination(character.CurrTile) || path.Count == 0)
+                if (hasReachedDestination(character.Tile) || path.Count == 0)
                 {
                     Finished();
                     return;
@@ -74,9 +74,9 @@ namespace MineFort.Entities.States
                 AdvanceNextTile();
 
                 distToTravel = Mathf.Sqrt(
-                    Mathf.Pow(character.CurrTile.X - nextTile.X, 2) +
-                    Mathf.Pow(character.CurrTile.Y - nextTile.Y, 2) +
-                    Mathf.Pow(character.CurrTile.Z - nextTile.Z, 2));
+                    Mathf.Pow(character.Tile.X - nextTile.X, 2) +
+                    Mathf.Pow(character.Tile.Y - nextTile.Y, 2) +
+                    Mathf.Pow(character.Tile.Z - nextTile.Z, 2));
 
                 if (nextTile.IsEnterable() == GameConsts.ENTERABILITY.Yes)
                 {
@@ -98,9 +98,9 @@ namespace MineFort.Entities.States
             }
 
             character.TileOffset = new Vector3(
-                (nextTile.X - character.CurrTile.X) * movementPercentage,
-                (nextTile.Y - character.CurrTile.Y) * movementPercentage,
-                (nextTile.Z - character.CurrTile.Z) * movementPercentage);
+                (nextTile.X - character.Tile.X) * movementPercentage,
+                (nextTile.Y - character.Tile.Y) * movementPercentage,
+                (nextTile.Z - character.Tile.Z) * movementPercentage);
         }
 
         public override void Enter()
@@ -121,7 +121,7 @@ namespace MineFort.Entities.States
             }
 
             // The starting tile might be included, so we need to get rid of it
-            while (path[0].Equals(character.CurrTile))
+            while (path[0].Equals(character.Tile))
             {
                 path.RemoveAt(0);
 
@@ -138,8 +138,8 @@ namespace MineFort.Entities.States
             AdvanceNextTile();
 
             distToTravel = Mathf.Sqrt(
-                Mathf.Pow(character.CurrTile.X - nextTile.X, 2) +
-                Mathf.Pow(character.CurrTile.Y - nextTile.Y, 2));
+                Mathf.Pow(character.Tile.X - nextTile.X, 2) +
+                Mathf.Pow(character.Tile.Y - nextTile.Y, 2));
         }
 
         public override void Exit()

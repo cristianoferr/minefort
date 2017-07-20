@@ -177,7 +177,7 @@ namespace MineFort.controllers
             int x = Mathf.FloorToInt(coord.x + 0.5f);
             int y = Mathf.FloorToInt(coord.y + 0.5f);
 
-            return World.GetTileAt(x, y, (int)coord.z);
+            return World.GetTileAt(x, y, 0);
         }
 
         public void Destroy()
@@ -252,8 +252,10 @@ namespace MineFort.controllers
         {
             World = SceneController.CreateNewWorld();
 
+            World.RandomizeWorld("land");
+
             // Center the Camera
-            Camera.main.transform.position = new Vector3(World.Width / 2, World.Height / 2, Camera.main.transform.position.z);
+            //Camera.main.transform.position = new Vector3(World.Width / 2, World.Height / 2, Camera.main.transform.position.z);
         }
 
         private void CreateWorldFromSaveFile(string fileName)

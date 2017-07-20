@@ -65,18 +65,21 @@ namespace MineFort.controllers
 
             GameObject tile_go = objectGameObjectMap[tile];
 
+            tile_go.transform.position = Utils.TwoDToIso(tile.X, tile.Y, tile.Z+tile.height);
+
             if (tile_go == null)
             {
                 UnityDebugger.Debugger.LogError("TileSpriteController", "tileGameObjectMap's returned GameObject is null -- did you forget to add the tile to the dictionary? Or maybe forget to unregister a callback?");
                 return;
             }
 
-            // TODO Evaluate this criteria and naming schema!
+            ChangeTileSprite(tile_go, tile.Type.fileName);
+            //TODO: verify for ways to mark the tile as heavily used.
+            /*// TODO Evaluate this criteria and naming schema!
             if (DoesTileSpriteExist(tile.Type.Type + "_heavy") && (tile.WalkCount >= 30))
             {
                 if (tile.ForceTileUpdate || tile.WalkCount == 30)
                 {
-                    ChangeTileSprite(tile_go, tile.Type.Type + "_heavy");
                 }
             }
             else if (DoesTileSpriteExist(tile.Type.Type + "_low") && (tile.WalkCount >= 10))
@@ -89,7 +92,7 @@ namespace MineFort.controllers
             else
             {
                 ChangeTileSprite(tile_go, tile.Type.Type);
-            }
+            }*/
 
             if (tile.Type == TileType.Empty)
             {

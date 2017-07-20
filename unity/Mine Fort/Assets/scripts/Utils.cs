@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MineFort.model;
+using System;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -28,24 +29,37 @@ namespace MineFort
         //z is height in a 2.5D environment
         public static Vector3 TwoDToIso(float x, float y,float z=0,float priority=0)
         {
-            x = x * 2f;
-            y = y * 2f;
+            //x = x * 2f;
+            //y = y * 2f;
+            //x+= GameConsts.WORLD_WIDTH / 2; 
+            //y+= GameConsts.WORLD_HEIGHT / 2;
             Vector3 pos = new Vector3(x - y, (x + y) / 2+z, x+y-priority);
+            pos.x += GameConsts.WORLD_WIDTH ;
+            pos.y += GameConsts.WORLD_HEIGHT;
             return pos;
         }
 
 
         public static Vector3 IsoTo2D(float x, float y)
         {
-            x = x / 2f;
-            y = y / 2f;
+            //x = x / 2f;
+            //y = y / 2f;
+            x -= GameConsts.WORLD_WIDTH ;
+            y -= GameConsts.WORLD_HEIGHT;
             Vector3 pos = new Vector3((2*y+x)/2,(2*y-x)/2, 0);
+           //pos.x += GameConsts.WORLD_WIDTH / 2;
+            //pos.y += GameConsts.WORLD_HEIGHT / 2;
             return pos;
         }
 
         internal static Vector3 TwoDToIso(Vector3 currFramePosition)
         {
             return TwoDToIso(currFramePosition.x, currFramePosition.y, currFramePosition.z);
+        }
+
+        internal static Vector3 TwoDToIso(float x, float y, float v, object cHAR_TILE_PRIORITY)
+        {
+            throw new NotImplementedException();
         }
 
 

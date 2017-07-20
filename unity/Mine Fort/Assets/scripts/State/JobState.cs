@@ -54,10 +54,10 @@ namespace MineFort.Entities.States
                 DebugLog(" - Next action: Haul material");
                 character.SetState(new HaulState(character, Job, this));
             }
-            else if (Job.IsTileAtJobSite(character.CurrTile) == false)
+            else if (Job.IsTileAtJobSite(character.Tile) == false)
             {
                 DebugLog(" - Next action: Go to job");
-                List<Tile> path = Pathfinder.FindPathToTile(character.CurrTile, Job.tile, Job.adjacent);
+                List<Tile> path = Pathfinder.FindPathToTile(character.Tile, Job.tile, Job.adjacent);
                 if (path != null && path.Count > 0)
                 {
                     character.SetState(new MoveState(character, Job.IsTileAtJobSite, path, this));
@@ -77,7 +77,7 @@ namespace MineFort.Entities.States
             {
                 DebugLog(" - Next action: Work");
 
-                if (Job.tile != character.CurrTile)
+                if (Job.tile != character.Tile)
                 {
                     // We aren't standing on the job spot itself, so make sure to face it.
                     character.FaceTile(Job.tile);

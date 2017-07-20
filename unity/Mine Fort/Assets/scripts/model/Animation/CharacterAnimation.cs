@@ -92,7 +92,7 @@ namespace Animation
 
             // TODO: What is the acceptable amount of O2 gas pressure? 
             // Using .15 from Need.cs for now.        
-            if (character.CurrTile.GetGasPressure("O2") >= 0.15f)
+            if (character.Tile.GetGasPressure("O2") >= 0.15f)
             {
                 newAnimation += 100; // Remove helmet
             }

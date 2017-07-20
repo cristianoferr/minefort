@@ -28,7 +28,7 @@ namespace MineFort.Entities
 
         public virtual void AbandonJob()
         {
-            nextTile = DestTile = CurrTile;
+            nextTile = DestTile = Tile;
         }
 
 
@@ -41,7 +41,7 @@ namespace MineFort.Entities
 
         public void SetDestination(Tile tile)
         {
-            if (CurrTile.IsNeighbour(tile, true) == false)
+            if (Tile.IsNeighbour(tile, true) == false)
             {
                 Utils.Log("Character::SetDestination -- Our destination tile isn't actually our neighbour.");
             }

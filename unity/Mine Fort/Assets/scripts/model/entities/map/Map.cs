@@ -90,6 +90,7 @@ namespace MineFort.model.entities
 
         public Tile GetTileAt(float x, float y,float z=0)
         {
+            if (x < 0||x>=width||y<0||y>=height||z<0||z>=depth) return null;
             Chunk chunk = GetChunkAt(x, y);
 
             int px = (int)(x % GameConsts.CHUNK_SIZE);

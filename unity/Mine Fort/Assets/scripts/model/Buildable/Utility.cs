@@ -584,7 +584,7 @@ public class Utility : ISelectable, IPrototypable, IContextActionProvider, IBuil
         }
 
         // Make sure tile is FLOOR
-        if (tile.Type != TileType.Floor && tileTypeBuildPermissions.Contains(tile.Type.Type) == false)
+        if (tile.Type.CanBuild && tileTypeBuildPermissions.Contains(tile.Type.Type) == false)
         {
             return false;
         }

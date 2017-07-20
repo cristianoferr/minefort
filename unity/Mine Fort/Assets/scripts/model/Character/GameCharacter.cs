@@ -56,7 +56,7 @@ namespace MineFort.Entities
 
         public GameCharacter(Tile tile, Color color, Color uniformColor, Color skinColor, string name):base()
         {
-            CurrTile = tile;
+            Tile = tile;
             characterColor = color;
             characterUniformColor = uniformColor;
             characterSkinColor = skinColor;
@@ -263,9 +263,9 @@ namespace MineFort.Entities
             JObject characterJson = new JObject();
 
             characterJson.Add("Name", Name);
-            characterJson.Add("X", CurrTile.X);
-            characterJson.Add("Y", CurrTile.Y);
-            characterJson.Add("Z", CurrTile.Z);
+            characterJson.Add("X", Tile.X);
+            characterJson.Add("Y", Tile.Y);
+            characterJson.Add("Z", Tile.Z);
 
             JObject needsJSon = new JObject();
             foreach (Need need in Needs)
@@ -351,15 +351,15 @@ namespace MineFort.Entities
         public void FaceTile(Tile nextTile)
         {
             // Find character facing
-            if (nextTile.X > CurrTile.X)
+            if (nextTile.X > Tile.X)
             {
                 CharFacing = GameConsts.Facing.EAST;
             }
-            else if (nextTile.X < CurrTile.X)
+            else if (nextTile.X < Tile.X)
             {
                 CharFacing = GameConsts.Facing.WEST;
             }
-            else if (nextTile.Y > CurrTile.Y)
+            else if (nextTile.Y > Tile.Y)
             {
                 CharFacing = GameConsts.Facing.NORTH;
             }

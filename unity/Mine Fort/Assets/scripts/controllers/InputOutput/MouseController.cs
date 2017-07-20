@@ -6,6 +6,7 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using MineFort;
 using MineFort.controllers;
 using MineFort.UI;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ public class MouseController
     // The world-position of the mouse last frame.
     private Vector3 lastFramePosition;
     private Vector3 currFramePosition;
+    Vector3 currIsoPosition;
 
     private Vector3 currPlacingPosition;
 
@@ -79,6 +81,11 @@ public class MouseController
         return currFramePosition;
     }
 
+    public Vector3 GetMouseIsoPosition()
+    {
+        return currIsoPosition;
+    }
+
     public Vector3 GetPlacingPosition()
     {
         return currPlacingPosition;
@@ -101,7 +108,7 @@ public class MouseController
 
     public Tile GetMouseOverTile()
     {
-        return WorldController.Instance.GetTileAtWorldCoord(currFramePosition);
+        return WorldController.Instance.GetTileAtWorldCoord(currIsoPosition);
     }
 
     public GameObject GetCursorParent()
@@ -166,6 +173,7 @@ public class MouseController
     {
         currFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         currFramePosition.z = WorldController.Instance.CameraController.CurrentLayer;
+        currIsoPosition = Utils.IsoTo2D(currFramePosition.x, currFramePosition.y);
     }
 
     private void CheckModeChanges()
@@ -307,7 +315,7 @@ public class MouseController
 
         if (isDragging == false || buildModeController.IsObjectDraggable() == false)
         {
-            dragStartPosition = currPlacingPosition;
+            dragStartPosition = currIsoPosition;
         }
 
         DragParameters dragParams = GetDragParameters();
@@ -355,9 +363,9 @@ public class MouseController
     private DragParameters GetDragParameters()
     {
         int startX = Mathf.FloorToInt(dragStartPosition.x + 0.5f);
-        int endX = Mathf.FloorToInt(currPlacingPosition.x + 0.5f);
+        int endX = Mathf.FloorToInt(currIsoPosition.x + 0.5f);
         int startY = Mathf.FloorToInt(dragStartPosition.y + 0.5f);
-        int endY = Mathf.FloorToInt(currPlacingPosition.y + 0.5f);
+        int endY = Mathf.FloorToInt(currIsoPosition.y + 0.5f);
         return new DragParameters(startX, endX, startY, endY);
     }
 

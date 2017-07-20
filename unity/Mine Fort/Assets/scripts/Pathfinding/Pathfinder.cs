@@ -342,7 +342,7 @@ namespace MineFort.Pathfinding
         /// </summary>
         public static GoalEvaluator GoalCanFitInventoryEvaluator(string type, int amount)
         {
-            return tile => tile.Type == TileType.Floor && (
+            return tile => tile.Type.CanBuild  && (
                 tile.Inventory == null ||
                 (tile.Inventory.Type == type && (tile.Inventory.StackSize + amount) <= tile.Inventory.MaxStackSize));
         }

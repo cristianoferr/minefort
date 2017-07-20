@@ -29,7 +29,7 @@ using MineFort.model.entities;
 /// InstalledObjects are things like walls, doors, and furniture (e.g. a sofa).
 /// </summary>
 [MoonSharpUserData]
-public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBuildable, IUpdatable
+public class Furniture : PhysicalEntity, ISelectable, IPrototypable, IContextActionProvider, IBuildable, IUpdatable
 {
     #region Private Variables
     private string isEnterableAction;
@@ -46,7 +46,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
     /// </summary>
     private List<ContextMenuLuaAction> contextMenuLuaActions;
 
-    private HashSet<BuildableComponent> components;
+    private HashSet<BuildableComponent> buildComponents;
 
     private Dictionary<string, OrderAction> orderActions;
 
@@ -88,7 +88,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
         Rotation = 0f;
         DragType = "single";
         LinksToNeighbour = string.Empty;
-        components = new HashSet<BuildableComponent>();
+        buildComponents = new HashSet<BuildableComponent>();
         orderActions = new Dictionary<string, OrderAction>();
     }
 
@@ -116,10 +116,10 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
         Jobs = new BuildableJobs(this, other.Jobs);
 
         // add cloned components
-        components = new HashSet<BuildableComponent>();
-        foreach (BuildableComponent component in other.components)
+        buildComponents = new HashSet<BuildableComponent>();
+        foreach (BuildableComponent component in other.buildComponents)
         {
-            components.Add(component.Clone());
+            buildComponents.Add(component.Clone());
         }
 
         // add cloned order actions
@@ -155,9 +155,9 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
 
         tileTypeBuildPermissions = new HashSet<string>(other.tileTypeBuildPermissions);
 
-        RequiresSlowUpdate = EventActions.HasEvent("OnUpdate") || components.Any(c => c.RequiresSlowUpdate);
+        RequiresSlowUpdate = EventActions.HasEvent("OnUpdate") || buildComponents.Any(c => c.RequiresSlowUpdate);
 
-        RequiresFastUpdate = EventActions.HasEvent("OnFastUpdate") || components.Any(c => c.RequiresFastUpdate);
+        RequiresFastUpdate = EventActions.HasEvent("OnFastUpdate") || buildComponents.Any(c => c.RequiresFastUpdate);
 
         LocalizationCode = other.LocalizationCode;
         UnlocalizedDescription = other.UnlocalizedDescription;
@@ -262,18 +262,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
         }
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the furniture is selected by the player or not.
-    /// </summary>
-    /// <value>Whether the furniture is selected or not.</value>
-    public bool IsSelected { get; set; }
 
-    /// <summary>
-    /// Gets the BASE tile of the furniture. (Large objects can span over multiple tiles).
-    /// This should be RENAMED (possibly to BaseTile).
-    /// </summary>
-    /// <value>The BASE tile of the furniture.</value>
-    public Tile Tile { get; private set; }
 
     /// <summary>
     /// Gets the string that defines the type of object the furniture is. This gets queried by the visual system to
@@ -391,7 +380,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
     {
         get
         {
-            return components != null || components.Count != 0;
+            return buildComponents != null || buildComponents.Count != 0;
         }
     }
 
@@ -451,7 +440,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
         }
 
         // need to update reference to furniture and call Initialize (so components can place hooks on events there)
-        foreach (BuildableComponent component in furnObj.components)
+        foreach (BuildableComponent component in furnObj.buildComponents)
         {
             component.Initialize(furnObj);
         }
@@ -499,7 +488,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
             EventActions.Trigger("OnFastUpdate", this, deltaTime);
         }
 
-        foreach (BuildableComponent component in components)
+        foreach (BuildableComponent component in buildComponents)
         {
             component.EveryFrameUpdate(deltaTime);
         }
@@ -515,7 +504,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
         // requirements from components (gas, ...)
         bool canFunction = true;
         BuildableComponent.Requirements newRequirements = BuildableComponent.Requirements.None;
-        foreach (BuildableComponent component in components)
+        foreach (BuildableComponent component in buildComponents)
         {
             bool componentCanFunction = component.CanFunction();
             canFunction &= componentCanFunction;
@@ -556,7 +545,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
             EventActions.Trigger("OnUpdate", this, deltaTime);
         }
 
-        foreach (BuildableComponent component in components)
+        foreach (BuildableComponent component in buildComponents)
         {
             component.FixedFrequencyUpdate(deltaTime);
         }
@@ -786,7 +775,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
                     if (component != null)
                     {
                         component.InitializePrototype(this);
-                        components.Add(component);
+                        buildComponents.Add(component);
                     }
 
                     break;
@@ -1089,7 +1078,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
     /// Returns LocalizationCode name for the furniture.
     /// </summary>
     /// <returns>LocalizationCode for the name of the furniture.</returns>
-    public string GetName()
+    public override string GetName()
     {
         return LocalizationCode; // this.Name;
     }
@@ -1098,7 +1087,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
     /// Returns the UnlocalizedDescription of the furniture.
     /// </summary>
     /// <returns>Description of the furniture.</returns>
-    public string GetDescription()
+    public override string GetDescription()
     {
         return UnlocalizedDescription;
     }
@@ -1107,7 +1096,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
     /// Returns the description of the job linked to the furniture. NOT INMPLEMENTED.
     /// </summary>
     /// <returns>Job description of the job linked to the furniture.</returns>
-    public string GetJobDescription()
+    public override string GetJobDescription()
     {
         return string.Empty;
     }
@@ -1125,10 +1114,10 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
         }
     }
 
-    public IEnumerable<string> GetAdditionalInfo()
+    public override IEnumerable<string> GetAdditionalInfo()
     {
         // try to get some info from components
-        foreach (BuildableComponent component in components)
+        foreach (BuildableComponent component in buildComponents)
         {
             IEnumerable<string> desc = component.GetDescription();
             if (desc != null)
@@ -1150,9 +1139,9 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
 
     public IPluggable GetPluggable(HashSet<string> utilityTags)
     {
-        if (components != null)
+        if (buildComponents != null)
         {
-            foreach (BuildableComponent component in components)
+            foreach (BuildableComponent component in buildComponents)
             {
                 IPluggable pluggable = component as IPluggable;
                 if (pluggable != null && utilityTags.Contains(pluggable.UtilityType))
@@ -1173,9 +1162,9 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
     /// <returns>Component or null.</returns>
     public T GetComponent<T>(string componentName) where T : BuildableComponent
     {
-        if (components != null)
+        if (buildComponents != null)
         {
-            foreach (BuildableComponent component in components)
+            foreach (BuildableComponent component in buildComponents)
             {
                 if (component.Type.Equals(componentName))
                 {
@@ -1191,7 +1180,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
     {
         BuildableComponent.Requirements requires = BuildableComponent.Requirements.None;
 
-        foreach (BuildableComponent component in components)
+        foreach (BuildableComponent component in buildComponents)
         {
             requires |= component.Needs;
         }
@@ -1256,7 +1245,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
         }
 
         // check for context menus of components
-        foreach (BuildableComponent component in components)
+        foreach (BuildableComponent component in buildComponents)
         {
             List<ContextMenuAction> componentContextMenu = component.GetContextMenu();
             if (componentContextMenu != null)
@@ -1359,7 +1348,7 @@ public class Furniture : ISelectable, IPrototypable, IContextActionProvider, IBu
                 if (!HasTypeTag("DoesntNeedFloor"))
                 {
                     // Make sure tile is FLOOR
-                    if (tile2.Type != TileType.Floor && tileTypeBuildPermissions.Contains(tile2.Type.Type) == false)
+                    if (tile2.Type.CanBuild && tileTypeBuildPermissions.Contains(tile2.Type.Type) == false)
                     {
                         return false;
                     }

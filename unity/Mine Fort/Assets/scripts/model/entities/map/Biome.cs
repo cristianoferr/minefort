@@ -28,10 +28,21 @@ namespace MineFort.model.entities.map
         IList<TileBiome> TileType;
         private Biomes biomes;
         internal float scale;
+        internal string name;
 
         public float maxHeight { get; internal set; }
         public float minHeight { get; internal set; }
-        
+
+
+        public string GetName()
+        {
+            return name; 
+        }
+
+        public override string ToString()
+        {
+            return "Biome:"+name + "["+minHeight+","+maxHeight+","+scale+"] with " + TileType.Count + " tiles. ";
+        }
 
         internal TileType RandomTile(string tag=null)
         {

@@ -151,7 +151,7 @@ namespace MineFort.Localization
 
             if (File.Exists(pathToConfigFile) == false)
             {
-                UnityDebugger.Debugger.LogError("LocalizationTable", "No config file found at: " + pathToConfigFile);
+                UnityDebugger.Debugger.LogWarning("LocalizationTable", "No config file found at: " + pathToConfigFile);
                 configExists = false;
                 return;
             }

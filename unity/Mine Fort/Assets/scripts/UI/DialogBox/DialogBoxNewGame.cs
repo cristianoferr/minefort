@@ -19,7 +19,6 @@ public class DialogBoxNewGame : DialogBox
     public InputField Width;
     public InputField Depth;
     public InputField Seed;
-    public Toggle GenerateAsteroids;
     public InputField GeneratorInputField;
     public GameObject generatorListItemPrefab;
     public Transform generatorList;
@@ -92,7 +91,7 @@ public class DialogBoxNewGame : DialogBox
         DialogBoxManager dialogManager = GameObject.FindObjectOfType<DialogBoxManager>();
         dialogManager.dialogBoxPromptOrInfo.SetPrompt("message_creating_new_world");
         dialogManager.dialogBoxPromptOrInfo.ShowDialog();
-        SceneController.LoadNewWorld(width, height, depth, seed, generatorFile, GenerateAsteroids.isOn);
+        SceneController.LoadNewWorld(width, height, depth, seed, generatorFile);
     }
 
     public void VerifyNumericInput(InputField input)

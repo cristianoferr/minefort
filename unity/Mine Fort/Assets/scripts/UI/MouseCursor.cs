@@ -128,7 +128,8 @@ namespace MineFort.UI
         {
             lowerLeft.text.text = upperLeft.text.text = lowerRight.text.text = upperRight.text.text = string.Empty;
 
-            Tile t = WorldController.Instance.GetTileAtWorldCoord(mc.GetMousePosition());
+            //Tile t = WorldController.Instance.GetTileAtWorldCoord(Utils.IsoTo2D(mc.GetMousePosition().x+0.5f, mc.GetMousePosition().y + 0.5f));
+            Tile t = WorldController.Instance.GetTileAtWorldCoord(mc.GetMouseIsoPosition());
 
             if (mc.GetCurrentMode() == MouseController.MouseMode.BUILD)
             {

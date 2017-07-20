@@ -23,13 +23,13 @@ namespace MineFort.Entities.States
 
         public override void Update(float deltaTime)
         {
-            GameInventory tileInventory = character.CurrTile.Inventory;
+            GameInventory tileInventory = character.Tile.Inventory;
 
             // Current tile is empty
             if (tileInventory == null)
             {
                 DebugLog(" - Dumping");
-                World.Current.InventoryManager.PlaceInventory(character.CurrTile, character.Inventory);
+                World.Current.InventoryManager.PlaceInventory(character.Tile, character.Inventory);
                 Finished();
                 return;
             }
@@ -38,12 +38,12 @@ namespace MineFort.Entities.States
             if (tileInventory.Type == character.Inventory.Type && (tileInventory.StackSize + character.Inventory.StackSize) <= tileInventory.MaxStackSize)
             {
                 DebugLog(" - Dumping");
-                World.Current.InventoryManager.PlaceInventory(character.CurrTile, character.Inventory);
+                World.Current.InventoryManager.PlaceInventory(character.Tile, character.Inventory);
                 Finished();
                 return;
             }
 
-            List<Tile> path = Pathfinder.FindPathToDumpInventory(character.CurrTile, character.Inventory.Type, character.Inventory.StackSize);
+            List<Tile> path = Pathfinder.FindPathToDumpInventory(character.Tile, character.Inventory.Type, character.Inventory.StackSize);
             if (path != null && path.Count > 0)
             {
                 character.SetState(new MoveState(character, Pathfinder.GoalTileEvaluator(path.Last(), false), path, this));

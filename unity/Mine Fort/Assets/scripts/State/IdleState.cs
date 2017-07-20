@@ -34,9 +34,9 @@ namespace MineFort.Entities.States
             timeSpentIdle += deltaTime;
             if (timeSpentIdle >= totalIdleTime)
             {
-                Tile[] neighbors = character.CurrTile.GetNeighbours();
-                Tile endTile = neighbors[Random.Range(0, 4)];
-                List<Tile> path = new List<Tile>() { character.CurrTile, endTile };
+                Tile[] neighbors = character.Tile.GetNeighbours();
+                Tile endTile = neighbors[Random.Range(0, neighbors.Length)];
+                List<Tile> path = new List<Tile>() { character.Tile, endTile };
 
                 if (endTile.MovementCost != 0)
                 {

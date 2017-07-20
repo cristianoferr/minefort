@@ -25,7 +25,7 @@ public enum BuildMode
 public class BuildModeController
 {
     private MouseController mouseController;
-    private TileType buildModeTile = TileType.Floor;
+    private TileType buildModeTile = null;//no default tiletype (there is more than one floor, player will be able to choose, eventually)
 
     private bool useCratedObject;
 

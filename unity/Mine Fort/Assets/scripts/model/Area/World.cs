@@ -344,6 +344,22 @@ public class World
         }
     }
 
+    internal void RandomizeWorld(string tag)
+    {
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                for (int z = 0; z < Depth; z++)
+                {
+                    Tile tile = GetTileAt(x, y,z);
+                    //this ignore the biome...
+                    tile.SetTileType(biomes.GetTileTypeWithTag(tag),false);
+                }
+            }
+        }
+    }
+
     public JToken RandomStateToJson()
     {
         // JSON.Net can't serialize the Random.State so we use JsonUtility

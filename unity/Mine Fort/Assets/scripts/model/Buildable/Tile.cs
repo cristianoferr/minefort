@@ -115,7 +115,18 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
     public int Y { get; private set; }
 
     public int Z { get; private set; }
-    public float height { get; set; }
+    private float height_;
+    public float height { get {
+            return height_;
+        }
+         set {
+            if (value != height_)
+            {
+                height_ = value;
+                ReportTileChanged();
+            }
+        }
+    }
 
     public float MovementModifier { get; set; }
 
@@ -157,6 +168,7 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
 
     public void SetTileType(TileType newTileType, bool doRoomFloodFill = true)
     {
+        
         if (type == newTileType)
         {
             return;
@@ -601,12 +613,13 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
 
     public string GetName()
     {
-        return type.LocalizationCode;
+        //  return type.LocalizationCode;
+        return type.name;
     }
 
     public string GetDescription()
     {
-        return type.UnlocalizedDescription;
+        return type.description;
     }
 
     public string GetJobDescription()

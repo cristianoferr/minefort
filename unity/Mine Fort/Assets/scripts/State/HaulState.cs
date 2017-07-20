@@ -55,7 +55,7 @@ namespace MineFort.Entities.States
                     string[] inventoryTypes = character.Inventory != null ?
                         new string[] { character.Inventory.Type } :
                         Job.RequestedItems.Keys.ToArray();
-                    path = World.Current.InventoryManager.GetPathToClosestInventoryOfType(inventoryTypes, character.CurrTile, Job.canTakeFromStockpile);
+                    path = World.Current.InventoryManager.GetPathToClosestInventoryOfType(inventoryTypes, character.Tile, Job.canTakeFromStockpile);
                     if (path != null && path.Count > 0)
                     {
                         GameInventory inv = path.Last().Inventory;
@@ -77,7 +77,7 @@ namespace MineFort.Entities.States
                     break;
 
                 case HaulAction.PickupMaterial:
-                    GameInventory tileInventory = character.CurrTile.Inventory;
+                    GameInventory tileInventory = character.Tile.Inventory;
                     int amountCarried = character.Inventory != null ? character.Inventory.StackSize : 0;
                     int amount = Mathf.Min(Job.AmountDesiredOfInventoryType(tileInventory.Type) - amountCarried, tileInventory.StackSize);
                     DebugLog(" - Picked up {0} {1}", amount, tileInventory.Type);
@@ -85,7 +85,7 @@ namespace MineFort.Entities.States
                     break;
 
                 case HaulAction.DeliverMaterial:
-                    path = Pathfinder.FindPath(character.CurrTile, Job.IsTileAtJobSite, Pathfinder.DefaultDistanceHeuristic(Job.tile));
+                    path = Pathfinder.FindPath(character.Tile, Job.IsTileAtJobSite, Pathfinder.DefaultDistanceHeuristic(Job.tile));
                     if (path != null && path.Count > 0)
                     {
                         character.SetState(new MoveState(character, Pathfinder.GoalTileEvaluator(path.Last(), false), path, this));
@@ -111,13 +111,13 @@ namespace MineFort.Entities.States
 
         private HaulAction NextAction()
         {
-            GameInventory tileInventory = character.CurrTile.Inventory;
+            GameInventory tileInventory = character.Tile.Inventory;
             bool jobWantsTileInventory = InventoryManager.CanBePickedUp(tileInventory, Job.canTakeFromStockpile) &&
                                          Job.AmountDesiredOfInventoryType(tileInventory.Type) > 0;
 
             if (noMoreMaterialFound && character.Inventory != null)
             {
-                return Job.IsTileAtJobSite(character.CurrTile) ? HaulAction.DropOffmaterial : HaulAction.DeliverMaterial;
+                return Job.IsTileAtJobSite(character.Tile) ? HaulAction.DropOffmaterial : HaulAction.DeliverMaterial;
             }
             else if (character.Inventory != null && Job.AmountDesiredOfInventoryType(character.Inventory.Type) == 0)
             {
@@ -136,7 +136,7 @@ namespace MineFort.Entities.States
                 // Already carrying it
                 if (amountWanted <= currentlyCarrying || spaceAvailable == 0)
                 {
-                    return Job.IsTileAtJobSite(character.CurrTile) ? HaulAction.DropOffmaterial : HaulAction.DeliverMaterial;
+                    return Job.IsTileAtJobSite(character.Tile) ? HaulAction.DropOffmaterial : HaulAction.DeliverMaterial;
                 }
                 else
                 {

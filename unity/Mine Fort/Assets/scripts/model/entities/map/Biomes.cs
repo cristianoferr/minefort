@@ -27,6 +27,7 @@ namespace MineFort.model.entities.map
         public void AddBiome(string name, Biome biome)
         {
             if (biomeList.ContainsKey(name)) biomeList.Remove(name);
+            biome.name = name;
             biomeList.Add(name, biome);
         }
 

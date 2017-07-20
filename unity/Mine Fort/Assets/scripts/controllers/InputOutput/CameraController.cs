@@ -6,7 +6,9 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using MineFort;
 using MineFort.controllers;
+using MineFort.model;
 using System;
 using UnityEngine;
 
@@ -33,7 +35,7 @@ public class CameraController
     public CameraController()
     {
         // Main camera handles UI only
-        Camera.main.farClipPlane = 9;
+        Camera.main.farClipPlane = 1000;
 
         cameraData = World.Current.CameraData;
 
@@ -176,6 +178,7 @@ public class CameraController
         {
             cameraData.presets = new Preset[5];
 
+            Camera.main.transform.position = Utils.IsoTo2D(GameConsts.WORLD_WIDTH/2, GameConsts.WORLD_HEIGHT / 2);
             cameraData.position = Camera.main.transform.position;
             cameraData.zoomLevel = zoomTarget;
             cameraData.zLevel = currentLayer;

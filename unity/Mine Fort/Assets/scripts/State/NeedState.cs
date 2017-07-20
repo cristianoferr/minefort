@@ -41,7 +41,7 @@ namespace MineFort.Entities.States
             // We must do something immediately, drop what we are doing.
             if (needPercent == 100 && biggestNeed != null && biggestNeed.CompleteOnFail)
             {
-                Job job = new Job(character.CurrTile, null, biggestNeed.CompleteJobCrit, biggestNeed.RestoreNeedTime * 10, null, Job.JobPriority.High, false, true, true);
+                Job job = new Job(character.Tile, null, biggestNeed.CompleteJobCrit, biggestNeed.RestoreNeedTime * 10, null, Job.JobPriority.High, false, true, true);
                 character.InterruptState();
                 character.ClearStateQueue();
                 character.SetState(new JobState(character, job));

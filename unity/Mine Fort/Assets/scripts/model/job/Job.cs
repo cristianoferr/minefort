@@ -534,7 +534,7 @@ public class Job : ISelectable, IPrototypable
     public bool CanGetToInventory(GameCharacter character)
     {
         List<Tile> path = null;
-        path = World.Current.InventoryManager.GetPathToClosestInventoryOfType(RequestedItems.Keys.ToArray(), character.CurrTile, canTakeFromStockpile);
+        path = World.Current.InventoryManager.GetPathToClosestInventoryOfType(RequestedItems.Keys.ToArray(), character.Tile, canTakeFromStockpile);
         if (path != null && path.Count > 0)
         {
             return true;

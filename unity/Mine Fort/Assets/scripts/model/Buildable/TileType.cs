@@ -18,11 +18,22 @@ using MineFort;
 [MoonSharpUserData]
 public class TileType : TagObject, IPrototypable, IEquatable<TileType>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TileType"/> class.
-    /// </summary>
-    public TileType()
+
+    public static TileType Empty = new TileType();
+
+
+    public TileType():this(0)
     {
+        name = "Empty";
+        
+    }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TileType"/> class.
+        /// </summary>
+        public TileType(float BaseMovementCost)
+    {
+        description = "NYI:tiletype Description";
+        this.BaseMovementCost = BaseMovementCost;
         PathfindingModifier = 0.0f;
         PathfindingWeight = 1.0f;
     }
@@ -30,6 +41,7 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
     #region MeuCodigo
     public string fileName = "undef";
     public string name;
+    internal string description;//TODO:pegar da tabela CSV
 
     internal void LoadFromCSV(string[] lineData)
     {
@@ -39,6 +51,7 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
         td.fileName = lineData[i++];
         td.BaseMovementCost = float.Parse(lineData[i++]);
         string[] tags = lineData[i++].Split(',');
+        td.CanBuild = lineData[i++] == "1";
         foreach (string tag in tags)
         {
             td.AddTag(tag);
@@ -46,29 +59,18 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
     }
     #endregion MeuCodigo
 
-    /// <summary>
-    /// Gets the empty tile type prototype.
-    /// </summary>
-    /// <value>The empty tile type.</value>
-    public static TileType Empty
-    {
-        get { return PrototypeManager.TileType.Get("empty"); }
-    }
-
-    /// <summary>
-    /// Gets the floor tile type prototype.
-    /// </summary>
-    /// <value>The floor tile type.</value>
-    public static TileType Floor
-    {
-        get { return PrototypeManager.TileType.Get("floor"); }
-    }
 
     /// <summary>
     /// Unique TileType identifier.
     /// </summary>
     /// <value>The tile type.</value>
-    public string Type { get; private set; }
+    public string Type
+    {
+        get
+        {
+            return name;
+        }
+    }
 
     /// <summary>
     /// Gets the base movement cost.
@@ -116,6 +118,8 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
     /// The order action to create tileType.
     /// </summary>
     public Dictionary<string, OrderAction> OrderActions { get; private set; }
+    public bool CanBuild { get; private set; }
+    
 
     public static bool operator ==(TileType left, TileType right)
     {
@@ -144,7 +148,7 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
 
     public override string ToString()
     {
-        return Type;
+        return name;
     }
 
     public T GetOrderAction<T>() where T : OrderAction
@@ -188,7 +192,6 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
     /// <param name="parentReader">The XML reader to read from.</param>
     public void ReadXmlPrototype(XmlReader parentReader)
     {
-        Type = parentReader.GetAttribute("type");
         OrderActions = new Dictionary<string, OrderAction>();
 
         XmlReader reader = parentReader.ReadSubtree();

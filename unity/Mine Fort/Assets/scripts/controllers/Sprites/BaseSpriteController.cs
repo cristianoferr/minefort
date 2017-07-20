@@ -6,6 +6,9 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using MineFort;
+using MineFort.Entities;
+using MineFort.model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +30,11 @@ public abstract class BaseSpriteController<T>
     {
         objectGameObjectMap.Clear();
         GameObject.Destroy(objectParent);
+    }
+
+    public  void UpdatePosition(PhysicalEntity character, GameObject char_go)
+    {
+        char_go.transform.position = Utils.TwoDToIso(character.X, character.Y, character.Z + character.Tile.height, GameConsts.CHAR_TILE_PRIORITY);
     }
 
     protected abstract void OnCreated(T obj);

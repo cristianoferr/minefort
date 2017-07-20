@@ -50,27 +50,34 @@ namespace MineFort.Entities
             }
         }
 
-
-        Tile _currTile =null;
-        /// <summary>
-        /// The tile the Character is considered to still be standing in.
-        /// </summary>
         public Tile CurrTile
         {
             get
             {
-                return CurrTile;
+                return _currTile;
+            }
+        }
+
+            Tile _currTile =null;
+        /// <summary>
+        /// The tile the Character is considered to still be standing in.
+        /// </summary>
+        public Tile Tile
+        {
+            get
+            {
+                return _currTile;
             }
 
             set
             {
-                if (CurrTile != null)
+                if (_currTile != null)
                 {
-                    CurrTile.Characters.Remove(this);
+                    _currTile.Characters.Remove(this);
                 }
 
-                CurrTile = value;
-                CurrTile.Characters.Add(this);
+                _currTile = value;
+                _currTile.Characters.Add(this);
 
                 TileOffset = Vector3.zero;
             }
@@ -117,7 +124,7 @@ namespace MineFort.Entities
                 Utils.LogError("PlaceNear pos is null!");
                 return;
             }
-            CurrTile = World.Current.GetTileAt(pos);
+            Tile = World.Current.GetTileAt(pos);
         }
 
         
@@ -138,7 +145,7 @@ namespace MineFort.Entities
         {
             return "";
         }
-            public string GetName()
+            public virtual string GetName()
         {
             return this.Name;
         }
@@ -166,7 +173,7 @@ namespace MineFort.Entities
         {
             get
             {
-                return CurrTile.X + TileOffset.x;
+                return Tile.X + TileOffset.x;
             }
         }
 
@@ -178,7 +185,7 @@ namespace MineFort.Entities
         {
             get
             {
-                return CurrTile.Y + TileOffset.y;
+                return Tile.Y + TileOffset.y;
             }
         }
 
@@ -190,7 +197,7 @@ namespace MineFort.Entities
         {
             get
             {
-                return CurrTile.Z + TileOffset.z;
+                return Tile.Z + TileOffset.z;
             }
         }
 

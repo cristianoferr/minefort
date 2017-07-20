@@ -95,7 +95,7 @@ namespace MineFort.io
                 biome.LoadFromCSV(lineData);
             }
 
-            if (dataDict == GameConsts.DATA_DICT_TileType)
+            if (dataDict == GameConsts.DATA_DICT_TILEDATA)
             {
                 world.biomes.LoadTileTypeFromCSV(lineData);
             }

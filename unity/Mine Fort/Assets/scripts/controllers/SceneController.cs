@@ -24,17 +24,14 @@ public static class SceneController
 
     public static int Seed { get; private set; }
 
-    public static bool GenerateAsteroids { get; private set; }
-
     public static string GeneratorFile { get; private set; }
 
     // Load the main scene.
-    public static void LoadNewWorld(int width, int height, int depth, int seed, string generatorFile = "Default.xml", bool generateAsteroids = true)
+    public static void LoadNewWorld(int width, int height, int depth, int seed, string generatorFile = "Default.xml")
     {
         NewWorldSize = new Vector3(width, height, depth);
         Seed = seed;
         GeneratorFile = generatorFile;
-        GenerateAsteroids = generateAsteroids;
         CleanInstancesBeforeLoadingScene();
         SceneManager.LoadScene(MainSceneName);
     }
@@ -42,7 +39,6 @@ public static class SceneController
     public static World CreateNewWorld(string generatorFile = "Default.xml", bool generateAsteroids = true)
     {
         GeneratorFile = generatorFile;
-        GenerateAsteroids = generateAsteroids;
 
         if (NewWorldSize == Vector3.zero)
         {

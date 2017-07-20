@@ -6,11 +6,10 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using MineFort.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MineFort.Localization
-{
     /**
      * <summary>
      * This class will automatically translate texts it is attached to.
@@ -126,4 +125,3 @@ namespace MineFort.Localization
             }
         }
     }
-}

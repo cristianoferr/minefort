@@ -6,6 +6,7 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using MineFort.model;
 using MineFort.model.entities;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,7 +83,7 @@ namespace MineFort.Entities
             objectGameObjectMap.Add(character, char_go);
 
             char_go.name = "Character";
-            char_go.transform.position = new Vector3(character.X, character.Y, character.Z);
+            UpdatePosition(character, char_go);
             char_go.transform.SetParent(objectParent.transform, true);
 
             SpriteRenderer sr = char_go.AddComponent<SpriteRenderer>();
@@ -105,6 +106,8 @@ namespace MineFort.Entities
             // the object's into changes.
             character.OnCharacterChanged += OnChanged;
         }
+
+        
 
         protected override void OnChanged(GameCharacter character)
         {
@@ -137,7 +140,7 @@ namespace MineFort.Entities
 
             GameObject char_go = objectGameObjectMap[character];
 
-            char_go.transform.position = new Vector3(character.X, character.Y, character.Z);
+            UpdatePosition(character, char_go);
         }
 
         protected override void OnRemoved(GameCharacter character)
