@@ -180,21 +180,7 @@ public class WorldGenerator
         world.ReadJson(startAreaFilePath);
     }
 
-    [System.Serializable]
-    [XmlRoot("Asteroid")]
-    public class AsteroidInfo
-    {
-        [XmlElement("AsteroidSize")]
-        public int AsteroidSize { get; set; }
-
-        [XmlElement("AsteroidDensity")]
-        public float AsteroidDensity { get; set; }
-
-        [XmlElement("ResourceChance")]
-        public float ResourceChance { get; set; }
-
-        public List<Resource> Resources { get; set; }
-    }
+   
 
     [System.Serializable]
     public class Resource

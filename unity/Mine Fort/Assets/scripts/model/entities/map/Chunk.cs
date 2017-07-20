@@ -7,7 +7,7 @@ namespace MineFort.model.entities.map
 {
     public class Chunk
     {
-        public Tile[,] tiles { get; private set; }
+        public Tile[,,] tiles { get; private set; }
         public IList<Room> rooms;
         public Chunk(Map map, int cx, int cy, Action<Tile> cbTileChanged)
 
@@ -17,28 +17,32 @@ namespace MineFort.model.entities.map
             this.cx = cx;
             this.cy = cy;
             outsideRoom = new Room(this);
-            tiles = new Tile[GameConsts.CHUNK_SIZE, GameConsts.CHUNK_SIZE];
+            tiles = new Tile[GameConsts.CHUNK_SIZE, GameConsts.CHUNK_SIZE,map.height];
             for (int i = 0; i < GameConsts.CHUNK_SIZE; i++)
             {
                 for (int j = 0; j < GameConsts.CHUNK_SIZE; j++)
                 {
-                    tiles[i, j] = new Tile(this, cx*GameConsts.CHUNK_SIZE+i, cy * GameConsts.CHUNK_SIZE+j, 0);
-                    //TODO: reativar esse tile tilechanged
-                    tiles[i, j].TileChanged+=cbTileChanged;
+                    for (int k = 0; k < map.depth; k++)
+                    {
+                        tiles[i, j,k] = new Tile(this, cx * GameConsts.CHUNK_SIZE + i, cy * GameConsts.CHUNK_SIZE + j, k);
+                        tiles[i, j,k].SetTileType(TileType.Empty);
+                        tiles[i, j,k].TileChanged += cbTileChanged;
+                    }
                 }
             }
         }
 
         public Room outsideRoom { get; set; }
 
-        public Tile GetTileAt(int px, int py)
+        public Tile GetTileAt(int px, int py,int pz)
         {
             //a posição não fica nesse chunk...
-            if (px < 0 || py < 0 || px >= GameConsts.CHUNK_SIZE || px >= GameConsts.CHUNK_SIZE)
+            if (pz<0||pz>=map.depth || px < 0 || py < 0 || py >= GameConsts.CHUNK_SIZE || px >= GameConsts.CHUNK_SIZE)
             {
-                return map.GetTileAt(cx * GameConsts.CHUNK_SIZE + px, cy * GameConsts.CHUNK_SIZE + py);
+                return null;// map.GetTileAt(cx * GameConsts.CHUNK_SIZE + px, cy * GameConsts.CHUNK_SIZE + py);
             }
-            return tiles[px, py];
+            //Utils.Log(String.Format("getTileAt:{0},{1},{2}", px, py, pz));
+            return tiles[px, py,pz];
         }
 
         public Map map { get; set; }

@@ -44,6 +44,11 @@ namespace MineFort.model.entities
         int chunkHeight = 0;
         internal void SetupWorld(int width, int height,int depth)
         {
+            GameConsts.CHUNK_SIZE = (width / GameConsts.CHUNK_QTD);
+            //This way I get the closest int value for width/height.
+            width = (width / GameConsts.CHUNK_SIZE) * GameConsts.CHUNK_SIZE;
+            height = (height / GameConsts.CHUNK_SIZE) * GameConsts.CHUNK_SIZE;
+
             this.width = width;
             this.height = height;
             this.depth = depth;
@@ -88,18 +93,18 @@ namespace MineFort.model.entities
         #endregion CallBacks
 
 
-        public Tile GetTileAt(float x, float y,float z=0)
+        public Tile GetTileAt(float x, float y, float z =0)
         {
             if (x < 0||x>=width||y<0||y>=height||z<0||z>=depth) return null;
             Chunk chunk = GetChunkAt(x, y);
 
             int px = (int)(x % GameConsts.CHUNK_SIZE);
             int py = (int)(y % GameConsts.CHUNK_SIZE);
-            return chunk.GetTileAt(px, py);
+            return chunk.GetTileAt((int)px, (int)py,(int)z);
         }
         public Tile GetTileAt(Vector3 position)
         {
-            return GetTileAt(position.x, position.y);
+            return GetTileAt(position.x, position.y, position.z);
 
         }
 

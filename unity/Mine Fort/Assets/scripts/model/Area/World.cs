@@ -105,11 +105,11 @@ public class World
     /// <param name="width">Width in tiles.</param>
     /// <param name="height">Height in tiles.</param>
     /// <param name="depth">Depth in amount.</param>
-    public World(int width, int height, int depth):this()
+    public World(int width, int height):this()
     {
 
         // Creates an empty world.
-        SetupWorld(width, height, depth);
+        SetupWorld(width, height);
         Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         if (SceneController.NewWorldSize != Vector3.zero)
         {
@@ -506,14 +506,13 @@ public class World
         */
     }
 
-    private void SetupWorld(int width, int height, int depth)
+    private void SetupWorld(int width, int height)
     {
         // Set the current world to be this world.
         // TODO: Do we need to do any cleanup of the old world?
         Current = this;
 
-        mapData.SetupWorld(width, height,depth);
-
+        
         RoomManager = new RoomManager();
         RoomManager.Adding += (room) => roomGraph = null;
         RoomManager.Removing += (room) => roomGraph = null;
@@ -539,6 +538,8 @@ public class World
 
         holder.Start();
         biomes.RandomBiome();
+        mapData.SetupWorld(width, height, biome.maxHeight);
+
     }
 
     private void FillTilesArray()

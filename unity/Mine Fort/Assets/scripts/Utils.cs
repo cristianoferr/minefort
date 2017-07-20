@@ -33,7 +33,7 @@ namespace MineFort
             //y = y * 2f;
             //x+= GameConsts.WORLD_WIDTH / 2; 
             //y+= GameConsts.WORLD_HEIGHT / 2;
-            Vector3 pos = new Vector3(x - y, (x + y) / 2+z, x+y-priority);
+            Vector3 pos = new Vector3(x - y, (x + y) / 2+z, x+y-priority-z);
             pos.x += GameConsts.WORLD_WIDTH ;
             pos.y += GameConsts.WORLD_HEIGHT;
             return pos;

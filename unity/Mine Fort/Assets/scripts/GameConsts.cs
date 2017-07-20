@@ -78,10 +78,11 @@ namespace MineFort.model
 
         public const string VAL_WORLD_HEIGHT = "world_height";
 
-        public const int CHUNK_SIZE = 32; //tamanho que cada chunk terá no eixo x,y
-        public const int WORLD_WIDTH = CHUNK_SIZE * 4;
-        public const int WORLD_HEIGHT = CHUNK_SIZE * 4;
-        public const int WORLD_DEPTH= 1;//TODO: permitir multiplos niveis
+        public const int CHUNK_QTD = 4;
+        public static int CHUNK_SIZE = 32; //tamanho que cada chunk terá no eixo x,y
+        public static int WORLD_WIDTH = GameConsts.CHUNK_SIZE * CHUNK_QTD;
+        public static int WORLD_HEIGHT = CHUNK_SIZE * 4;
+        //public static int WORLD_DEPTH= 1;//TODO: permitir multiplos niveis
 
         //usado no csv
         public const string DATA_DICT_BIOME = "BIOMES";

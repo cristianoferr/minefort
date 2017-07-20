@@ -43,11 +43,11 @@ public static class SceneController
         if (NewWorldSize == Vector3.zero)
         {
             //TODO: change world size to be dynamic
-            return new World(GameConsts.WORLD_WIDTH, GameConsts.WORLD_HEIGHT, GameConsts.WORLD_DEPTH);
+            return new World(GameConsts.WORLD_WIDTH, GameConsts.WORLD_HEIGHT);
         }
         else
         {
-            return new World((int)NewWorldSize.x, (int)NewWorldSize.y, (int)NewWorldSize.z);
+            return new World((int)NewWorldSize.x, (int)NewWorldSize.y);
         }
     }
 

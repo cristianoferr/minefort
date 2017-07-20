@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace MineFort.logic.MapGen
 {
-   public class MapGenerator
+    public class MapGenerator
     {
         private World world;
 
@@ -17,22 +17,38 @@ namespace MineFort.logic.MapGen
             this.world = world;
         }
 
-        public void RegenerateMap(float seed,Biome biome)
+        public void RegenerateMap(float seed, Biome biome)
         {
-            float height = biome.maxHeight;
+            float maxHeight = biome.maxHeight;
             for (int x = 0; x < world.Width; x++)
             {
                 for (int y = 0; y < world.Height; y++)
                 {
-                        float noise= Mathf.PerlinNoise((seed+x)/ biome.scale, (seed+ y) /biome.scale) ;
+                    float noise = Mathf.PerlinNoise((seed + x) / biome.scale, (seed + y) / biome.scale);
+
                     if (noise < 0) noise = 0;
                     if (noise > 1) noise = 1;
-                    Tile tile = world.GetTileAt(x, y,0);
-                    tile.height = biome.minHeight+noise*height;
-                    tile.SetTileType(biome.GetTileForHeight(noise));
+                    int height = (int)(noise* maxHeight);
+                    Tile tile = world.GetTileAt(x, y, height);
+                    //tile.height = noise*height;
+                    tile.height = 0;
+                    TileType tileType = biome.GetTileForHeight(noise);
+                    tile.SetTileType(tileType,false);
+                    for (int i = 0; i < height; i++)
+                    {
+                        Tile belowTile = world.GetTileAt(x, y, i);
+                        belowTile.SetTileType(biome.GetTileWithTag(tileType.BelowTileTag), false);
+                        //belowTile.SetTileType(TileType.Empty, false);
+                    }
+                    for (int i = height + 1; i < maxHeight; i++)
+                    {
+                         world.GetTileAt(x, y, i).SetTileType(TileType.Empty, false);
+                        Tile belowTile = world.GetTileAt(x, y, i);
+                        //belowTile.SetTileType(biome.GetTileWithTag(tileType.BelowTileTag), false);
+                    }
                 }
+
             }
-            
         }
     }
 }

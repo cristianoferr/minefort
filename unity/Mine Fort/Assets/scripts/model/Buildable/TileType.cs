@@ -52,6 +52,7 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
         td.BaseMovementCost = float.Parse(lineData[i++]);
         string[] tags = lineData[i++].Split(',');
         td.CanBuild = lineData[i++] == "1";
+        td.BelowTileTag = lineData[i++];
         foreach (string tag in tags)
         {
             td.AddTag(tag);
@@ -119,7 +120,16 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
     /// </summary>
     public Dictionary<string, OrderAction> OrderActions { get; private set; }
     public bool CanBuild { get; private set; }
-    
+    string belowTileTag_;
+    public string BelowTileTag { get {
+            if (belowTileTag_ == null|| belowTileTag_ == "") return tagsAsText;
+            return belowTileTag_;
+        }
+        private set
+        {
+            belowTileTag_ = value;
+        }
+    }
 
     public static bool operator ==(TileType left, TileType right)
     {

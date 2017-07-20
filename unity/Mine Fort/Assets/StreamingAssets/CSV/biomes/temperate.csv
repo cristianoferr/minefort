@@ -1,9 +1,18 @@
 5;BIOMES;MAX_HEIGHT;MIN_HEIGHT;scale
-;;10;0;30
+;;5;0;30
 ;;;;lower numbers=smaller features (10 looks like a swamp)
 Name;minHeight;maxHeight;tags;
 water;0;0.2;water;
-sand;0.2;0.4;sand;
-grass;0.4;0.6;grass;
-rock;0.6;0.8;rock;
-snow;0.8;1;snow;
+sand1;0.2;0.26;sand1;
+sand2;0.26;0.32;sand2;
+sand3;0.32;0.42;sand3;
+dirt1;0.38;0.42;dirt;
+dirt1;0.42;0.5;dirt;
+grass1;0.5;0.55;dirtgrass;
+grass;0.55;0.6;grass1;
+rock;0.6;0.68;rock1;
+rock;0.68;0.72;rock2;
+rock;0.72;0.8;rock3;
+snowstone1;0.8;0.85;snowstone1;
+snowstone2;0.85;0.9;snowstone2;
+snow;0.9;1;snow;

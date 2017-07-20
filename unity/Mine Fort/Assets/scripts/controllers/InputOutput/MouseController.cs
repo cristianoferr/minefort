@@ -12,6 +12,7 @@ using MineFort.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 public class MouseController
 {
@@ -49,9 +50,13 @@ public class MouseController
 
     private MouseMode currentMode = MouseMode.SELECT;
 
+    //For isoMetricBounds 
+    float minX, minY, maxX, maxY;
+
     // Use this for initialization.
     public MouseController(BuildModeController buildModeController, FurnitureSpriteController furnitureSpriteController, UtilitySpriteController utilitySpriteController, GameObject cursorObject)
     {
+        CalcBounds();
         buildModeController.SetMouseController(this);
         this.buildModeController = buildModeController;
         this.furnitureSpriteController = furnitureSpriteController;
@@ -64,6 +69,25 @@ public class MouseController
         furnitureParent = new GameObject("Furniture Preview Sprites");
 
         TimeManager.Instance.EveryFrameNotModal += (time) => Update();
+    }
+
+    private void CalcBounds()
+    {
+        Vector3 v = Utils.TwoDToIso(0, 0, 0);
+        minX = maxX = v.x;
+        minY = maxY = v.y;
+        CalcBound(World.Current.Width, World.Current.Height);
+        CalcBound(0, World.Current.Height);
+        CalcBound(World.Current.Width, 0);
+    }
+
+    private void CalcBound(float width, float height)
+    {
+        Vector3 v = Utils.TwoDToIso(width, height, 0f,0f);
+        if (v.x < minX) minX = v.x;
+        if (v.y < minY) minY = v.y;
+        if (v.x > maxX) maxX = v.x;
+        if (v.y > maxY) maxY = v.y;
     }
 
     public enum MouseMode
@@ -571,8 +595,8 @@ public class MouseController
     {
         Vector3 oldPos = Camera.main.transform.position;
 
-        oldPos.x = Mathf.Clamp(oldPos.x, 0, (float)World.Current.Width - 1);
-        oldPos.y = Mathf.Clamp(oldPos.y, 0, (float)World.Current.Height - 1);
+        oldPos.x = Mathf.Clamp(oldPos.x, minX,maxX);
+        oldPos.y = Mathf.Clamp(oldPos.y, minY,maxY);
 
         Camera.main.transform.position = oldPos;
     }

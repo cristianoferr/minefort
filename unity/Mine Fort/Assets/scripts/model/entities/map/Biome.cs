@@ -22,7 +22,6 @@ namespace MineFort.model.entities.map
             TileType = new List<TileBiome>();
             this.biomes = biomes;
             maxHeight = 1;
-            minHeight = 0;
             scale = 100;
         }
         IList<TileBiome> TileType;
@@ -30,8 +29,7 @@ namespace MineFort.model.entities.map
         internal float scale;
         internal string name;
 
-        public float maxHeight { get; internal set; }
-        public float minHeight { get; internal set; }
+        public int maxHeight { get; internal set; }
 
 
         public string GetName()
@@ -41,7 +39,7 @@ namespace MineFort.model.entities.map
 
         public override string ToString()
         {
-            return "Biome:"+name + "["+minHeight+","+maxHeight+","+scale+"] with " + TileType.Count + " tiles. ";
+            return "Biome:"+name + "["+maxHeight+","+scale+"] with " + TileType.Count + " tiles. ";
         }
 
         internal TileType RandomTile(string tag=null)

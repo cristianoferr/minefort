@@ -135,8 +135,8 @@ public class InitialTest
         Assert.IsNotNull(chunk00);
         Assert.IsNotNull(chunk10);
         //testando se a posição coincide...
-        Tile tile00 = chunk00.GetTileAt(GameConsts.CHUNK_SIZE, 0);
-        Tile tile10 = chunk10.GetTileAt(0, 0);
+        Tile tile00 = chunk00.GetTileAt(GameConsts.CHUNK_SIZE, 0,0);
+        Tile tile10 = chunk10.GetTileAt(0, 0,0);
         Tile tileChunk = world.mapData.GetTileAt(GameConsts.CHUNK_SIZE, 0);
 
         Assert.IsTrue(tile00 == tile10, tile00 + " <> " + tile10);

@@ -9,6 +9,7 @@ using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using MineFort.logic.MapGen;
 
 namespace MineFort.controllers
 {
@@ -251,8 +252,11 @@ namespace MineFort.controllers
         private void CreateEmptyWorld()
         {
             World = SceneController.CreateNewWorld();
+            MapGenerator mapGen=new MapGenerator(World);
 
-            World.RandomizeWorld("land");
+            //TODO: colocar random seed
+            mapGen.RegenerateMap(1000,World.biome);
+           // World.RandomizeWorld("land");
 
             // Center the Camera
             //Camera.main.transform.position = new Vector3(World.Width / 2, World.Height / 2, Camera.main.transform.position.z);

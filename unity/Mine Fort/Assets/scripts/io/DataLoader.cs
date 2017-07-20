@@ -81,8 +81,8 @@ namespace MineFort.io
             if (dataDict == GameConsts.DATA_DICT_BIOME)
             {
                 Biome biome = world.biomes.GetBiome(fileName);
-                biome.maxHeight = float.Parse(lineData[2]);
-                biome.minHeight = float.Parse(lineData[3]);
+                biome.maxHeight = int.Parse(lineData[2]);
+                //biome.minHeight = float.Parse(lineData[3]);
                 biome.scale = float.Parse(lineData[4]);
             }
         }
