@@ -25,7 +25,7 @@ namespace MineFort.model.entities.map
             scale = 100;
         }
         IList<TileBiome> TileType;
-        private Biomes biomes;
+        public Biomes biomes;
         internal float scale;
         internal string name;
 
@@ -76,6 +76,7 @@ namespace MineFort.model.entities.map
             TileType.Add(tb);
         }
 
+        //TODO: rever esse metodo
         public TileType GetTileWithTag(string tag)
         {
             return biomes.GetTileTypeWithTag(TileType[Utils.Random(0, TileType.Count)].tags);

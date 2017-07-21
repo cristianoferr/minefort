@@ -34,17 +34,20 @@ namespace MineFort.logic.MapGen
                     tile.height = 0;
                     TileType tileType = biome.GetTileForHeight(noise);
                     tile.SetTileType(tileType,false);
-                    for (int i = 0; i < height; i++)
+                    
+                    for (int i = height-1; i >=0; i--)
                     {
                         Tile belowTile = world.GetTileAt(x, y, i);
-                        belowTile.SetTileType(biome.GetTileWithTag(tileType.BelowTileTag), false);
+                        tileType = biome.biomes.GetTileTypeWithTag(tileType.BelowTileTag);
+                        belowTile.SetTileType(tileType, false);
                         //belowTile.SetTileType(TileType.Empty, false);
                     }
+                    
                     for (int i = height + 1; i < maxHeight; i++)
                     {
                          world.GetTileAt(x, y, i).SetTileType(TileType.Empty, false);
                         Tile belowTile = world.GetTileAt(x, y, i);
-                        //belowTile.SetTileType(biome.GetTileWithTag(tileType.BelowTileTag), false);
+                        //belowTile.SetTileType(biome.biomes.GetTileWithTag(tileType.BelowTileTag), false);
                     }
                 }
 

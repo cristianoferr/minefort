@@ -34,7 +34,7 @@ public abstract class BaseSpriteController<T>
 
     public  void UpdatePosition(PhysicalEntity character, GameObject char_go)
     {
-        char_go.transform.position = Utils.TwoDToIso(character.X, character.Y, character.Z + character.Tile.height, GameConsts.CHAR_TILE_PRIORITY);
+        char_go.transform.position = Utils.TwoDToIso(character.X, character.Y, character.Z + character.Tile.height);
     }
 
     protected abstract void OnCreated(T obj);

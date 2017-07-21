@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - DeleteButton
+  - AreYouSureDelete
+  - PerformanceUI
   layers:
   - Default
   - TransparentFX
@@ -38,9 +41,33 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
+  - name: Tiles
+    uniqueID: 2732635613
+    locked: 0
+  - name: Utility
+    uniqueID: 3768386489
+    locked: 0
+  - name: Furniture
+    uniqueID: 1643566285
+    locked: 0
+  - name: Power
+    uniqueID: 759072587
+    locked: 0
+  - name: Jobs
+    uniqueID: 3521816473
+    locked: 0
+  - name: Inventory
+    uniqueID: 17226215
+    locked: 0
+  - name: InventoryUI
+    uniqueID: 2860613493
+    locked: 0
+  - name: Characters
+    uniqueID: 2254603415
     locked: 0
   - name: TileUI
     uniqueID: 4178559269
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0

@@ -255,7 +255,7 @@ namespace MineFort.Rooms
                         }
                     }
 
-                    Tile sourceTileDown = sourceTile.Down();
+                    Tile sourceTileDown = sourceTile.Up();
 
                     if (sourceTileDown != null && sourceTileDown.Room != null)
                     {
@@ -311,7 +311,7 @@ namespace MineFort.Rooms
                         Remove(sourceTile.Room);
                     }
 
-                    Tile sourceTileDown = sourceTile.Down();
+                    Tile sourceTileDown = sourceTile.Up();
 
                     if (sourceTileDown != null && sourceTileDown.Room != null && !sourceTileDown.Room.IsOutsideRoom())
                     {

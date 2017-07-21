@@ -46,6 +46,7 @@ namespace MineFort.Entities
         /// <param name="name">The name of the character, will get a new one if it is null.</param>
         public GameCharacter Create(Tile tile, string name = null)
         {
+            
             return Create(tile, ColorUtilities.RandomColor(), ColorUtilities.RandomGrayColor(), ColorUtilities.RandomSkinColor(), name != null ? name : CharacterNameManager.GetNewName());
         }
 
@@ -59,6 +60,7 @@ namespace MineFort.Entities
         /// <param name="name">The name of the character, will get a new one if it is null.</param>
         public GameCharacter Create(Tile tile, Color color, Color uniformColor, Color skinColor, string name = null)
         {
+            
             GameCharacter character = new GameCharacter(tile, color, uniformColor, skinColor, name != null ? name : CharacterNameManager.GetNewName());
             Characters.Add(character);
             TimeManager.Instance.RegisterFastUpdate(character);

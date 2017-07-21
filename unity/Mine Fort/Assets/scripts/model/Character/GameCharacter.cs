@@ -56,6 +56,11 @@ namespace MineFort.Entities
 
         public GameCharacter(Tile tile, Color color, Color uniformColor, Color skinColor, string name):base()
         {
+            if (tile.Type != TileType.Empty)
+                while (tile.Up().Type != TileType.Empty)
+                {
+                    tile = tile.Up();
+                }
             Tile = tile;
             characterColor = color;
             characterUniformColor = uniformColor;

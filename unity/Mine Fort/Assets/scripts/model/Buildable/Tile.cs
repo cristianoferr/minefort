@@ -491,13 +491,13 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
             return false;
         }
 
-        if (Down() == null)
+        if (Up() == null)
         {
             return true;
         }
         else
         {
-            return Down().HasClearLineToBottom();
+            return Up().HasClearLineToBottom();
         }
     }
 
@@ -521,12 +521,12 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
         return World.Current.GetTileAt(X - 1, Y, Z);
     }
 
-    public Tile Up()
+    public Tile Down()
     {
         return World.Current.GetTileAt(X, Y, Z - 1);
     }
 
-    public Tile Down()
+    public Tile Up()
     {
         return World.Current.GetTileAt(X, Y, Z + 1);
     }

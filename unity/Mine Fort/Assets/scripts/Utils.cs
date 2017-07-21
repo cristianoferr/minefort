@@ -27,13 +27,13 @@ namespace MineFort
         }
 
         //z is height in a 2.5D environment
-        public static Vector3 TwoDToIso(float x, float y,float z=0,float priority=0)
+        public static Vector3 TwoDToIso(float x, float y,float z=0)
         {
             //x = x * 2f;
             //y = y * 2f;
             //x+= GameConsts.WORLD_WIDTH / 2; 
             //y+= GameConsts.WORLD_HEIGHT / 2;
-            Vector3 pos = new Vector3(x - y, (x + y) / 2+z, x+y-priority-z);
+            Vector3 pos = new Vector3(x - y, (x + y ) / 2+z, z+20);
             pos.x += GameConsts.WORLD_WIDTH ;
             pos.y += GameConsts.WORLD_HEIGHT;
             return pos;
@@ -57,10 +57,7 @@ namespace MineFort
             return TwoDToIso(currFramePosition.x, currFramePosition.y, currFramePosition.z);
         }
 
-        internal static Vector3 TwoDToIso(float x, float y, float v, object cHAR_TILE_PRIORITY)
-        {
-            throw new NotImplementedException();
-        }
+        
 
 
         /*

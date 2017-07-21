@@ -83,7 +83,7 @@ public class MouseController
 
     private void CalcBound(float width, float height)
     {
-        Vector3 v = Utils.TwoDToIso(width, height, 0f,0f);
+        Vector3 v = Utils.TwoDToIso(width, height, 0f);
         if (v.x < minX) minX = v.x;
         if (v.y < minY) minY = v.y;
         if (v.x > maxX) maxX = v.x;

@@ -667,7 +667,7 @@ public class World
         if (tileGraph != null)
         {
             tileGraph.RegenerateGraphAtTile(t);
-            tileGraph.RegenerateGraphAtTile(t.Down());
+            tileGraph.RegenerateGraphAtTile(t.Up());
         }
     }
 }

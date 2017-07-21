@@ -80,7 +80,7 @@ public static partial class SettingsKeyHolder
         get
         {
             int temp;
-            return Settings.GetSetting("general_autosave_interval", out temp) ? temp : 10;
+            return Settings.GetSetting("general_autosave_interval", out temp) ? temp : 0;
         }
 
         set

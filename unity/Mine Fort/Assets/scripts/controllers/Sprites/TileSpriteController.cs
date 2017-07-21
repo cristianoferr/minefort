@@ -6,6 +6,7 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using MineFort;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,13 +50,15 @@ public class TileSpriteController : BaseSpriteController<Tile>
 
         tile_go.name = "Tile_" + tile.X + "_" + tile.Y + "_" + tile.Z;
         tile_go.transform.position = new Vector3(tile.X, tile.Y, tile.Z);
+        tile_go.transform.position = Utils.TwoDToIso(tile_go.transform.position);
         tile_go.transform.SetParent(objectParent.transform, true);
-
+        
         // Add a Sprite Renderer
         // Add a default sprite for empty tiles.
         SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
         sr.sprite = SpriteManager.GetSprite("Tile", "empty");
         sr.sortingLayerName = "Tiles";
+        //sr.sortingOrder = tile.X + tile.Y + tile.Z;
 
         OnChanged(tile);
     }
@@ -70,6 +73,8 @@ public class TileSpriteController : BaseSpriteController<Tile>
         }
 
         GameObject tile_go = objectGameObjectMap[tile];
+        SpriteRenderer sr = tile_go.GetComponent<SpriteRenderer>();
+        sr.sortingOrder = -(tile.X + tile.Y - tile.Z);
 
         if (tile_go == null)
         {
@@ -77,25 +82,26 @@ public class TileSpriteController : BaseSpriteController<Tile>
             return;
         }
 
-        // TODO Evaluate this criteria and naming schema!
-        if (DoesTileSpriteExist(tile.Type.Type + "_heavy") && (tile.WalkCount >= 30))
-        {
-            if (tile.ForceTileUpdate || tile.WalkCount == 30)
-            {
-                ChangeTileSprite(tile_go, tile.Type.Type + "_heavy");
-            }
-        }
-        else if (DoesTileSpriteExist(tile.Type.Type + "_low") && (tile.WalkCount >= 10))
-        {
-            if (tile.ForceTileUpdate || tile.WalkCount == 10)
-            {
-                ChangeTileSprite(tile_go, tile.Type.Type + "_low");
-            }
-        }
-        else
-        {
-            ChangeTileSprite(tile_go, tile.Type.Type);
-        }
+        //TODO: verify for ways to mark the tile as heavily used.
+
+        /*  
+          if (DoesTileSpriteExist(tile.Type.Type + "_heavy") && (tile.WalkCount >= 30))
+          {
+              if (tile.ForceTileUpdate || tile.WalkCount == 30)
+              {
+                  ChangeTileSprite(tile_go, tile.Type.Type + "_heavy");
+              }
+          }
+          else if (DoesTileSpriteExist(tile.Type.Type + "_low") && (tile.WalkCount >= 10))
+          {
+              if (tile.ForceTileUpdate || tile.WalkCount == 10)
+              {
+                  ChangeTileSprite(tile_go, tile.Type.Type + "_low");
+              }
+          }*/
+          
+        ChangeTileSprite(tile_go, tile.Type.fileName);
+       
 
         if (tile.Type == TileType.Empty)
         {

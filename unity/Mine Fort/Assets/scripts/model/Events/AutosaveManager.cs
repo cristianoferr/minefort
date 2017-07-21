@@ -35,7 +35,8 @@ public class AutosaveManager
             scheduler = Scheduler.Scheduler.Current;
         }
 
-        AutosaveInterval = SettingsKeyHolder.AutosaveInterval;
+        //TODO: reenable autosave
+        AutosaveInterval = 0;// SettingsKeyHolder.AutosaveInterval;
 
         // autosaves disabled if AutosaveInterval <= 0
         if (AutosaveInterval > 0)
