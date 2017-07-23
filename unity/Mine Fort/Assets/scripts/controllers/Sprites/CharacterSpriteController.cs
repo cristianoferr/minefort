@@ -6,6 +6,7 @@
 // file LICENSE, which is part of this source code package, for details.
 // ====================================================
 #endregion
+using MineFort.controllers;
 using MineFort.model;
 using MineFort.model.entities;
 using System.Collections.Generic;
@@ -115,6 +116,7 @@ namespace MineFort.Entities
             GameObject inventoryGo = objectGameObjectMap[character].transform.GetChild(0).gameObject;
             SpriteRenderer inventorySR = inventoryGo.GetComponent<SpriteRenderer>();
 
+            
             // Important to set the characters SortOrder first.
             int charSortOrder = character.Animation.SetAndGetSortOrder();
             if (character.Inventory != null)
@@ -139,8 +141,18 @@ namespace MineFort.Entities
             }
 
             GameObject char_go = objectGameObjectMap[character];
-
             UpdatePosition(character, char_go);
+            
+            GameObject tile_go= WorldController.Instance.TileSpriteController.GetGOForTile(character.Tile);
+           /* Debug.DrawLine(char_go.transform.position, Utils.TwoDToIso(character.Tile.Vector3), Color.red, 1);
+            Debug.DrawLine(Utils.TwoDToIso(character.Tile.X-0.5f, character.Tile.Y- 0.5f, character.Tile.Z), Utils.TwoDToIso(character.Tile.X + 0.5f, character.Tile.Y + 0.5f, character.Tile.Z), Color.blue, 1);
+            Debug.DrawLine(Utils.TwoDToIso(character.Tile.X - 0.5f, character.Tile.Y + 0.5f, character.Tile.Z), Utils.TwoDToIso(character.Tile.X + 0.5f, character.Tile.Y - 0.5f, character.Tile.Z), Color.blue, 1);*/
+            tile_go.GetComponent<SpriteRenderer>().color = new Color(0.5f, 1f, 0.5f, 0.75f);
+        }
+
+        public void UpdatePosition(PhysicalEntity character, GameObject char_go)
+        {
+            char_go.transform.position = Utils.TwoDToIso(character.X, character.Y, character.Z + character.Tile.height+ GameConsts.CHAR_TILE_HEIGHT);
         }
 
         protected override void OnRemoved(GameCharacter character)

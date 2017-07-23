@@ -52,6 +52,7 @@ public class MouseController
 
     //For isoMetricBounds 
     float minX, minY, maxX, maxY;
+    private int tileHeight=0;
 
     // Use this for initialization.
     public MouseController(BuildModeController buildModeController, FurnitureSpriteController furnitureSpriteController, UtilitySpriteController utilitySpriteController, GameObject cursorObject)
@@ -132,7 +133,11 @@ public class MouseController
 
     public Tile GetMouseOverTile()
     {
-        return WorldController.Instance.GetTileAtWorldCoord(currIsoPosition);
+        Tile tile = WorldController.Instance.GetTileAtWorldCoord(currIsoPosition);
+        if (tile == null) return null;
+        tile = tile.GetValidGroundTile();
+        tileHeight = tile.Z;
+        return tile;
     }
 
     public GameObject GetCursorParent()
@@ -197,7 +202,7 @@ public class MouseController
     {
         currFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         currFramePosition.z = WorldController.Instance.CameraController.CurrentLayer;
-        currIsoPosition = Utils.IsoTo2D(currFramePosition.x, currFramePosition.y);
+        currIsoPosition = Utils.IsoTo2D(currFramePosition.x, currFramePosition.y - 0.5f, tileHeight);
     }
 
     private void CheckModeChanges()
@@ -399,9 +404,12 @@ public class MouseController
         {
             for (int y = dragParams.StartY; y <= dragParams.EndY; y++)
             {
-                Tile t = WorldController.Instance.World.GetTileAt(x, y, WorldController.Instance.CameraController.CurrentLayer);
+                Tile t = WorldController.Instance.World.GetTileAt(x, y, tileHeight);
                 if (t != null)
                 {
+                    t = t.GetValidGroundTile();
+                    tileHeight = t.Z;
+                    DebugPaingTile(t);
                     // Display the building hint on top of this tile position.
                     if (buildModeController.BuildMode == BuildMode.FURNITURE)
                     {
@@ -427,6 +435,13 @@ public class MouseController
                 }
             }
         }
+    }
+
+    public void DebugPaingTile(Tile t)
+    {
+        GameObject go=WorldController.Instance.TileSpriteController.GetGOForTile(t);
+        SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+        sr.color = new Color(0.75f, 0.75f, 0.75f, 0.75f);
     }
 
     private void ShowGenericVisuals(int x, int y)
@@ -456,6 +471,7 @@ public class MouseController
                     // Trying to build off the map, bail out of this cycle.
                     continue;
                 }
+                tile = tile.GetValidGroundTile();
 
                 if (buildModeController.BuildMode == BuildMode.FURNITURE)
                 {
@@ -615,15 +631,16 @@ public class MouseController
             World.Current.FurnitureManager.IsWorkSpotClear(furnitureType, tile) &&
             buildModeController.DoesFurnitureBuildJobOverlapExistingBuildJob(tile, furnitureType, buildModeController.CurrentPreviewRotation) == false)
         {
-            sr.color = new Color(0.5f, 1f, 0.5f, 0.25f);
+            sr.color = new Color(0.5f, 1f, 0.5f, 0.75f);
         }
         else
         {
-            sr.color = new Color(1f, 0.5f, 0.5f, 0.25f);
+            sr.color = new Color(1f, 0.5f, 0.5f, 0.75f);
         }
 
         go.name = furnitureType + "_p_" + tile.X + "_" + tile.Y + "_" + tile.Z;
-        go.transform.position = tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite, buildModeController.CurrentPreviewRotation);
+         go.transform.position = tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite, buildModeController.CurrentPreviewRotation);
+        FurnitureSpriteController.UpdatePosition(tile, go);
         go.transform.Rotate(0, 0, buildModeController.CurrentPreviewRotation);
     }
 
@@ -649,11 +666,11 @@ public class MouseController
             World.Current.FurnitureManager.IsWorkSpotClear(furnitureType, tile) &&
             buildModeController.DoesFurnitureBuildJobOverlapExistingBuildJob(tile, furnitureType) == false)
         {
-            sr.color = new Color(0.5f, 1f, 0.5f, 0.25f);
+            sr.color = new Color(0.5f, 1f, 0.5f, 0.5f);
         }
         else
         {
-            sr.color = new Color(1f, 0.5f, 0.5f, 0.25f);
+            sr.color = new Color(1f, 0.5f, 0.5f, 0.5f);
         }
 
         go.transform.position = new Vector3(tile.X + proto.Jobs.WorkSpotOffset.x, tile.Y + proto.Jobs.WorkSpotOffset.y, WorldController.Instance.CameraController.CurrentLayer);

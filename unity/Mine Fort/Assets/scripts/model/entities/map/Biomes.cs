@@ -14,7 +14,8 @@ namespace MineFort.model.entities.map
         public Biomes()
         {
             biomeList = new Dictionary<string, Biome>();
-            TileType = new List<TileType>();
+            TileType.Empty.AddTag(GameConsts.TAG_EMPTY);
+            tileTypes = new List<TileType>();
         }
 
         public Biomes(DataHolder dataHolder)
@@ -22,7 +23,7 @@ namespace MineFort.model.entities.map
             this.dataHolder = dataHolder;
         }
 
-        public IList<TileType> TileType { get; private set; }
+        public IList<TileType> tileTypes { get; private set; }
 
         public void AddBiome(string name, Biome biome)
         {
@@ -48,19 +49,19 @@ namespace MineFort.model.entities.map
 
         public TileType GetTileTypeWithName(string name)
         {
-            TileType td= TileType.Where(x => x.name==name).FirstOrDefault();
+            TileType td= tileTypes.Where(x => x.name==name).FirstOrDefault();
             if (td == null)
             {
                 td = new TileType();
                 td.name = name;
-                TileType.Add(td);
+                tileTypes.Add(td);
             }
             return td;
         }
 
         public TileType GetTileTypeWithTag(string tags)
         {
-            return TileType.Where(x => x.ContainsTags(tags)).OrderBy(x=>Utils.Random(0,100)).FirstOrDefault();
+            return tileTypes.Where(x => x.ContainsTags(tags)).OrderBy(x=>Utils.Random(0,100)).FirstOrDefault();
         }
 
         internal void LoadTileTypeFromCSV(string[] lineData)

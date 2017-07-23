@@ -77,38 +77,14 @@ namespace MineFort.Entities
                 }
 
 
-                _currTile = GetEmptyTile(value);
+                _currTile = value.GetValidGroundTile();
                 _currTile.Characters.Add(this);
 
                 TileOffset = Vector3.zero;
             }
         }
 
-        private Tile GetEmptyTile(Tile value)
-        {
-            //nothing below, so it falls...
-            if (value.Type == TileType.Empty)
-            {
-                Tile tdown = value.Down();
-                if (tdown != null)
-                {
-                    return GetEmptyTile(tdown);
-                }
-            }
-            else
-            {
-                Tile tup = value.Up();
-                if (tup != null)
-                {
-                    if (tup.Type != TileType.Empty)
-                    {
-                        return GetEmptyTile(tup);
-                    }
-                }
-            }
-
-            return value;
-        }
+      
 
         /// Tile offset for animation
         public Vector3 TileOffset { get; set; }

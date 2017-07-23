@@ -61,6 +61,33 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
         }
     }
 
+    public Tile GetValidGroundTile()
+    {
+            //TODO: animate fall?
+            //nothing below, so it falls...
+            if (Type == TileType.Empty)
+            {
+                Tile tdown = Down();
+                if (tdown != null)
+                {
+                    return tdown.GetValidGroundTile();
+                }
+            }
+            else
+            {
+                Tile tup = Up();
+                if (tup != null)
+                {
+                    if (tup.Type != TileType.Empty)
+                    {
+                        return tup.GetValidGroundTile();
+                    }
+                }
+            }
+
+            return this;
+    }
+
     public HashSet<Furniture> ReservedAsWorkSpotBy { get; private set; }
 
     // LooseObject is something like a drill or a stack of metal sitting on the floor
@@ -134,6 +161,10 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
     {
         get
         {
+            if (Type==TileType.Empty && Down().type!= TileType.Empty)
+            {
+                return Down().MovementCost * 2;
+            }
             // This prevented the character from walking in empty tiles. It has been diasbled to allow the character to construct floor tiles.
             // TODO: Permanent solution for handeling when a character can walk in empty tiles is required
             return Type.BaseMovementCost * MovementModifier * (Furniture != null ? Furniture.MovementCost : 1);
@@ -519,6 +550,22 @@ public class Tile : ISelectable, IContextActionProvider, IComparable, IEquatable
     public Tile West()
     {
         return World.Current.GetTileAt(X - 1, Y, Z);
+    }
+    public Tile SW()
+    {
+        return World.Current.GetTileAt(X - 1, Y-1, Z);
+    }
+    public Tile NW()
+    {
+        return World.Current.GetTileAt(X - 1, Y + 1, Z);
+    }
+    public Tile SE()
+    {
+        return World.Current.GetTileAt(X + 1, Y - 1, Z);
+    }
+    public Tile NE()
+    {
+        return World.Current.GetTileAt(X + 1, Y + 1, Z);
     }
 
     public Tile Down()

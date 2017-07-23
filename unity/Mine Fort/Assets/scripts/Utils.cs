@@ -40,13 +40,13 @@ namespace MineFort
         }
 
 
-        public static Vector3 IsoTo2D(float x, float y)
+        public static Vector3 IsoTo2D(float x, float y,float z=0)
         {
             //x = x / 2f;
             //y = y / 2f;
             x -= GameConsts.WORLD_WIDTH ;
             y -= GameConsts.WORLD_HEIGHT;
-            Vector3 pos = new Vector3((2*y+x)/2,(2*y-x)/2, 0);
+            Vector3 pos = new Vector3((2*y+x)/2-z,(2*y-x)/2-z, z);
            //pos.x += GameConsts.WORLD_WIDTH / 2;
             //pos.y += GameConsts.WORLD_HEIGHT / 2;
             return pos;

@@ -9,11 +9,21 @@ namespace MineFort.model.entities
     public class Map
     {
         private Chunk[,] chunks { get; set; }
+        public AutomatoCelular automato;
 
         public Map(World world)
         {
             this.world = world;
+            automato = new AutomatoCelular(this);
         }
+        public Biome biome
+        {
+            get
+            {
+                return world.biome;
+            }
+        }
+
         public Room GetOutsideRoom(Vector3 position)
         {
             return GetChunkAt(position).outsideRoom;

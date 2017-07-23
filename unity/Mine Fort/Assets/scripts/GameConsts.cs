@@ -87,13 +87,16 @@ namespace MineFort.model
         //usado no csv
         public const string DATA_DICT_BIOME = "BIOMES";
         internal const string DATA_DICT_TILEDATA = "TILEDATA";
+        public const string DATA_DICT_AUTOMATO= "AUTOMATO";
 
         public const string TAG_TILE_WATER="water";
         public const string TAG_TILE_LAND = "land";
         public const string TAG_TILE_GRASS = "grass";
         public const string TAG_TILE_TEST = "test";
+        public const string TAG_EMPTY = "empty";
+        
 
         public const float CAM_MAX_DISTANCE = 50f;
-        internal const float CHAR_TILE_PRIORITY = 10;
+        internal const float CHAR_TILE_HEIGHT = 1f;
     }
 }

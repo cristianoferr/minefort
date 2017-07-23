@@ -26,7 +26,18 @@ public class Job : ISelectable, IPrototypable
     // This class holds info for a queued up job, which can include
     // things like placing furniture, moving stored inventory,
     // working at a desk, and maybe even fighting enemies.
-    public Tile tile;
+    private Tile tile_;
+    public Tile tile
+    {
+        get
+        {
+            return tile_;
+        }
+        set
+        {
+            tile_ = value;
+        }
+    }
 
     public IBuildable buildablePrototype;
 

@@ -177,8 +177,8 @@ namespace MineFort.controllers
         {
             int x = Mathf.FloorToInt(coord.x + 0.5f);
             int y = Mathf.FloorToInt(coord.y + 0.5f);
-
-            return World.GetTileAt(x, y, 0);
+            return World.GetTileAt(Utils.TwoDToIso(x, y, coord.z));
+           // return World.GetTileAt(Utils.TwoDToIso(coord));
         }
 
         public void Destroy()
@@ -256,6 +256,7 @@ namespace MineFort.controllers
 
             //TODO: colocar random seed
             mapGen.RegenerateMap(1000,World.biome);
+            World.map.automato.Start();
            // World.RandomizeWorld("land");
 
             // Center the Camera

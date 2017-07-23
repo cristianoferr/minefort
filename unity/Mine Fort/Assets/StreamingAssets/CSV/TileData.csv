@@ -18,3 +18,8 @@ rock2;ISO_Tile_Stone_02;1.6;rock2,rock,land;1;rock1;0;;200;lava;;
 rock3;ISO_Tile_Stone_03;1.6;rock3,rock,land;1;rock2;0;;200;lava;;
 dirt1;ISO_Tile_Dirt_01;2;dirt1,dirt,land;1;rock;1;;200;lava;;
 lavacracks;ISO_Tile_LavaCracks_01;0;lavacracks,unpass;0;lava;0;;;;30;land
+lowtile_stone1;ISO_LowTile_Stone_01;0.8;lowrock1;1;rock3;0;;;;;
+lowtile_lowdirt1;ISO_LowTile_Dirt_01;0.8;lowdirt1;1;dirt;0;;;;;
+lowtile_lowsand1;ISO_LowTile_Sand_01;0.8;lowsand1;1;dirt;0;;;;;
+lowtile_lowgrass1;ISO_LowTile_Grass_01;0.8;lowgrass,lowgrass1;1;dirt;0;;;;;
+lowtile_lowpatchgrass1;ISO_LowTile_GrassPatch_01;0.8;lowpatchgrass,lowpatchgrass1;1;dirt;0;;;;;

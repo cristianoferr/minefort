@@ -79,7 +79,8 @@ namespace MineFort.model.entities.map
         //TODO: rever esse metodo
         public TileType GetTileWithTag(string tag)
         {
-            return biomes.GetTileTypeWithTag(TileType[Utils.Random(0, TileType.Count)].tags);
+            //return biomes.GetTileTypeWithTag(TileType[Utils.Random(0, TileType.Count)].tags);
+            return biomes.GetTileTypeWithTag(tag);
         }
     }
 }

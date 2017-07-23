@@ -38,6 +38,7 @@ public class CameraController
         Camera.main.farClipPlane = 1000;
 
         cameraData = World.Current.CameraData;
+      //  currentLayer = World.Current.Depth;
 
         KeyboardManager keyboardManager = KeyboardManager.Instance;
         keyboardManager.RegisterInputAction("MoveCameraEast", KeyboardMappedInputType.Key, () => { frameMoveHorizontal++; });

@@ -20,7 +20,7 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
 {
 
     public static TileType Empty = new TileType();
-
+  
 
     public TileType():this(0)
     {

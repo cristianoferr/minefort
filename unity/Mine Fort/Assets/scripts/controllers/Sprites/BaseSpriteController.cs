@@ -32,10 +32,7 @@ public abstract class BaseSpriteController<T>
         GameObject.Destroy(objectParent);
     }
 
-    public  void UpdatePosition(PhysicalEntity character, GameObject char_go)
-    {
-        char_go.transform.position = Utils.TwoDToIso(character.X, character.Y, character.Z + character.Tile.height);
-    }
+    
 
     protected abstract void OnCreated(T obj);
 

@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using MineFort.Buildable.Components;
 using UnityEngine;
+using MineFort.Entities;
+using MineFort;
+using MineFort.model;
 
 public class FurnitureSpriteController : BaseSpriteController<Furniture>
 {
@@ -149,7 +152,7 @@ public class FurnitureSpriteController : BaseSpriteController<Furniture>
 
         furn_go.name = furniture.Type + "_" + furniture.Tile.X + "_" + furniture.Tile.Y;
         furn_go.transform.position = furniture.Tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite, furniture.Rotation);
-        UpdatePosition(furniture, furn_go);
+        UpdatePosition(furniture.Tile, furn_go);
         furn_go.transform.Rotate(0, 0, furniture.Rotation);
         furn_go.transform.SetParent(objectParent.transform, true);
 
@@ -202,6 +205,11 @@ public class FurnitureSpriteController : BaseSpriteController<Furniture>
         furniture.Changed += OnChanged;
         furniture.Removed += OnRemoved;
         furniture.IsOperatingChanged += OnIsOperatingChanged;
+    }
+
+    public static void UpdatePosition(Tile tile, GameObject char_go)
+    {
+        char_go.transform.position = Utils.TwoDToIso(char_go.transform.position.x, char_go.transform.position.y, char_go.transform.position.z + tile.height + GameConsts.CHAR_TILE_HEIGHT);
     }
 
     protected override void OnChanged(Furniture furn)

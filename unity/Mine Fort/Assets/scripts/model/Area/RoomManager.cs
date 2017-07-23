@@ -227,7 +227,7 @@ namespace MineFort.Rooms
                     FloodFillBegan();
                 }
 
-                if (splitting)
+                if (splitting && oldRoom!=null)
                 {
                     // The source tile had a room, so this must be a new piece of furniture
                     // that is potentially dividing this old room into as many as four new rooms.

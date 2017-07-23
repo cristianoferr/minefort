@@ -1348,7 +1348,7 @@ public class Furniture : PhysicalEntity, ISelectable, IPrototypable, IContextAct
                 if (!HasTypeTag("DoesntNeedFloor"))
                 {
                     // Make sure tile is FLOOR
-                    if (tile2.Type.CanBuild && tileTypeBuildPermissions.Contains(tile2.Type.Type) == false)
+                    if (!tile2.Type.CanBuild || tile!=tile.GetValidGroundTile()) // && tileTypeBuildPermissions.Contains(tile2.Type.Type) == false)
                     {
                         return false;
                     }

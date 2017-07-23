@@ -1,0 +1,11 @@
+5;AUTOMATO;;;;
+;;;;;
+;;;;;
+DESCRIPTION;WHEN?;CELL_TAG;CHANGE_TO;TAG_BELOW;ANYSIDE_TAG;CHANGE_HEIGHT
+for when there‹s water in multiple levels;start;empty;water;water;water;0
+stepping stone1;start;rock;lowrock1;;empty;-0.5
+stepping dirt1;start;dirt;lowdirt1;;empty;-0.5
+stepping grass1;start;grass1;lowgrass1;;empty;-0.5
+stepping sand1;start;sand;lowsand1;;empty;-0.5
+stepping grass1;start;dirtgrass;lowpatchgrass1;;empty;-0.5
+

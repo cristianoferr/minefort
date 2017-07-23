@@ -63,6 +63,13 @@ public class TileSpriteController : BaseSpriteController<Tile>
         OnChanged(tile);
     }
 
+    public GameObject GetGOForTile(Tile tile)
+    {
+        if (objectGameObjectMap.ContainsKey(tile)) return objectGameObjectMap[tile];
+        return null;
+    }
+
+
     // This function should be called automatically whenever a tile's data gets changed.
     protected override void OnChanged(Tile tile)
     {

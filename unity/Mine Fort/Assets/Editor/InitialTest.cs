@@ -61,7 +61,7 @@ public class InitialTest
     public void TestaConversaoCoordenadaIso()
     {
 
-        Vector3 pos = new Vector3(100, 50, 0);
+        Vector3 pos = new Vector3(100, 50, 20);
         Vector3 posIso = Utils.TwoDToIso(pos.x, pos.y);
         Assert.IsNotNull(posIso);
         Vector3 posNormal = Utils.IsoTo2D(posIso.x, posIso.y);
