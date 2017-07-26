@@ -7,6 +7,7 @@
 // ====================================================
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,11 +15,14 @@ using System.Xml;
 using System.Xml.Serialization;
 using UnityEngine;
 
+//TODO: integrar dataholder com essa class: worldgenerator
+
 public class WorldGenerator
 {
     private static WorldGenerator instance;
 
     private int sumOfAllWeightedChances;
+    private AsteroidInfo asteroidInfo;
 
     private WorldGenerator()
     {
@@ -44,13 +48,13 @@ public class WorldGenerator
         int height = world.Height;
         int depth = world.Depth;
 
-        //ReadXML(world);
+        ReadXML(world);
         //world.ResizeWorld(width, height, depth);
 
         //TODO: Urgente: Migrar mapgen para cá
-        Random.InitState(seed);
+        UnityEngine.Random.InitState(seed);
 
-        //sumOfAllWeightedChances = asteroidInfo.Resources.Select(x => x.WeightedChance).Sum();
+        sumOfAllWeightedChances = asteroidInfo.Resources.Select(x => x.WeightedChance).Sum();
 
     }
 
@@ -76,14 +80,14 @@ public class WorldGenerator
 
         for (int i = 0; i < numPoints * 4; i++)
         {
-            workingPoints.Add(new Vector3(Random.Range(0, world.Width), Random.Range(0, world.Height), Random.Range(0, world.Depth)));
+            workingPoints.Add(new Vector3(UnityEngine.Random.Range(0, world.Width), UnityEngine.Random.Range(0, world.Height), UnityEngine.Random.Range(0, world.Depth)));
         }
 
         for (int i = 0; i < numPoints; i++)
         {
             if (finalPoints.Count == 0)
             {
-                int pointToAdd = Random.Range(0, workingPoints.Count);
+                int pointToAdd = UnityEngine.Random.Range(0, workingPoints.Count);
                 finalPoints.Add(workingPoints[pointToAdd]);
                 workingPoints.RemoveAt(pointToAdd);
             }
@@ -133,6 +137,24 @@ public class WorldGenerator
 
         if (reader.ReadToDescendant("WorldGenerator"))
         {
+
+            if (reader.ReadToDescendant("Asteroid"))
+            {
+                try
+                {
+                    ReadXmlAsteroid(reader);
+                }
+                catch (System.Exception e)
+                {
+                    // Leaving this in because UberLogger doesn't handle multiline messages  
+                    UnityDebugger.Debugger.LogError("WorldGenerator", "Error reading WorldGenerator/Asteroid" + System.Environment.NewLine + "Exception: " + e.Message + System.Environment.NewLine + "StackTrace: " + e.StackTrace);
+                }
+            }
+            else
+            {
+                UnityDebugger.Debugger.LogError("WorldGenerator", "Did not find a 'Asteroid' element in the WorldGenerator definition file.");
+            }
+
             if (reader.ReadToNextSibling("StartArea"))
             {
                 try
@@ -148,7 +170,7 @@ public class WorldGenerator
             }
             else
             {
-                UnityDebugger.Debugger.LogError("WorldGenerator", "Did not find a 'StartArea' element in the WorldGenerator definition file.");
+             //   UnityDebugger.Debugger.LogError("WorldGenerator", "Did not find a 'StartArea' element in the WorldGenerator definition file.");
             }
 
             if (reader.ReadToNextSibling("Wallet"))
@@ -173,7 +195,65 @@ public class WorldGenerator
         }
     }
 
-    
+    private void ReadXmlAsteroid(XmlReader reader)
+    {
+        XmlSerializer serializer = new XmlSerializer(typeof(AsteroidInfo));
+        asteroidInfo = (AsteroidInfo)serializer.Deserialize(reader);
+    }
+
+
+    internal void PlaceAsteroidChunk(Tile tile,World world)
+    {
+        if (tile.Type == TileType.Empty)
+        {
+            return;
+        }
+            //tile.SetTileType(asteroidFloorType);
+
+            world.FurnitureManager.PlaceFurniture("astro_wall", tile, false);
+
+            if (UnityEngine.Random.value <= asteroidInfo.ResourceChance && tile.Furniture.Type == "astro_wall")
+            {
+                if (asteroidInfo.Resources.Count > 0)
+                {
+                    int currentweight = 0;
+                    int randomweight = UnityEngine.Random.Range(0, sumOfAllWeightedChances);
+
+                    for (int i = 0; i < asteroidInfo.Resources.Count; i++)
+                    {
+                        Resource inv = asteroidInfo.Resources[i];
+
+                        int weight = inv.WeightedChance;
+                        currentweight += weight;
+
+                        if (randomweight <= currentweight)
+                        {
+                            tile.Furniture.Parameters["ore_type"].SetValue(inv.Type);
+                            tile.Furniture.Parameters["source_type"].SetValue(inv.Source);
+
+                            break;
+                        }
+                    }
+                }
+        }
+    }
+
+    //TODO: rename this class name: asteroid
+    [System.Serializable]
+    [XmlRoot("Asteroid")]
+    public class AsteroidInfo
+    {
+        [XmlElement("AsteroidSize")]
+        public int AsteroidSize { get; set; }
+
+        [XmlElement("AsteroidDensity")]
+        public float AsteroidDensity { get; set; }
+
+        [XmlElement("ResourceChance")]
+        public float ResourceChance { get; set; }
+
+        public List<Resource> Resources { get; set; }
+    }
 
     private void ReadStartArea(string startAreaFilePath, World world)
     {
@@ -200,4 +280,6 @@ public class WorldGenerator
         [XmlAttribute("weightedChance")]
         public int WeightedChance { get; set; }
     }
+
+    
 }

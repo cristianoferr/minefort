@@ -7,6 +7,7 @@
 // ====================================================
 #endregion
 using MineFort;
+using MineFort.controllers;
 using MineFort.Entities;
 using MineFort.model.entities;
 using UnityEngine;
@@ -90,7 +91,7 @@ public class JobSpriteController : BaseSpriteController<Job>
             // This job is for building a tile.
             // For now, the only tile that could be is the floor, so just show a floor sprite
             // until the graphics system for tiles is fleshed out further.
-            job_go.transform.position = Utils.TwoDToIso(job.tile.Vector3);
+            job_go.transform.position = job.tile.Vector3;
             sr.sprite = SpriteManager.GetSprite("Tile", "solid");
             sr.color = new Color32(128, 255, 128, 192);
         }
@@ -98,13 +99,13 @@ public class JobSpriteController : BaseSpriteController<Job>
         {
             sr.sprite = SpriteManager.GetSprite("UI", "CursorCircle");
             sr.color = Color.red;
-            job_go.transform.position = Utils.TwoDToIso(job.tile.Vector3);
+            job_go.transform.position = job.tile.Vector3;
         }
         else if (job.Description.Contains("mine"))
         {
             sr.sprite = SpriteManager.GetSprite("UI", "MiningIcon");
             sr.color = new Color(1, 1, 1, 0.25f);
-            job_go.transform.position = Utils.TwoDToIso(job.tile.Vector3);
+            job_go.transform.position = job.tile.Vector3;
         }
         else
         {
@@ -119,13 +120,13 @@ public class JobSpriteController : BaseSpriteController<Job>
             {
                 Furniture furnitureToBuild = (Furniture)job.buildablePrototype;
                 sr.sprite = fsc.GetSpriteForFurniture(job.Type);
-                job_go.transform.position = Utils.TwoDToIso(job.tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite, furnitureToBuild.Rotation));
+                job_go.transform.position = job.tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite, furnitureToBuild.Rotation);
                 job_go.transform.Rotate(0, 0, furnitureToBuild.Rotation);
             }
             else if (job.buildablePrototype.GetType().ToString() == "Utility")
             {
                 sr.sprite = usc.GetSpriteForUtility(job.Type);
-                job_go.transform.position = Utils.TwoDToIso(job.tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite));
+                job_go.transform.position = job.tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite);
             }
 
             sr.color = new Color32(128, 255, 128, 64);
@@ -151,6 +152,10 @@ public class JobSpriteController : BaseSpriteController<Job>
 
         job.OnJobCompleted += OnRemoved;
         job.OnJobStopped += OnRemoved;
+        UpdatePosition(job.tile, job_go);
+
+       // GameObject tile_go = WorldController.Instance.TileSpriteController.GetGOForTile(job.tile);
+       // tile_go.GetComponent<SpriteRenderer>().color = new Color(1f, 0.5f, 0.5f, 0.75f);
     }
 
     protected override void OnChanged(Job job)

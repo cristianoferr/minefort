@@ -32,7 +32,10 @@ public abstract class BaseSpriteController<T>
         GameObject.Destroy(objectParent);
     }
 
-    
+    public void UpdatePosition(Tile tile, GameObject char_go)
+    {
+        char_go.transform.position = Utils.TwoDToIso(char_go.transform.position.x, char_go.transform.position.y, char_go.transform.position.z + tile.height + GameConsts.CHAR_TILE_HEIGHT);
+    }
 
     protected abstract void OnCreated(T obj);
 

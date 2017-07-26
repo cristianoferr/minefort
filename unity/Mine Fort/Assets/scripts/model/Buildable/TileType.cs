@@ -53,6 +53,7 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
         string[] tags = lineData[i++].Split(',');
         td.CanBuild = lineData[i++] == "1";
         td.BelowTileTag = lineData[i++];
+        td.CanMine= lineData[i++] == "1";
         foreach (string tag in tags)
         {
             td.AddTag(tag);
@@ -130,6 +131,8 @@ public class TileType : TagObject, IPrototypable, IEquatable<TileType>
             belowTileTag_ = value;
         }
     }
+
+    public bool CanMine { get; private set; }
 
     public static bool operator ==(TileType left, TileType right)
     {

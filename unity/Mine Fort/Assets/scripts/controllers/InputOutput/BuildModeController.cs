@@ -11,6 +11,7 @@ using System.Linq;
 using MineFort.OrderActions;
 using MineFort.Rooms;
 using MineFort.controllers;
+using System;
 
 public enum BuildMode
 {
@@ -355,8 +356,14 @@ public class BuildModeController
         }
         else if (BuildMode == BuildMode.MINE)
         {
-            if (tile.Furniture != null)
+            if (tile.Type.CanMine)
             {
+                //empty tile... need to start data
+                if (tile.Furniture == null)
+                {
+                    InitMineableTile(tile);
+                }
+                //TODO: minerar no porcupine leva em conta a furniture... aqui terá que ser diferente baseado no tile type
                 Job existingMineJob;
                 bool hasMineJob = tile.Furniture.Jobs.HasJobWithPredicate(x => x.OrderName == typeof(Mine).Name, out existingMineJob);
                 if (!hasMineJob)
@@ -389,6 +396,11 @@ public class BuildModeController
         {
             UnityDebugger.Debugger.LogError("BuildModeController", "UNIMPLEMENTED BUILD MODE");
         }
+    }
+
+    private void InitMineableTile(Tile tile)
+    {
+        WorldGenerator.Instance.PlaceAsteroidChunk(tile, World.Current);
     }
 
     public bool DoesFurnitureBuildJobOverlapExistingBuildJob(Tile t, string furnitureType, float rotation = 0)

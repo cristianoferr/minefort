@@ -14,6 +14,7 @@ using UnityEngine;
 using MineFort.Entities;
 using MineFort;
 using MineFort.model;
+using MineFort.controllers;
 
 public class FurnitureSpriteController : BaseSpriteController<Furniture>
 {
@@ -205,13 +206,12 @@ public class FurnitureSpriteController : BaseSpriteController<Furniture>
         furniture.Changed += OnChanged;
         furniture.Removed += OnRemoved;
         furniture.IsOperatingChanged += OnIsOperatingChanged;
-    }
 
-    public static void UpdatePosition(Tile tile, GameObject char_go)
-    {
-        char_go.transform.position = Utils.TwoDToIso(char_go.transform.position.x, char_go.transform.position.y, char_go.transform.position.z + tile.height + GameConsts.CHAR_TILE_HEIGHT);
-    }
+        GameObject tile_go = WorldController.Instance.TileSpriteController.GetGOForTile(furniture.Tile);
+        tile_go.GetComponent<SpriteRenderer>().color = new Color(1f, 0.5f, 0.5f, 0.75f);
 
+    }
+    
     protected override void OnChanged(Furniture furn)
     {
         // Make sure the furniture's graphics are correct.

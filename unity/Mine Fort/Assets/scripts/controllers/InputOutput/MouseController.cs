@@ -409,7 +409,7 @@ public class MouseController
                 {
                     t = t.GetValidGroundTile();
                     tileHeight = t.Z;
-                    DebugPaingTile(t);
+                    //DebugPaingTile(t);
                     // Display the building hint on top of this tile position.
                     if (buildModeController.BuildMode == BuildMode.FURNITURE)
                     {
@@ -640,7 +640,7 @@ public class MouseController
 
         go.name = furnitureType + "_p_" + tile.X + "_" + tile.Y + "_" + tile.Z;
          go.transform.position = tile.Vector3 + ImageUtils.SpritePivotOffset(sr.sprite, buildModeController.CurrentPreviewRotation);
-        FurnitureSpriteController.UpdatePosition(tile, go);
+        WorldController.Instance.FurnitureSpriteController.UpdatePosition(tile, go);
         go.transform.Rotate(0, 0, buildModeController.CurrentPreviewRotation);
     }
 
